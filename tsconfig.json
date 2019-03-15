@@ -17,6 +17,38 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "data": [
+        "dist/data"
+      ],
+      "data/*": [
+        "dist/data/*"
+      ],
+      "material": [
+        "dist/material"
+      ],
+      "material/*": [
+        "dist/material/*"
+      ],
+      "api": [
+        "dist/api"
+      ],
+      "api/*": [
+        "dist/api/*"
+      ],
+      "notification": [
+        "dist/notification"
+      ],
+      "notification/*": [
+        "dist/notification/*"
+      ],
+      "auth": [
+        "dist/auth"
+      ],
+      "auth/*": [
+        "dist/auth/*"
+      ]
+    }
   }
 }
