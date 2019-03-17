@@ -421,7 +421,7 @@
               "projects/chama/src/assets"
             ],
             "styles": [
-              "projects/chama/src/styles.css"
+              "projects/chama/src/styles.scss"
             ],
             "scripts": [],
             "es5BrowserSupport": true
