@@ -25,6 +25,7 @@
     "@bugsnag/js": "^6.0.0",
     "@bugsnag/plugin-angular": "^6.0.0",
     "angular2-jwt": "^0.2.3",
+    "angularx-social-login": "^1.2.6",
     "core-js": "^2.5.4",
     "hammerjs": "^2.0.8",
     "rxjs": "~6.3.3",

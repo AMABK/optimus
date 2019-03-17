@@ -6,7 +6,6 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  model = 'auth/login';
   isAuthenticated$ = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) {

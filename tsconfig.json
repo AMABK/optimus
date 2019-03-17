@@ -48,6 +48,18 @@
       ],
       "auth/*": [
         "dist/auth/*"
+      ],
+      "spinner": [
+        "dist/spinner"
+      ],
+      "spinner/*": [
+        "dist/spinner/*"
+      ],
+      "error": [
+        "dist/error"
+      ],
+      "error/*": [
+        "dist/error/*"
       ]
     }
   }

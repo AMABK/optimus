@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
   ];
 
   constructor(
-    private snackbar: MatSnackBar,
     private ns: NotificationService,
     private authService: AuthService,
     private router: Router

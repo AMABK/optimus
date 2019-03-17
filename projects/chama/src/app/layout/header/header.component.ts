@@ -8,7 +8,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 })
 export class HeaderComponent {
   @Input() isLoggedIn;
-  @Input() title;
+  @Input() title: string;
   @Input() sidenav;
   @Output() logout = new EventEmitter();
 }
