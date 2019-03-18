@@ -9,11 +9,12 @@ import { MaterialModule } from 'projects/material/src/public_api';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderModule } from './layout/header/header.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AuthGuardService } from 'projects/auth/src/public_api';
+import { ErrorInterceptorService } from 'projects/error/src/public_api';
 
 let config = new AuthServiceConfig([
   {
@@ -48,11 +49,15 @@ export function provideConfig() {
   providers: [
     AuthGuardService,
     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptorService,
+      multi: true
+    },
+    {
       provide: AuthServiceConfig,
       useFactory: provideConfig
     }
   ],
   bootstrap: [AppComponent]
 })
-  
 export class AppModule {}

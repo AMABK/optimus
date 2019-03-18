@@ -14,21 +14,22 @@ import { NotificationService } from 'projects/notification/src/public_api';
 @Injectable({
   providedIn: 'root'
 })
-export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private notificationsService: NotificationService) {}
+export class ErrorInterceptorService implements HttpInterceptor {
+  constructor(private notificationService: NotificationService) {}
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      catchError(error => {
-        if (error instanceof HttpErrorResponse) {
-          this.notificationsService.emit(
-            `${request.url} | ${error.status} – ${error.statusText}`
+      catchError(response => {
+        if (response instanceof HttpErrorResponse) {
+          this.notificationService.emit(
+            `${response.error}`,
+            'danger'
           );
         }
-        return throwError(error);
+        return throwError(response);
       })
     );
   }

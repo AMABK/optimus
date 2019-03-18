@@ -10,6 +10,7 @@ import {
   GoogleLoginProvider,
   LinkedInLoginProvider
 } from 'angularx-social-login';
+import { NotificationService } from 'projects/notification/src/public_api';
 
 
 @Component({
@@ -50,7 +51,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private socialAuthService: SocialAuthService,
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private notificationService: NotificationService
   ) {
     this.matIconRegistry.addSvgIcon(
       'facebook-icon',
@@ -67,6 +69,10 @@ export class LoginComponent implements OnInit {
       this.authService.setToken(result['access_token']);
       // Redirect to home
       this.router.navigate(['']);
+      this.notificationService.emit(
+        'Welcome to Chama App',
+        'success'
+      );
     });
   }
   signInWithGoogle(): void {

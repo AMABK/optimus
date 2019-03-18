@@ -9,7 +9,8 @@ export class NotificationService {
   constructor(private snackbar: MatSnackBar) {
   }
 
-  emit(notification) {
-    this.snackbar.open(notification, 'OK', { duration: 3000 });
+  // Second parameter sets background color
+  emit(notification, status= 'danger') {
+    this.snackbar.open(notification, 'OK', { duration: 3000, panelClass: [status +'-snackbar'], verticalPosition: 'top' });
   }
 }

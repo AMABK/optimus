@@ -2,4 +2,4 @@
  * Public API Surface of error
  */
 
-export * from './lib/error.interceptor';
+export { ErrorInterceptorService } from './lib/error-interceptor.service';
