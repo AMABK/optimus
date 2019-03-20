@@ -633,6 +633,41 @@
           }
         }
       }
+    },
+    "dynamic-tree": {
+      "root": "projects/dynamic-tree",
+      "sourceRoot": "projects/dynamic-tree/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/dynamic-tree/tsconfig.lib.json",
+            "project": "projects/dynamic-tree/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/dynamic-tree/src/test.ts",
+            "tsConfig": "projects/dynamic-tree/tsconfig.spec.json",
+            "karmaConfig": "projects/dynamic-tree/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/dynamic-tree/tsconfig.lib.json",
+              "projects/dynamic-tree/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "chama"

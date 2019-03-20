@@ -29,7 +29,7 @@ export class ErrorInterceptorService implements HttpInterceptor {
             'danger'
           );
         }
-        return throwError(response);
+        return throwError('response');
       })
     );
   }

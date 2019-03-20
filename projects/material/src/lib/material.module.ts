@@ -16,7 +16,8 @@ import {
   MatSnackBarModule,
   MatTableModule,
   MatToolbarModule,
-  MatButtonToggleModule
+  MatButtonToggleModule,
+  MatProgressBarModule
 } from "@angular/material";
 
 
@@ -56,6 +57,7 @@ import {
     MatSnackBarModule,
     MatTableModule,
     MatToolbarModule,
+    MatProgressBarModule,
     MatButtonToggleModule
   ]
 })

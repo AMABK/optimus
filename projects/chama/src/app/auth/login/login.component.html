@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="card-wrapper left">
+    <mat-card class="mat-elevation-z1 left-card">
+      <mat-card-header>
+        <mat-card-title>
+          <h2>Login</h2>
+        </mat-card-title>
+      </mat-card-header>
+      <form (submit)="login(userLogin.email, userLogin.password)">
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput placeholder="Email or Phone number" [(ngModel)]="userLogin.email" type="text" name="email">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Password" [(ngModel)]="userLogin.password" type="password" name="password">
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="submit" mat-raised-button color="primary">Login</button>
+          <button type="submit" class="regButton" mat-raised-button color="primary">Register</button>
+        </mat-card-actions>
+        <mat-card-actions>
+          <a href="/auth/forgot-pass">Forgot password ?</a>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+    <app-social-login></app-social-login>
+  </div>
+</div>
+    
+    <div class="background" [ngClass]="chosenFilter"></div>
+    <app-spinner *ngIf="loading"></app-spinner>

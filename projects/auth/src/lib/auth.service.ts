@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { NotificationService } from 'projects/notification/src/public_api';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   isAuthenticated$ = new BehaviorSubject(false);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private notificationService: NotificationService) {
     this.setToken(this.getToken());
   }
 
@@ -22,6 +23,11 @@ export class AuthService {
 
   logout() {
     this.setToken('');
+    // Display success message
+    this.notificationService.emit(
+      'Successfully logged out of Chama App',
+      'success'
+    );
   }
 
   // TOKEN

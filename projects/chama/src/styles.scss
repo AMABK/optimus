@@ -231,9 +231,9 @@ app-login {
         bottom: 0;
         z-index: 100;
         .card-wrapper {
+            margin: auto;
             display: flex;
             justify-content: center;
-            height: 400px;
         }
 
     }

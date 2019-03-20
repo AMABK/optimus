@@ -60,6 +60,12 @@
       ],
       "error/*": [
         "dist/error/*"
+      ],
+      "dynamic-tree": [
+        "dist/dynamic-tree"
+      ],
+      "dynamic-tree/*": [
+        "dist/dynamic-tree/*"
       ]
     }
   }

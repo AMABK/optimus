@@ -6,7 +6,6 @@ import { SocialLoginModule, AuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider } from 'angularx-social-login';
 import { FooterComponent } from './layout/footer/footer.component';
 import { MaterialModule } from 'projects/material/src/public_api';
-import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HeaderModule } from './layout/header/header.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -15,6 +14,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { AuthGuardService } from 'projects/auth/src/public_api';
 import { ErrorInterceptorService } from 'projects/error/src/public_api';
+import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
+import { AuthComponent } from './auth/auth.component';
+import { LoginModule } from './auth/login/login.module';
+import { SpinnerModule } from './spinner/spinner.module';
+import { MatTreeModule } from '@angular/material/tree';
+import { SidenavComponent } from './shared/sidenav/sidenav.component';
+import { SidenavModule } from './shared/sidenav/sidenav.module';
+
 
 let config = new AuthServiceConfig([
   {
@@ -34,7 +41,7 @@ export function provideConfig() {
   return config;
 }
 @NgModule({
-  declarations: [AppComponent, FooterComponent, LoginComponent],
+  declarations: [AppComponent, FooterComponent, AuthComponent, PasswordResetComponent, SidenavComponent],
   imports: [
     AppRoutingModule,
     BrowserModule,
@@ -44,7 +51,11 @@ export function provideConfig() {
     RouterModule,
     BrowserAnimationsModule,
     FormsModule,
-    SocialLoginModule
+    LoginModule,
+    SocialLoginModule,
+    SpinnerModule,
+    MatTreeModule,
+    SidenavModule
   ],
   providers: [
     AuthGuardService,
