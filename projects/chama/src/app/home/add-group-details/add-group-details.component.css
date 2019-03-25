@@ -1,0 +1,8 @@
+.button-true{
+    border-radius: 20px;
+    background:  #428bca;
+}
+.button-false{
+    border-radius: 20px;
+    background:  #b4b4b4;
+}

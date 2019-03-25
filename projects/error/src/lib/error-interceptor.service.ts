@@ -23,10 +23,16 @@ export class ErrorInterceptorService implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(response => {
+        console.log(response);
         if (response instanceof HttpErrorResponse) {
+          let responseStatus = 'danger';
+          console.log(response.status);
+          if (response.status == 200) {
+            responseStatus = 'success';
+          }
           this.notificationService.emit(
-            `${response.error}`,
-            'danger'
+            `${response.error.message}`,
+            responseStatus
           );
         }
         return throwError('response');

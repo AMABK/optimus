@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
   loading = false;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private matIconRegistry: MatIconRegistry,
@@ -50,16 +51,20 @@ export class LoginComponent implements OnInit {
   ) {  }
 
   ngOnInit() {
-    if (this.authService.getToken() !== '') {
+    if (this.route.snapshot.paramMap.get('returnUrl') !== '') {
+      this.notificationService.emit('Please login first to access this page', 'warning');
+    }
+    if (this.authService.getToken() !== null) {
       this.router.navigate(['/home']);
     }
   }
 
   login(email: string, password: string) {
     this.loading = true;
-    const url = environment.apiUrl + '/api/auth/login';
+    const url = environment.apiUrl + '/api/oauth/token';
     this.authService.login(url, email, password).subscribe(result => {
       // Store the token
+      this.authService.storeResult(JSON.stringify(result));
       // tslint:disable-next-line:no-string-literal
       this.authService.setToken(result['access_token']);
       // Redirect to home

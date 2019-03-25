@@ -347,11 +347,14 @@ mat-toolbar {
     }
 }
 .success-snackbar {
-  background:#58DCAC; 
+      color: #3c763d;
+      background: #dff0d8; 
 }
 .warning-snackbar {
-  background:#F5E162; 
+    color: #8a6d3b;
+  background:#fcf8e3; 
 }
 .danger-snackbar {
-  background:#EF1920; 
+      color: #a94442;
+    background: #f2dede;
 }

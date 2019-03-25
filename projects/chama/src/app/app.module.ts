@@ -21,6 +21,7 @@ import { SpinnerModule } from './spinner/spinner.module';
 import { MatTreeModule } from '@angular/material/tree';
 import { SidenavComponent } from './shared/sidenav/sidenav.component';
 import { SidenavModule } from './shared/sidenav/sidenav.module';
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 
 let config = new AuthServiceConfig([
@@ -41,7 +42,13 @@ export function provideConfig() {
   return config;
 }
 @NgModule({
-  declarations: [AppComponent, FooterComponent, AuthComponent, PasswordResetComponent, SidenavComponent],
+  declarations: [
+    AppComponent,
+    FooterComponent,
+    AuthComponent,
+    PasswordResetComponent,
+    SidenavComponent
+  ],
   imports: [
     AppRoutingModule,
     BrowserModule,
@@ -55,7 +62,8 @@ export function provideConfig() {
     SocialLoginModule,
     SpinnerModule,
     MatTreeModule,
-    SidenavModule
+    SidenavModule,
+    FlexLayoutModule
   ],
   providers: [
     AuthGuardService,

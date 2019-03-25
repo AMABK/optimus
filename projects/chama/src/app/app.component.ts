@@ -41,6 +41,10 @@ export class AppComponent implements OnInit {
   }
 
   isSidenaveOpen(component, authentication) {
+    if (authentication) {
+      return true;
+    }
+    
     return component.opened && authentication;
   }
 }

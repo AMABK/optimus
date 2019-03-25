@@ -66,6 +66,12 @@
       ],
       "dynamic-tree/*": [
         "dist/dynamic-tree/*"
+      ],
+      "form-error": [
+        "dist/form-error"
+      ],
+      "form-error/*": [
+        "dist/form-error/*"
       ]
     }
   }
