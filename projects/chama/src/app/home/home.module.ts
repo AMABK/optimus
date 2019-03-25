@@ -7,8 +7,7 @@ import { MaterialModule } from 'projects/material/src/public_api';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material';
-import { FormErrorComponent } from 'projects/form-error/src/public_api';
+import { MatDialogModule, MatStepperModule, MatFormFieldModule, MatInputModule, MatTabsModule, MatRadioModule } from '@angular/material';
 
 @NgModule({
   declarations: [HomeComponent, AddGroupDetailsComponent],
@@ -19,7 +18,12 @@ import { FormErrorComponent } from 'projects/form-error/src/public_api';
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    MatDialogModule
+    MatDialogModule,
+    MatStepperModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTabsModule,
+    MatRadioModule
   ],
   entryComponents: [AddGroupDetailsComponent]
 })

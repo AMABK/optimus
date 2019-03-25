@@ -1,7 +1,35 @@
 .full-row-height {
     height: 100vh;
 }
-.button{
+.group-button{
     background: #428bca;
     border-radius: 0%;
+    margin-left: 25%;
+}
+.edit-group-button{
+    background: #428bca;
+    border-radius: 0%;
+}
+.center{
+    text-align:center;
+}
+.mat-grid-tile-top-left {
+  border-bottom: 1px solid #428bca;
+  border-right: 1px solid #428bca;
+}
+.mat-grid-tile-top-right {
+  border-bottom: 1px solid #428bca;
+  border-left: 1px solid #428bca;
+}
+.mat-grid-tile-bottom-left {
+  border-top: 1px solid #428bca;
+}
+.mat-grid-tile-bottom-right {
+  border-left: 1px solid #428bca;
+}
+table {
+  width: 100%;
+}
+.warning-icon {
+    color: #c59919b5;
 }
