@@ -26,7 +26,6 @@ export class ErrorInterceptorService implements HttpInterceptor {
         console.log(response);
         if (response instanceof HttpErrorResponse) {
           let responseStatus = 'danger';
-          console.log(response.status);
           if (response.status == 200) {
             responseStatus = 'success';
           }

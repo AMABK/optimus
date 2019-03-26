@@ -6,6 +6,7 @@ import { MaterialModule } from 'projects/material/src/public_api';
 import { LoginComponent } from './login.component';
 import { SocialLoginComponent } from '../../shared/social-login/social-login.component';
 import { SpinnerModule } from '../../spinner/spinner.module';
+import { MatFormFieldModule } from '@angular/material';
 
 
 export const uiLoginRoutes: Route[] = [];
@@ -20,7 +21,8 @@ export const uiLoginRoutes: Route[] = [];
     FormsModule,
     RouterModule,
     MaterialModule,
-    SpinnerModule
+    SpinnerModule,
+    MatFormFieldModule
   ],
   entryComponents: [
     LoginComponent
@@ -28,6 +30,7 @@ export const uiLoginRoutes: Route[] = [];
   exports: [
     LoginComponent,
     SocialLoginComponent
-  ]
+  ],
+  providers:[ ]
 })
 export class LoginModule {}

@@ -6,6 +6,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { NotificationService } from 'projects/notification/src/public_api';
 import { environment } from 'projects/chama/src/environments/environment';
+import { catchError, first } from 'rxjs/operators';
+import { ObservableInput, Observable, BehaviorSubject } from 'rxjs';
+import { url } from 'inspector';
+import { User } from '../../models/user/user';
 
 
 @Component({
@@ -40,6 +44,8 @@ export class LoginComponent implements OnInit {
   chosenFilter = this.filters[Math.floor(Math.random() * this.filters.length)];
   userLogin = { email: '', password: '' };
   loading = false;
+  private currentUserSubject: BehaviorSubject<User>;
+  public currentUser: Observable<User>;
 
   constructor(
     private route: ActivatedRoute,
@@ -48,33 +54,42 @@ export class LoginComponent implements OnInit {
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
     private notificationService: NotificationService
-  ) {  }
+  ) {
+    this.currentUserSubject = new BehaviorSubject<User>(
+      JSON.parse(sessionStorage.getItem('currentUser'))
+    );
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
 
   ngOnInit() {
-    if (this.route.snapshot.paramMap.get('returnUrl') !== '') {
-      this.notificationService.emit('Please login first to access this page', 'warning');
-    }
+    // if (this.route.snapshot.paramMap.get('redirectUrl') !== '') {
+    //   this.notificationService.emit(
+    //     'Please login first to access this page',
+    //     'warning'
+    //   );
+    // }
     if (this.authService.getToken() !== null) {
       this.router.navigate(['/home']);
     }
   }
-
+  public get currentUserValue(): User {
+    return this.currentUserSubject.value;
+  }
   login(email: string, password: string) {
     this.loading = true;
-    const url = environment.apiUrl + '/api/oauth/token';
-    this.authService.login(url, email, password).subscribe(result => {
-      // Store the token
-      this.authService.storeResult(JSON.stringify(result));
-      // tslint:disable-next-line:no-string-literal
-      this.authService.setToken(result['access_token']);
-      // Redirect to home
-      this.router.navigate(['home']);
-      this.loading = false;
-      // Display success message
-      this.notificationService.emit(
-        'Welcome to Chama App',
-        'success'
-      );
-    });
+    this.authService.login(environment.apiUrl + '/api/oauth/token', email, password)
+      .pipe()
+      .subscribe(authData => {
+        if (authData && authData.access_token) {
+          sessionStorage.setItem(
+            "currentUser",
+            JSON.stringify(authData)
+          );
+          this.currentUserSubject.next(authData);
+        }
+        this.router.navigate(['/home']);
+        this.loading = false;
+      });
+  
   }
 }

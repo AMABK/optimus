@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'projects/chama/src/environments/environment';
-import { Chama } from '../../models/chama';
+import { Chama } from '../../models/chama/chama';
 import { AuthService } from 'projects/auth/src/public_api';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ChamaService {
   constructor(private http: HttpClient, private authService: AuthService) { }
   
   createAuthorizationHeader(headers: Headers) {
-    this.token = this.authService.getUserData()['access_token'];
+    this.token = this.authService.getUserId();
     headers.append(
       'Authorization', 'Bearer ' + this.token
     );
@@ -31,7 +31,14 @@ export class ChamaService {
   }
 
   all() {
-    return this.http.get<Chama[]>(this.getUrl());
+    //return this.http.get<Chama[]>(this.getUrl());
+    this.token = this.authService.getUserData()['access_token'];
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + this.token
+    });
+    return this.http.get<Chama>(`http://localhost:8000/api/chama/`, {
+      headers: headers
+    });
   }
 
   load(id) {

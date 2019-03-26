@@ -1,39 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationService } from 'projects/notification/src/public_api';
-import { ChamaService } from '../../http/chama/chama.service';
-import { Chama } from '../../models/chama/chama';
-import { Observable } from 'rxjs';
-import { FormControl, Validators, FormGroup, FormBuilder, FormControlName } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
+import { ChamaService } from '../../http/chama/chama.service';
+import { NotificationService } from 'projects/notification/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef } from '@angular/material';
+import { Chama } from '../../models/chama/chama';
+import { Observable } from 'rxjs';
 
 const emptyChama: Chama = {
   id: null,
-  name: '',
-  address: '',
-  location: '',
-  description: '',
+  name: "",
+  address: "",
+  location: "",
+  description: "",
   createdBy: null,
   status: null,
-  createdAt: '',
-  updatedAt: '',
+  createdAt: "",
+  updatedAt: ""
 };
 @Component({
-  selector: "app-add-group-details",
-  templateUrl: "./add-group-details.component.html",
-  styleUrls: ["./add-group-details.component.css"]
+  selector: "app-invite-group-members",
+  templateUrl: "./invite-group-members.component.html",
+  styleUrls: ["./invite-group-members.component.css"]
 })
-export class AddGroupDetailsComponent implements OnInit {
-  chama$: Observable<Chama[]>;
+export class InviteGroupMembersComponent implements OnInit {
+  chama$: Observable<Chama>;
   currentChama: Chama;
   activeButton: boolean = true;
 
+  
   constructor(
     private notificationService: NotificationService,
     private chamaService: ChamaService,
     private authService: AuthService,
-    public dialogRef: MatDialogRef<AddGroupDetailsComponent>
+    public dialogRef: MatDialogRef<InviteGroupMembersComponent>
   ) {}
 
   name = new FormControl("", [Validators.required, Validators.minLength(4)]);
@@ -63,7 +64,7 @@ export class AddGroupDetailsComponent implements OnInit {
         address: this.address.value,
         location: this.location.value,
         description: this.desc.value,
-        createdBy: this.authService.getUserData()["user"]["id"],
+        createdBy: this.authService.getUserId(),
         status: 0
       };
 
@@ -81,7 +82,7 @@ export class AddGroupDetailsComponent implements OnInit {
   createChama(chama) {
     this.chamaService.create(chama).subscribe(
       response => {
-        this.closeCreateGroupDialog();
+        this.closeInviteGroupMembersDialog();
         this.notificationService.emit("Chama successfully created!", "success");
         this.getChama();
         this.resetCurrentChama();
@@ -103,7 +104,7 @@ export class AddGroupDetailsComponent implements OnInit {
   getChama() {
     this.chama$ = this.chamaService.all();
   }
-  closeCreateGroupDialog(): void {
+  closeInviteGroupMembersDialog(): void {
     this.dialogRef.close();
   }
 }

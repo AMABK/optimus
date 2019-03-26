@@ -8,9 +8,16 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatStepperModule, MatFormFieldModule, MatInputModule, MatTabsModule, MatRadioModule } from '@angular/material';
+import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
+import { InviteGroupMembersComponent } from './invite-group-members/invite-group-members.component';
 
 @NgModule({
-  declarations: [HomeComponent, AddGroupDetailsComponent],
+  declarations: [
+    HomeComponent,
+    AddGroupDetailsComponent,
+    RequestExitGroupComponent,
+    InviteGroupMembersComponent
+  ],
   imports: [
     CommonModule,
     HomeRoutingModule,
@@ -25,6 +32,10 @@ import { MatDialogModule, MatStepperModule, MatFormFieldModule, MatInputModule, 
     MatTabsModule,
     MatRadioModule
   ],
-  entryComponents: [AddGroupDetailsComponent]
+  entryComponents: [
+    AddGroupDetailsComponent,
+    InviteGroupMembersComponent,
+    RequestExitGroupComponent
+  ]
 })
 export class HomeModule {}

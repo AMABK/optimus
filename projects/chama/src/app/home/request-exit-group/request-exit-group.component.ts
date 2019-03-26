@@ -1,30 +1,30 @@
 import { Component, OnInit } from '@angular/core';
+import { Chama } from '../../models/chama/chama';
+import { Validators, FormControl } from '@angular/forms';
+import { FormErrorService } from 'projects/form-error/src/public_api';
+import { MatDialogRef } from '@angular/material';
+import { AuthService } from 'projects/auth/src/public_api';
+import { Observable } from 'rxjs';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
-import { Chama } from '../../models/chama/chama';
-import { Observable } from 'rxjs';
-import { FormControl, Validators, FormGroup, FormBuilder, FormControlName } from '@angular/forms';
-import { FormErrorService } from 'projects/form-error/src/public_api';
-import { AuthService } from 'projects/auth/src/public_api';
-import { MatDialogRef } from '@angular/material';
 
 const emptyChama: Chama = {
   id: null,
-  name: '',
-  address: '',
-  location: '',
-  description: '',
+  name: "",
+  address: "",
+  location: "",
+  description: "",
   createdBy: null,
   status: null,
-  createdAt: '',
-  updatedAt: '',
+  createdAt: "",
+  updatedAt: ""
 };
 @Component({
-  selector: "app-add-group-details",
-  templateUrl: "./add-group-details.component.html",
-  styleUrls: ["./add-group-details.component.css"]
+  selector: "app-request-exit-group",
+  templateUrl: "./request-exit-group.component.html",
+  styleUrls: ["./request-exit-group.component.css"]
 })
-export class AddGroupDetailsComponent implements OnInit {
+export class RequestExitGroupComponent implements OnInit {
   chama$: Observable<Chama[]>;
   currentChama: Chama;
   activeButton: boolean = true;
@@ -33,7 +33,7 @@ export class AddGroupDetailsComponent implements OnInit {
     private notificationService: NotificationService,
     private chamaService: ChamaService,
     private authService: AuthService,
-    public dialogRef: MatDialogRef<AddGroupDetailsComponent>
+    public dialogRef: MatDialogRef<RequestExitGroupComponent>
   ) {}
 
   name = new FormControl("", [Validators.required, Validators.minLength(4)]);
@@ -81,7 +81,7 @@ export class AddGroupDetailsComponent implements OnInit {
   createChama(chama) {
     this.chamaService.create(chama).subscribe(
       response => {
-        this.closeCreateGroupDialog();
+        this.closeRequestExitGroupDialog();
         this.notificationService.emit("Chama successfully created!", "success");
         this.getChama();
         this.resetCurrentChama();
@@ -103,7 +103,7 @@ export class AddGroupDetailsComponent implements OnInit {
   getChama() {
     this.chama$ = this.chamaService.all();
   }
-  closeCreateGroupDialog(): void {
+  closeRequestExitGroupDialog(): void {
     this.dialogRef.close();
   }
 }
