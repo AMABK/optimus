@@ -7,6 +7,7 @@ import { AuthService } from 'projects/auth/src/public_api';
 import { Observable } from 'rxjs';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
+import { environment } from 'projects/chama/src/environments/environment';
 
 const emptyChama: Chama = {
   id: null,
@@ -25,7 +26,7 @@ const emptyChama: Chama = {
   styleUrls: ["./request-exit-group.component.css"]
 })
 export class RequestExitGroupComponent implements OnInit {
-  chama$: Observable<Chama[]>;
+  chama$: Observable<Chama>;
   currentChama: Chama;
   activeButton: boolean = true;
 
@@ -101,7 +102,7 @@ export class RequestExitGroupComponent implements OnInit {
     this.currentChama = emptyChama;
   }
   getChama() {
-    this.chama$ = this.chamaService.all();
+    this.chama$ = this.chamaService.all(environment.apiUrl + '/api/chama?user=1');
   }
   closeRequestExitGroupDialog(): void {
     this.dialogRef.close();

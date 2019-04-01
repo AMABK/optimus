@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'projects/chama/src/environments/environment';
 import { Chama } from '../../models/chama/chama';
 import { AuthService } from 'projects/auth/src/public_api';
+import { share } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +12,12 @@ export class ChamaService {
   model = 'chama';
   token: string;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
-  
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
   createAuthorizationHeader(headers: Headers) {
     this.token = this.authService.getUserId();
-    headers.append(
-      'Authorization', 'Bearer ' + this.token
-    );
-    headers.append(
-      'X-Requested-With', 'XMLHttpRequest'
-    );
+    headers.append('Authorization', 'Bearer ' + this.token);
+    headers.append('X-Requested-With', 'XMLHttpRequest');
   }
   getUrl() {
     return `${environment.apiUrl}${this.model}`;
@@ -30,15 +27,17 @@ export class ChamaService {
     return `${this.getUrl()}/${id}`;
   }
 
-  all() {
+  all(url) {
     //return this.http.get<Chama[]>(this.getUrl());
     this.token = this.authService.getUserData()['access_token'];
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.token
+      Authorization: 'Bearer ' + this.token
     });
-    return this.http.get<Chama>(`http://localhost:8000/api/chama/`, {
-      headers: headers
-    });
+    return this.http
+      .get<Chama>(`${url}`, {
+        headers: headers
+      })
+      .pipe(share());
   }
 
   load(id) {
@@ -48,7 +47,7 @@ export class ChamaService {
   create(chama: Chama) {
     this.token = this.authService.getUserData()['access_token'];
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer ' + this.token
+      Authorization: 'Bearer ' + this.token
     });
     return this.http.post(`http://localhost:8000/api/chama/create`, chama, {
       headers: headers
@@ -57,6 +56,18 @@ export class ChamaService {
 
   update(chama: Chama) {
     return this.http.patch(this.getUrl(), chama);
+  }
+  updateDefaultChama(chamaId) {
+    this.token = this.authService.getUserData()["access_token"];
+    let headers = new HttpHeaders({
+      Authorization: "Bearer " + this.token
+    });
+    
+     this.http
+      .post(`http://localhost:8000/api/chama/update-defaulta`,chamaId, {
+        headers: headers
+      });
+    alert("jj");
   }
 
   delete(chama: Chama) {

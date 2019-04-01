@@ -7,6 +7,7 @@ import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef } from '@angular/material';
 import { Chama } from '../../models/chama/chama';
 import { Observable } from 'rxjs';
+import { environment } from 'projects/chama/src/environments/environment';
 
 const emptyChama: Chama = {
   id: null,
@@ -102,7 +103,8 @@ export class InviteGroupMembersComponent implements OnInit {
     this.currentChama = emptyChama;
   }
   getChama() {
-    this.chama$ = this.chamaService.all();
+    let url = environment.apiUrl + '/api/chama?user_id=' + this.authService.getUserId();
+    this.chama$ = this.chamaService.all(url);
   }
   closeInviteGroupMembersDialog(): void {
     this.dialogRef.close();

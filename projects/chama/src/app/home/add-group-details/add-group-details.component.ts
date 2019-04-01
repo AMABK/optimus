@@ -7,6 +7,8 @@ import { FormControl, Validators, FormGroup, FormBuilder, FormControlName } from
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef } from '@angular/material';
+import { environment } from 'projects/chama/src/environments/environment';
+
 
 const emptyChama: Chama = {
   id: null,
@@ -25,10 +27,9 @@ const emptyChama: Chama = {
   styleUrls: ["./add-group-details.component.css"]
 })
 export class AddGroupDetailsComponent implements OnInit {
-  chama$: Observable<Chama[]>;
+  chama$: Observable<Chama>;
   currentChama: Chama;
   activeButton: boolean = true;
-
   constructor(
     private notificationService: NotificationService,
     private chamaService: ChamaService,
@@ -68,6 +69,8 @@ export class AddGroupDetailsComponent implements OnInit {
       };
 
       this.saveChama(this.currentChama);
+      let url = environment.apiUrl + "/api/chama?user_id=" + this.authService.getUserId();
+      this.chama$ = this.chamaService.all(url);
     }
   }
 
@@ -101,7 +104,8 @@ export class AddGroupDetailsComponent implements OnInit {
     this.currentChama = emptyChama;
   }
   getChama() {
-    this.chama$ = this.chamaService.all();
+    let url = environment.apiUrl + '/api/chama';
+    this.chama$ = this.chamaService.all(url );
   }
   closeCreateGroupDialog(): void {
     this.dialogRef.close();

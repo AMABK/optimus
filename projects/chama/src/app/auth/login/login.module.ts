@@ -12,10 +12,7 @@ import { MatFormFieldModule } from '@angular/material';
 export const uiLoginRoutes: Route[] = [];
 
 @NgModule({
-  declarations: [
-    LoginComponent,
-    SocialLoginComponent
-  ],
+  declarations: [LoginComponent, SocialLoginComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -24,13 +21,8 @@ export const uiLoginRoutes: Route[] = [];
     SpinnerModule,
     MatFormFieldModule
   ],
-  entryComponents: [
-    LoginComponent
-  ],
-  exports: [
-    LoginComponent,
-    SocialLoginComponent
-  ],
-  providers:[ ]
+  entryComponents: [LoginComponent],
+  exports: [LoginComponent, SocialLoginComponent],
+  providers: []
 })
 export class LoginModule {}

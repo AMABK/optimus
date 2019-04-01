@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialog } from '@angular/material';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
 import { InviteGroupMembersComponent } from './invite-group-members/invite-group-members.component';
-import { environment } from 'src/environments/environment';
 import { ChamaService } from '../http/chama/chama.service';
 import { Chama } from 'src/app/models/chama';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 const ELEMENT_DATA = [
   { position: 1, name: 'Royals Self Help Group', weight: '21st Nov,', symbol: 'H' },
@@ -33,18 +33,14 @@ export class HomeComponent implements OnInit {
   secondFormGroup: FormGroup;
   defaultGroup = true;
   editGroup = true;
-  displayedColumns: string[] = [
-    "position",
-    "name",
-    "weight",
-    "select",
-    "request"
-  ];
-  dataSource = ELEMENT_DATA;
+  private checked: string;
+  displayedColumns: string[] = ["name", "address", "default", "request"];
+  //dataSource = ELEMENT_DATA;
   constructor(
     public dialog: MatDialog,
     private _formBuilder: FormBuilder,
-    private chamaService: ChamaService
+    private chamaService: ChamaService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -54,13 +50,23 @@ export class HomeComponent implements OnInit {
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ["", Validators.required]
     });
-
-    this.chama$ = this.chamaService.all();
+    this.chama$ = this.getChamas(this.authService.getUserId());
+  }
+  getChamas(userId) {
+    let url = environment.apiUrl + "/api/chama?user_id=" + userId;
+    return this.chamaService.all(url);
+  }
+  updateDefaultChama(chamaId) {
+    this.chamaService.updateDefaultChama(chamaId);
+    //this.chama$ = this.getChamas(this.authService.getUserId());
   }
   openAddGroupDetails() {
     const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
       height: "auto",
-      width: "600px"
+      width: "600px",
+      data: {
+        key: "tsdfwc"
+      }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

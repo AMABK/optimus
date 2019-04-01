@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatStepperModule, MatFormFieldModule, MatInputModule, MatTabsModule, MatRadioModule } from '@angular/material';
 import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
 import { InviteGroupMembersComponent } from './invite-group-members/invite-group-members.component';
+import { CdkColumnDef } from '@angular/cdk/table';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { InviteGroupMembersComponent } from './invite-group-members/invite-group
     AddGroupDetailsComponent,
     InviteGroupMembersComponent,
     RequestExitGroupComponent
-  ]
+  ],
+  providers: [CdkColumnDef]
 })
 export class HomeModule {}

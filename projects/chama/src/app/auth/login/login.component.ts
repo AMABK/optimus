@@ -6,9 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { NotificationService } from 'projects/notification/src/public_api';
 import { environment } from 'projects/chama/src/environments/environment';
-import { catchError, first } from 'rxjs/operators';
-import { ObservableInput, Observable, BehaviorSubject } from 'rxjs';
-import { url } from 'inspector';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { User } from '../../models/user/user';
 
 

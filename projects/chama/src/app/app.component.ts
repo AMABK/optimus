@@ -14,7 +14,7 @@ import { NotificationService } from 'projects/notification/src/public_api';
 })
 export class AppComponent implements OnInit {
   title = 'Chama App';
-  isLoggedIn$: Observable<boolean> = this.authService.isAuthenticated$;
+  isLoggedIn$: Observable<boolean>;
 
   links = [
     { path: '/home', icon: 'home', label: 'Home' },
