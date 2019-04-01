@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { SocialLoginModule, AuthServiceConfig } from 'angularx-social-login';
-import { GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider } from 'angularx-social-login';
 import { FooterComponent } from './layout/footer/footer.component';
 import { MaterialModule } from 'projects/material/src/public_api';
 import { AppRoutingModule } from './app-routing.module';
@@ -24,23 +22,6 @@ import { SidenavModule } from './shared/sidenav/sidenav.module';
 import { FlexLayoutModule } from "@angular/flex-layout";
 
 
-let config = new AuthServiceConfig([
-  {
-    id: GoogleLoginProvider.PROVIDER_ID,
-    provider: new GoogleLoginProvider('G156777402651-s4irll2nan9nfl03dgcvfhrod8iijo3f.apps.googleusercontent.com')
-  },
-  {
-    id: FacebookLoginProvider.PROVIDER_ID,
-    provider: new FacebookLoginProvider('Facebook-App-Id')
-  },
-  {
-    id: LinkedInLoginProvider.PROVIDER_ID,
-    provider: new LinkedInLoginProvider('LinkedIn-client-Id', false, 'en_US')
-  }
-]);
-export function provideConfig() {
-  return config;
-}
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,13 +37,12 @@ export function provideConfig() {
     HeaderModule,
     HttpClientModule,
     RouterModule,
-    BrowserAnimationsModule,
     FormsModule,
     LoginModule,
-    SocialLoginModule,
     SpinnerModule,
     MatTreeModule,
     SidenavModule,
+    BrowserAnimationsModule,
     FlexLayoutModule
   ],
   providers: [
@@ -71,10 +51,6 @@ export function provideConfig() {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptorService,
       multi: true
-    },
-    {
-      provide: AuthServiceConfig,
-      useFactory: provideConfig
     }
   ],
   bootstrap: [AppComponent]

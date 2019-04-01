@@ -1,9 +1,9 @@
-<app-header [isLoggedIn]="isLoggedIn$ | async" [title]="title" [sidenav]="sidenav" (logout)="logout($event)">
+<app-header [userData]="currentUser" [title]="title" [sidenav]="sidenav" (logout)="logout($event)">
 </app-header>
 
 
 <mat-sidenav-container>
-  <mat-sidenav [opened]="isSidenaveOpen(sidenav, isLoggedIn$ | async)" #sidenav mode="side" class="app-sidenav">
+  <mat-sidenav [opened]="currentUser" #sidenav mode="side" class="app-sidenav">
     <nav>
       <a mat-button class="nav-link" *ngFor="let link of links" [routerLink]="link.path" routerLinkActive="active">
         <mat-icon>{{link.icon}}</mat-icon>
@@ -13,7 +13,7 @@
     <app-sidenav></app-sidenav>
   </mat-sidenav>
 
-  <div class="app-content" [@routerAnimations]="prepareRouterState(routerOutlet)">
+  <div class="app-content" >
     <router-outlet #routerOutlet="outlet"></router-outlet>
   </div>
 </mat-sidenav-container>

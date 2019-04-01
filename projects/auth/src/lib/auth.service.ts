@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { User } from 'projects/chama/src/app/models/user/user';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User>;
@@ -18,13 +18,14 @@ export class AuthService {
     private http: HttpClient,
     private notificationService: NotificationService
   ) {
-    this.currentUserSubject = new BehaviorSubject<User>(
-      JSON.parse(sessionStorage.getItem("currentUser"))
-    );
+    const userData = JSON.parse(localStorage.getItem('authData'));
+    this.currentUserSubject = new BehaviorSubject<User>(userData);
     this.currentUser = this.currentUserSubject.asObservable();
-    const userData = JSON.parse(localStorage.getItem("authData"));
+    
   }
-
+  public get currentUserValue(): User {
+    return this.currentUserSubject.value;
+  }
   getUrl(url) {
     return `${url}`;
   }
@@ -34,10 +35,10 @@ export class AuthService {
       .post<User>(`${url}`, {
         username: email,
         password: password,
-        client_id: "4",
-        client_secret: "DZlqHEjFDNESHnHakD4tzZA5N2vwzEq3RMPfY8Oy",
-        grant_type: "password",
-        scope: ""
+        client_id: '4',
+        client_secret: 'DZlqHEjFDNESHnHakD4tzZA5N2vwzEq3RMPfY8Oy',
+        grant_type: 'password',
+        scope: ''
       })
       .pipe(
         map(authData => {
@@ -59,23 +60,21 @@ export class AuthService {
 
   logout() {
     // remove user from local storage to log user out
-    sessionStorage.removeItem("currentUser");
+    sessionStorage.removeItem('authData');
     this.currentUserSubject.next(null);
   }
-  public get currentUserValue(): User {
-    return this.currentUserSubject.value;
-  }
+
   storeResult(authData) {
-    sessionStorage.setItem("authData", JSON.stringify(authData));
+    localStorage.setItem('authData', JSON.stringify(authData));
   }
 
   getToken() {
     return this.getUserData().access_token;
   }
   getUserId() {
-    return this.getUserData().user["id"];
+    return this.getUserData().user['id'];
   }
   getUserData() {
-    return JSON.parse(sessionStorage.getItem("authData"));
+    return JSON.parse(localStorage.getItem('authData'));
   }
 }

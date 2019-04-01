@@ -11,18 +11,14 @@ import { User } from '../../models/user/user';
 })
 export class HeaderComponent implements OnInit {
   @Input() name: string;
-  @Input() isLoggedIn;
   @Input() title: string;
   @Input() sidenav;
   @Output() logout = new EventEmitter();
+  @Input() userData;
   currentUser: User;
   constructor(private router: Router, private authService: AuthService) {
-    this.authService.currentUser.subscribe(
-      user => (this.currentUser = user)
-    );
+    this.authService.currentUser.subscribe(user => (this.currentUser = user));
   }
-  ngOnInit() {
-  }
-  
+  ngOnInit() {}
 }
 

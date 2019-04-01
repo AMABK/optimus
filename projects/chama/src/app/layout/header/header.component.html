@@ -11,10 +11,10 @@
     </span>
   </span>
   <span class="spacer"></span>
-  <span *ngIf="currentUser">
+  <span *ngIf="userData">
     <img   src="./../../../assets/images/user.png" alt="profile pic" class="profile-pic"/>
   <span class="username" >
-    {{this.currentUser.user['first_name']}} {{this.currentUser.user['last_name']}}
+    {{userData.user['first_name']}} {{userData.user['last_name']}}
     </span>
   <button mat-icon-button [matMenuTriggerFor]="user">
     <mat-icon>more_vert</mat-icon>

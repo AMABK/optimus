@@ -23,9 +23,9 @@ const ELEMENT_DATA = [
   { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
 ];
 @Component({
-  selector: "app-home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.css"]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   chama$: Observable<Chama>;
@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
   defaultGroup = true;
   editGroup = true;
   private checked: string;
-  displayedColumns: string[] = ["name", "address", "default", "request"];
+  displayedColumns: string[] = ['name', 'address', 'default', 'request'];
   //dataSource = ELEMENT_DATA;
   constructor(
     public dialog: MatDialog,
@@ -45,15 +45,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ["", Validators.required]
+      firstCtrl: ['', Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ["", Validators.required]
+      secondCtrl: ['', Validators.required]
     });
     this.chama$ = this.getChamas(this.authService.getUserId());
   }
   getChamas(userId) {
-    let url = environment.apiUrl + "/api/chama?user_id=" + userId;
+    let url = environment.apiUrl + '/api/chama?user_id=' + userId;
     return this.chamaService.all(url);
   }
   updateDefaultChama(chamaId) {
@@ -62,10 +62,10 @@ export class HomeComponent implements OnInit {
   }
   openAddGroupDetails() {
     const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
-      height: "auto",
-      width: "600px",
+      height: 'auto',
+      width: '600px',
       data: {
-        key: "tsdfwc"
+        key: 'tsdfwc'
       }
     });
     dialogRef.afterClosed().subscribe(result => {
@@ -75,8 +75,8 @@ export class HomeComponent implements OnInit {
 
   openRequestExitGroupDialog() {
     const dialogRef = this.dialog.open(RequestExitGroupComponent, {
-      height: "auto",
-      width: "600px"
+      height: 'auto',
+      width: '600px'
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -84,8 +84,8 @@ export class HomeComponent implements OnInit {
   }
   openInviteGroupMembersDialog() {
     const dialogRef = this.dialog.open(InviteGroupMembersComponent, {
-      height: "auto",
-      width: "600px"
+      height: 'auto',
+      width: '600px'
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
