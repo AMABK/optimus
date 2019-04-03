@@ -4,6 +4,7 @@ import { environment } from 'projects/chama/src/environments/environment';
 import { Chama } from '../../models/chama/chama';
 import { AuthService } from 'projects/auth/src/public_api';
 import { share } from 'rxjs/operators';
+import { User } from '../../models/user/user';
 
 @Injectable({
   providedIn: 'root'
@@ -40,8 +41,14 @@ export class ChamaService {
       .pipe(share());
   }
 
-  load(id) {
-    return this.http.get<Chama>(this.getUrlForId(id));
+  getChama(id) {
+    return this.http.get<Chama>(`${environment.apiUrl}/api/${this.model}/${id}`);
+  }
+
+  getDefaultChamaDetails() {
+    return this.http.get<User>(
+      `${environment.apiUrl}/api/${this.model}/default-chama/`
+    );
   }
 
   create(chama: Chama) {
@@ -55,19 +62,23 @@ export class ChamaService {
   }
 
   update(chama: Chama) {
-    return this.http.patch(this.getUrl(), chama);
+    return this.http.post<Chama>(`http://localhost:8000/api/chama/update`, chama);
   }
   updateDefaultChama(chamaId) {
-    this.token = this.authService.getUserData()["access_token"];
+    this.token = this.authService.getUserData()['access_token'];
     let headers = new HttpHeaders({
-      Authorization: "Bearer " + this.token
+      Authorization: 'Bearer ' + this.token
     });
-    
-     this.http
-      .post(`http://localhost:8000/api/chama/update-defaulta`,chamaId, {
+
+    return this.http.post(
+      `http://localhost:8000/api/chama/update-default`,
+      {
+        chamaId: chamaId
+      },
+      {
         headers: headers
-      });
-    alert("jj");
+      }
+    );
   }
 
   delete(chama: Chama) {

@@ -12,6 +12,8 @@ import { environment } from 'projects/chama/src/environments/environment';
 const emptyChama: Chama = {
   id: null,
   name: "",
+  email: '',
+  phoneNumber:'',
   address: "",
   location: "",
   description: "",
@@ -38,6 +40,8 @@ export class RequestExitGroupComponent implements OnInit {
   ) {}
 
   name = new FormControl("", [Validators.required, Validators.minLength(4)]);
+  email = new FormControl("", [Validators.email, Validators.minLength(4)]);
+  phoneNumber = new FormControl("", [Validators.required, Validators.minLength(4)]);
   address = new FormControl("", [Validators.required, Validators.minLength(4)]);
   location = new FormControl("", [
     Validators.required,
@@ -61,6 +65,8 @@ export class RequestExitGroupComponent implements OnInit {
     ) {
       this.currentChama = {
         name: this.name.value,
+        email: this.email.value,
+        phoneNumber: this.phoneNumber.value,
         address: this.address.value,
         location: this.location.value,
         description: this.desc.value,
@@ -102,7 +108,9 @@ export class RequestExitGroupComponent implements OnInit {
     this.currentChama = emptyChama;
   }
   getChama() {
-    this.chama$ = this.chamaService.all(environment.apiUrl + '/api/chama?user=1');
+    this.chama$ = this.chamaService.all(
+      environment.apiUrl + "/api/chama?user=1"
+    );
   }
   closeRequestExitGroupDialog(): void {
     this.dialogRef.close();

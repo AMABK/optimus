@@ -72,6 +72,12 @@
       ],
       "form-error/*": [
         "dist/form-error/*"
+      ],
+      "token-interceptor": [
+        "dist/token-interceptor"
+      ],
+      "token-interceptor/*": [
+        "dist/token-interceptor/*"
       ]
     }
   }

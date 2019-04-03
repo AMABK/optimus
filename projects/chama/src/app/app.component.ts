@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
-import { User } from './models/user/user';
+import { Auth } from './models/auth/auth';
 
 @Component({
   selector: "app-root",
@@ -11,7 +11,7 @@ import { User } from './models/user/user';
 })
 export class AppComponent implements OnInit {
   title = "Chama App";
-  currentUser: User;
+  currentUser: Auth;
   links = [
     { path: "/home", icon: "home", label: "Home" },
     { path: "/customers", icon: "face", label: "Customers" },

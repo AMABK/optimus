@@ -7,8 +7,10 @@ import { RequestExitGroupComponent } from './request-exit-group/request-exit-gro
 import { InviteGroupMembersComponent } from './invite-group-members/invite-group-members.component';
 import { ChamaService } from '../http/chama/chama.service';
 import { Chama } from 'src/app/models/chama';
-import { Observable } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { NotificationService } from 'projects/notification/src/public_api';
+import { User } from '../models/user/user';
 
 const ELEMENT_DATA = [
   { position: 1, name: 'Royals Self Help Group', weight: '21st Nov,', symbol: 'H' },
@@ -23,60 +25,88 @@ const ELEMENT_DATA = [
   { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
 ];
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-  chama$: Observable<Chama>;
+  chamas$: Observable<Chama>;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
-  defaultGroup = true;
+  defaultGroup: any;
   editGroup = true;
-  private checked: string;
-  displayedColumns: string[] = ['name', 'address', 'default', 'request'];
-  //dataSource = ELEMENT_DATA;
+  user$: Observable<User>;
+  displayedColumns: string[] = ["name", "address", "default", "request"];
+  private chamaSubject: BehaviorSubject<User>;
+  public chama: Observable<User>;
   constructor(
     public dialog: MatDialog,
     private _formBuilder: FormBuilder,
     private chamaService: ChamaService,
-    private authService: AuthService
-  ) {}
+    private authService: AuthService,
+    private notificationService: NotificationService
+  ) { 
+    this.getDefaultChamaDetails();
+  }
 
   ngOnInit() {
     this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
+      firstCtrl: ["", Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
+      secondCtrl: ["", Validators.required]
     });
-    this.chama$ = this.getChamas(this.authService.getUserId());
+    this.chamas$ = this.getChamas(this.authService.getUserId());
+    //this.getDefaultChamaDetails();
   }
   getChamas(userId) {
-    let url = environment.apiUrl + '/api/chama?user_id=' + userId;
+    let url = environment.apiUrl + "/api/chama?user_id=" + userId;
     return this.chamaService.all(url);
   }
+  getDefaultChamaDetails() {
+    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+      this.chamaSubject = new BehaviorSubject<User>(result);
+      this.chama = this.chamaSubject.asObservable();
+      //alert(JSON.stringify(this.chama));
+    });
+    //This fails need work
+    //alert((this.chamaSubject));
+  }
   updateDefaultChama(chamaId) {
-    this.chamaService.updateDefaultChama(chamaId);
+    this.defaultGroup = this.chamaService
+      .updateDefaultChama(chamaId)
+      .subscribe(result => {
+        this.getDefaultChamaDetails();
+        this.notificationService.emit(
+          "Default chama successfully updated",
+          "success"
+        );
+      });
     //this.chama$ = this.getChamas(this.authService.getUserId());
   }
+  ngOnDestroy() {
+    this.defaultGroup.unsubscribe();
+  }
   openAddGroupDetails() {
-    const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
-      height: 'auto',
-      width: '600px',
-      data: {
-        key: 'tsdfwc'
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+    
+    this.chamaService.getChama(32).subscribe(result => {
+      const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
+        height: "auto",
+        width: "600px",
+        data: {
+          key: result
+        }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+      });
     });
   }
 
   openRequestExitGroupDialog() {
     const dialogRef = this.dialog.open(RequestExitGroupComponent, {
-      height: 'auto',
-      width: '600px'
+      height: "auto",
+      width: "600px"
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
@@ -84,8 +114,8 @@ export class HomeComponent implements OnInit {
   }
   openInviteGroupMembersDialog() {
     const dialogRef = this.dialog.open(InviteGroupMembersComponent, {
-      height: 'auto',
-      width: '600px'
+      height: "auto",
+      width: "600px"
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);

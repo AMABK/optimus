@@ -20,6 +20,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { SidenavComponent } from './shared/sidenav/sidenav.component';
 import { SidenavModule } from './shared/sidenav/sidenav.module';
 import { FlexLayoutModule } from "@angular/flex-layout";
+import { TokenInterceptorService } from 'projects/token-interceptor/src/public_api';
 
 
 @NgModule({
@@ -47,6 +48,11 @@ import { FlexLayoutModule } from "@angular/flex-layout";
   ],
   providers: [
     AuthGuardService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptorService,

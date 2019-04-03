@@ -12,8 +12,10 @@ import { environment } from 'projects/chama/src/environments/environment';
 const emptyChama: Chama = {
   id: null,
   name: "",
+  email: '',
   address: "",
   location: "",
+  phoneNumber:'',
   description: "",
   createdBy: null,
   status: null,
@@ -30,7 +32,6 @@ export class InviteGroupMembersComponent implements OnInit {
   currentChama: Chama;
   activeButton: boolean = true;
 
-  
   constructor(
     private notificationService: NotificationService,
     private chamaService: ChamaService,
@@ -39,6 +40,8 @@ export class InviteGroupMembersComponent implements OnInit {
   ) {}
 
   name = new FormControl("", [Validators.required, Validators.minLength(4)]);
+  email = new FormControl("", [Validators.email, Validators.minLength(4)]);
+  phoneNumber = new FormControl("", [Validators.required, Validators.minLength(4)]);
   address = new FormControl("", [Validators.required, Validators.minLength(4)]);
   location = new FormControl("", [
     Validators.required,
@@ -62,6 +65,8 @@ export class InviteGroupMembersComponent implements OnInit {
     ) {
       this.currentChama = {
         name: this.name.value,
+        email: this.email.value,
+        phoneNumber: this.phoneNumber.value,
         address: this.address.value,
         location: this.location.value,
         description: this.desc.value,
@@ -103,7 +108,8 @@ export class InviteGroupMembersComponent implements OnInit {
     this.currentChama = emptyChama;
   }
   getChama() {
-    let url = environment.apiUrl + '/api/chama?user_id=' + this.authService.getUserId();
+    let url =
+      environment.apiUrl + "/api/chama?user_id=" + this.authService.getUserId();
     this.chama$ = this.chamaService.all(url);
   }
   closeInviteGroupMembersDialog(): void {

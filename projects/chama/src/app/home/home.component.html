@@ -1,7 +1,7 @@
 <mat-tab-group>
     <mat-tab label="Group Home Page" fxLayout="row">
         <mat-grid-list cols="2" rowHeight="2:1">
-            <mat-grid-tile *ngIf="chama$ | async as chamaData">
+            <mat-grid-tile *ngIf="chamas$ | async as chamaData">
                 <div class="mat-table" *ngIf="chamaData.length; else noChamaData">
                     <!-- <div class="mat-header-row">
                         <div class="mat-header-cell">One</div>
@@ -44,7 +44,7 @@
             </mat-grid-tile>
         </mat-grid-list>
     </mat-tab>
-    <mat-tab label="Select Default Group" *ngIf="chama$ | async as chamaData">
+    <mat-tab label="Select Default Group" *ngIf="chamas$ | async as chamaData">
         <mat-card *ngIf="chamaData.length; else noChamaData">
             <table mat-table [dataSource]="chamaData" class="mat-elevation-z8">
                 <!--- Note that these columns can be defined in any order.
@@ -99,8 +99,8 @@
                     <mat-step [stepControl]="firstFormGroup">
                         <ng-template matStepLabel>GROUP<br>Set Up Group Details</ng-template>
                         <div class="center">
-                            
-                            <button mat-button  class="edit-group-button" (click)="openInviteGroupMembersDialog()">
+
+                            <button mat-button  class="edit-group-button" (click)="openAddGroupDetails()">
                                 <mat-icon>group</mat-icon> ADD GROUP DETAILS HERE
                             </button>
                         </div>
@@ -108,7 +108,7 @@
                     <mat-step [stepControl]="secondFormGroup" optional>
                         <ng-template matStepLabel>GROUP MEMBERS<br>Add Group Members</ng-template>
                         <div class="center">
-                            <button mat-button class="edit-group-button" (click)="openAddGroupDetails()">
+                            <button mat-button class="edit-group-button" (click)="openInviteGroupMembersDialog()">
                                 <mat-icon>group_add</mat-icon> ADD GROUP MEMBERS
                             </button>
                         </div>

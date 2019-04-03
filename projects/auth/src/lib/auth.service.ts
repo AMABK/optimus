@@ -4,14 +4,14 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { User } from 'projects/chama/src/app/models/user/user';
+import { Auth } from 'projects/chama/src/app/models/auth/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
+  private currentUserSubject: BehaviorSubject<Auth>;
+  public currentUser: Observable<Auth>;
   token: string;
   constructor(
     private router: Router,
@@ -19,11 +19,11 @@ export class AuthService {
     private notificationService: NotificationService
   ) {
     const userData = JSON.parse(localStorage.getItem('authData'));
-    this.currentUserSubject = new BehaviorSubject<User>(userData);
+    this.currentUserSubject = new BehaviorSubject<Auth>(userData);
     this.currentUser = this.currentUserSubject.asObservable();
     
   }
-  public get currentUserValue(): User {
+  public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
   }
   getUrl(url) {
@@ -32,7 +32,7 @@ export class AuthService {
 
   login(url: string, email: string, password: string) {
     return this.http
-      .post<User>(`${url}`, {
+      .post<Auth>(`${url}`, {
         username: email,
         password: password,
         client_id: '4',

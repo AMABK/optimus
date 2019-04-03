@@ -7,7 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { environment } from 'projects/chama/src/environments/environment';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { User } from '../../models/user/user';
+import { Auth } from '../../models/auth/auth';
 
 
 @Component({
@@ -42,8 +42,8 @@ export class LoginComponent implements OnInit {
   chosenFilter = this.filters[Math.floor(Math.random() * this.filters.length)];
   userLogin = { email: '', password: '' };
   loading = false;
-  private currentUserSubject: BehaviorSubject<User>;
-  public currentUser: Observable<User>;
+  private currentUserSubject: BehaviorSubject<Auth>;
+  public currentUser: Observable<Auth>;
 
   constructor(
     private route: ActivatedRoute,
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     private notificationService: NotificationService
   ) {
-    this.currentUserSubject = new BehaviorSubject<User>(
+    this.currentUserSubject = new BehaviorSubject<Auth>(
       JSON.parse(sessionStorage.getItem('currentUser'))
     );
     this.currentUser = this.currentUserSubject.asObservable();
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/home']);
     }
   }
-  public get currentUserValue(): User {
+  public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
   }
   login(email: string, password: string) {
