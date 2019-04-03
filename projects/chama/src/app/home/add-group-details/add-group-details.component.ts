@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter, Output } from '@angular/core';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
 import { Chama } from '../../models/chama/chama';
@@ -24,14 +24,15 @@ const emptyChama: Chama = {
   updatedAt: '',
 };
 @Component({
-  selector: "app-add-group-details",
-  templateUrl: "./add-group-details.component.html",
-  styleUrls: ["./add-group-details.component.css"]
+  selector: 'app-add-group-details',
+  templateUrl: './add-group-details.component.html',
+  styleUrls: ['./add-group-details.component.css']
 })
 export class AddGroupDetailsComponent implements OnInit {
   chamas$: Observable<Chama>;
   currentChama: Chama;
   activeButton: boolean = true;
+  @Output() updateEvent = new EventEmitter<Chama>();
   constructor(
     private notificationService: NotificationService,
     private chamaService: ChamaService,
@@ -86,14 +87,14 @@ export class AddGroupDetailsComponent implements OnInit {
         address: this.address.value,
         location: this.location.value,
         description: this.desc.value,
-        createdBy: this.authService.getUserData()["user"]["id"],
+        createdBy: this.authService.getUserData()['user']['id'],
         status: 0
       };
 
       this.saveChama(this.currentChama);
       let url =
         environment.apiUrl +
-        "/api/chama?user_id=" +
+        '/api/chama?user_id=' +
         this.authService.getUserId();
       this.chamas$ = this.chamaService.all(url);
     }
@@ -110,7 +111,7 @@ export class AddGroupDetailsComponent implements OnInit {
     this.chamaService.create(chama).subscribe(
       response => {
         this.closeCreateGroupDialog();
-        this.notificationService.emit("Chama successfully created!", "success");
+        this.notificationService.emit('Chama successfully created!', 'success');
         this.getChama();
         this.resetCurrentChama();
       },
@@ -121,8 +122,7 @@ export class AddGroupDetailsComponent implements OnInit {
   updateChama(chama) {
     this.chamaService.update(chama).subscribe(response => {
       this.closeCreateGroupDialog();
-      this.notificationService.emit("Chama details update!", 'success');
-      
+      this.notificationService.emit('Chama details update!', 'success');
       this.getChama();
       this.resetCurrentChama();
     });
@@ -131,7 +131,7 @@ export class AddGroupDetailsComponent implements OnInit {
     this.currentChama = emptyChama;
   }
   getChama() {
-    let url = environment.apiUrl + "/api/chama";
+    let url = environment.apiUrl + '/api/chama';
     this.chamas$ = this.chamaService.all(url);
   }
   closeCreateGroupDialog(): void {

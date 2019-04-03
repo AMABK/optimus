@@ -69,8 +69,6 @@ export class HomeComponent implements OnInit {
       this.chama = this.chamaSubject.asObservable();
       //alert(JSON.stringify(this.chama));
     });
-    //This fails need work
-    //alert((this.chamaSubject));
   }
   updateDefaultChama(chamaId) {
     this.defaultGroup = this.chamaService
@@ -82,23 +80,24 @@ export class HomeComponent implements OnInit {
           "success"
         );
       });
-    //this.chama$ = this.getChamas(this.authService.getUserId());
+   // this.chama$ = this.getChamas(this.authService.getUserId());
   }
   ngOnDestroy() {
     this.defaultGroup.unsubscribe();
   }
   openAddGroupDetails() {
     
-    this.chamaService.getChama(32).subscribe(result => {
+    this.chamaService.getDefaultChamaDetails().subscribe(result => {
       const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
         height: "auto",
         width: "600px",
         data: {
-          key: result
+          key: result.default_chama
         }
       });
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        this.chamas$ = this.getChamas(this.authService.getUserId());
+        //console.log(`Dialog result: ${result}`);
       });
     });
   }

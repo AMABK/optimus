@@ -16,11 +16,12 @@ export class TokenInterceptorService {
     if (currentUser && currentUser.access_token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${currentUser.access_token}`
+          Authorization: `Bearer ${currentUser.access_token}`,
         }
       });
     }
 
     return next.handle(request);
   }
+
 }
