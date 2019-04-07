@@ -1,6 +1,6 @@
 #https://www.youtube.com/watch?v=etA5xiX5TCA  production deployment
 # stage 1
-FROM node:latest as node
+FROM node:latest as node 
 WORKDIR /app
 COPY . .
 RUN npm install
