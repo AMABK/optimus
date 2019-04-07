@@ -1,7 +1,6 @@
 <app-header [userData]="currentUser" [title]="title" [sidenav]="sidenav" (logout)="logout($event)">
 </app-header>
 
-
 <mat-sidenav-container>
   <mat-sidenav [opened]="currentUser" #sidenav mode="side" class="app-sidenav">
     <nav>
@@ -17,3 +16,4 @@
     <router-outlet #routerOutlet="outlet"></router-outlet>
   </div>
 </mat-sidenav-container>
+<app-footer></app-footer>

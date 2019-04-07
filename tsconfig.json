@@ -78,6 +78,14 @@
       ],
       "token-interceptor/*": [
         "dist/token-interceptor/*"
+      ],
+      "loader": [
+        "dist/loader",
+        "dist/loader"
+      ],
+      "loader/*": [
+        "dist/loader/*",
+        "dist/loader/*"
       ]
     }
   }

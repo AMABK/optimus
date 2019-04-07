@@ -1,0 +1,50 @@
+<h1 mat-dialog-title *ngIf="data.key.id">
+  {{data.key.modal}} <b>{{data.key.chamaName}}</b> Group Payment Details
+</h1>
+<h1 mat-dialog-title *ngIf="!data.key.id">
+  Add Default Group Payment Details
+</h1>
+<div mat-dialog-content>
+  <form (ngSubmit)="onSubmit()">
+    <mat-form-field style="display: none;">
+      <input matInput [value]="data.key?.id" [formControl]="id">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Bank Name" [value]="data.key?.bank" [formControl]="bank">
+      <mat-error *ngIf="!bank.hasError('minLength')">
+        Bank name is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Country Name" [value]="data.key?.country" [formControl]="country">
+      <mat-error *ngIf="!country.hasError('minLength')">
+        Domicile country is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <ejs-richtexteditor id='iframeRTE' [value]="data.key?.description" [toolbarSettings]='tools'
+      [formControl]="description"
+      placeholder="<b>Bank</b>: Equity Bank<br><b>Branch</b>: Community Branch<br><b>Account Name</b>: Chama Group Name<br><b>Account No</b>: 0170478375XX89">
+    </ejs-richtexteditor>
+    <mat-error *ngIf="!description.hasError('minLength')">
+      Banking details are <strong>required</strong>(Please provide accurate and precise details)
+    </mat-error>
+    <h4>Basic mat-select</h4>
+    <mat-form-field>
+      <mat-label>Select Payment Mode Status</mat-label>
+      <mat-select [formControl]="status" >
+        <mat-option matInput *ngFor="let item of list" [value]="item.value">
+          {{item.viewValue}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="!status.hasError('required')">
+        This field is <strong>required</strong>(Please select)
+      </mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button type="submit" mat-button cdkFocusInitial class="button-primary"> {{data.key.modal}} Group Payment
+        Details</button>
+      <button mat-button (click)="closeAddGroupPaymentDialog(); $event.preventDefault()"
+        class="button-default">Cancel</button>
+    </div>
+  </form>
+</div>

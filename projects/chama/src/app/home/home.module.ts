@@ -11,13 +11,17 @@ import { MatDialogModule, MatStepperModule, MatFormFieldModule, MatInputModule, 
 import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
 import { InviteGroupMembersComponent } from './invite-group-members/invite-group-members.component';
 import { CdkColumnDef } from '@angular/cdk/table';
+import { AddGroupPaymentDetailsComponent } from './add-group-payment-details/add-group-payment-details.component';
+import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
+
 
 @NgModule({
   declarations: [
     HomeComponent,
     AddGroupDetailsComponent,
     RequestExitGroupComponent,
-    InviteGroupMembersComponent
+    InviteGroupMembersComponent,
+    AddGroupPaymentDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -31,12 +35,14 @@ import { CdkColumnDef } from '@angular/cdk/table';
     MatFormFieldModule,
     MatInputModule,
     MatTabsModule,
-    MatRadioModule
+    MatRadioModule,
+    RichTextEditorAllModule
   ],
   entryComponents: [
     AddGroupDetailsComponent,
     InviteGroupMembersComponent,
-    RequestExitGroupComponent
+    RequestExitGroupComponent,
+    AddGroupPaymentDetailsComponent
   ],
   providers: [CdkColumnDef]
 })

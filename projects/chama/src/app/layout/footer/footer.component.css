@@ -1,0 +1,14 @@
+.spacer {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+}
+.footer{
+    background: #64667559;
+}
+.mat-toolbar-row, .mat-toolbar-single-row {
+    height: 40px;
+}
+.mat-toolbar h5, .mat-toolbar h6 {
+    font: 500 10px/22px Roboto,"Helvetica Neue",sans-serif;
+}

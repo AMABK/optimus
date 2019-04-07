@@ -7,18 +7,18 @@ import { share } from 'rxjs/operators';
 import { User } from '../../models/user/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class ChamaService {
-  model = 'chama';
+  model = "chama";
   token: string;
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   createAuthorizationHeader(headers: Headers) {
     this.token = this.authService.getUserId();
-    headers.append('Authorization', 'Bearer ' + this.token);
-    headers.append('X-Requested-With', 'XMLHttpRequest');
+    headers.append("Authorization", "Bearer " + this.token);
+    headers.append("X-Requested-With", "XMLHttpRequest");
   }
   getUrl() {
     return `${environment.apiUrl}${this.model}`;
@@ -30,9 +30,9 @@ export class ChamaService {
 
   all(url) {
     //return this.http.get<Chama[]>(this.getUrl());
-    this.token = this.authService.getUserData()['access_token'];
+    this.token = this.authService.getUserData()["access_token"];
     let headers = new HttpHeaders({
-      Authorization: 'Bearer ' + this.token
+      Authorization: "Bearer " + this.token
     });
     return this.http
       .get<Chama>(`${url}`, {
@@ -42,7 +42,9 @@ export class ChamaService {
   }
 
   getChama(id) {
-    return this.http.get<Chama>(`${environment.apiUrl}/api/${this.model}/${id}`);
+    return this.http.get<Chama>(
+      `${environment.apiUrl}/api/${this.model}/${id}`
+    );
   }
 
   getDefaultChamaDetails() {
@@ -52,22 +54,37 @@ export class ChamaService {
   }
 
   create(chama: Chama) {
-    this.token = this.authService.getUserData()['access_token'];
+    this.token = this.authService.getUserData()["access_token"];
     let headers = new HttpHeaders({
-      Authorization: 'Bearer ' + this.token
+      Authorization: "Bearer " + this.token
     });
     return this.http.post(`http://localhost:8000/api/chama/create`, chama, {
       headers: headers
     });
   }
+  createPaymentMode(paymentMode) {
+    return this.http.post(
+      `http://localhost:8000/api/chama/create-payment-mode`,
+      paymentMode
+    );
+  }
 
   update(chama: Chama) {
-    return this.http.post<Chama>(`http://localhost:8000/api/chama/update`, chama);
+    return this.http.post<Chama>(
+      `http://localhost:8000/api/chama/update`,
+      chama
+    );
+  }
+  updatePaymentMode(paymentMode) {
+    return this.http.post(
+      `http://localhost:8000/api/chama/update-payment-mode`,
+      paymentMode
+    );
   }
   updateDefaultChama(chamaId) {
-    this.token = this.authService.getUserData()['access_token'];
+    this.token = this.authService.getUserData()["access_token"];
     let headers = new HttpHeaders({
-      Authorization: 'Bearer ' + this.token
+      Authorization: "Bearer " + this.token
     });
 
     return this.http.post(

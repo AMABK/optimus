@@ -29,7 +29,7 @@ import { TokenInterceptorService } from 'projects/token-interceptor/src/public_a
     FooterComponent,
     AuthComponent,
     PasswordResetComponent,
-    SidenavComponent
+    SidenavComponent,
   ],
   imports: [
     AppRoutingModule,
