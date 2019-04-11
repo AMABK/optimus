@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { Auth } from './models/auth/auth';
+import { LoaderService } from 'projects/loader/src/public_api';
 
 @Component({
   selector: "app-root",
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit {
   ];
 
   constructor(
+    public loaderService: LoaderService,
     private ns: NotificationService,
     private authService: AuthService,
     private router: Router
@@ -26,7 +28,13 @@ export class AppComponent implements OnInit {
     this.authService.currentUser.subscribe(x => (this.currentUser = x));
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.loaderService.isLoading.getValue()) {
+      console.log(this.loaderService.isLoading.getValue());
+    } else{
+      console.log(this.loaderService.isLoading.getValue());
+    }
+  }
 
   logout() {
     this.authService.logout();

@@ -47,17 +47,17 @@ export class HomeComponent implements OnInit {
       secondCtrl: ['', Validators.required]
     });
     this.chamas$ = this.getChamas(this.authService.getUserId());
-    //this.getDefaultChamaDetails();
+    // this.getDefaultChamaDetails();
   }
   getChamas(userId) {
-    let url = environment.apiUrl + '/api/chama?user_id=' + userId;
+    const url = environment.apiUrl + '/api/chama?user_id=' + userId;
     return this.chamaService.all(url);
   }
   getDefaultChamaDetails() {
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.chama = this.chamaSubject.asObservable();
-      //alert(JSON.stringify(this.chama));
+      // alert(JSON.stringify(this.chama));
     });
   }
   updateDefaultChama(chamaId) {
@@ -73,15 +73,30 @@ export class HomeComponent implements OnInit {
     // this.chama$ = this.getChamas(this.authService.getUserId());
   }
   ngOnDestroy() {
-    this.defaultGroup.unsubscribe();
+    this.defaultGroup;
   }
   openAddGroupDetails() {
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
+      let modalData: {};
+      if (result.default_chama == null) {
+        modalData = {
+          id: null,
+          name: '',
+          address: '',
+          phone_number: '',
+          email: '',
+          location: '',
+          description: ''
+        };
+      } else {
+        modalData = result.default_chama;
+    }
+
       const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
         height: 'auto',
         width: '600px',
         data: {
-          key: result.default_chama
+          key: modalData
         }
       });
       dialogRef.afterClosed().subscribe(result => {
@@ -111,7 +126,7 @@ export class HomeComponent implements OnInit {
   }
 
   openAddPaymentDetails() {
-    let result = {
+    const result = {
       modal: 'Add',
       bank: '',
       country: '',
@@ -127,7 +142,7 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.chamas$ = this.getChamas(this.authService.getUserId());
       this.getDefaultChamaDetails();
-      //console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
     });
   }
   openEditPaymentDetails(payment, chamaName) {
@@ -143,11 +158,11 @@ export class HomeComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.chamas$ = this.getChamas(this.authService.getUserId());
       this.getDefaultChamaDetails();
-      //console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
     });
   }
   tabPosition(key) {
-    let position = Number(key) + 1;
+    const position = Number(key) + 1;
     return position;
   }
 }

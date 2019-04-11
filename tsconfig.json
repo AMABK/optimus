@@ -81,11 +81,19 @@
       ],
       "loader": [
         "dist/loader",
+        "dist/loader",
         "dist/loader"
       ],
       "loader/*": [
         "dist/loader/*",
+        "dist/loader/*",
         "dist/loader/*"
+      ],
+      "loader-interceptor": [
+        "dist/loader-interceptor"
+      ],
+      "loader-interceptor/*": [
+        "dist/loader-interceptor/*"
       ]
     }
   }

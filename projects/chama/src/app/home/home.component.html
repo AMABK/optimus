@@ -70,7 +70,7 @@
                 </ng-template>
             </mat-grid-tile>
             <mat-grid-tile class="mat-grid-tile-bottom-left mat-grid-tile-home" *ngIf="chama | async as chamaData">
-                <mat-card *ngIf="chamaData.default_chama.payment_modes.length; else noChamaData">
+                <mat-card *ngIf="chamaData.default_chama?.payment_modes.length; else noChamaData">
                     <mat-tab-group>
                         <mat-tab *ngFor="let payment of (chamaData.default_chama.payment_modes) | keyvalue"
                             label="Tab {{tabPosition(payment.key)}}">

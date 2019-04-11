@@ -17,7 +17,7 @@ import { SidenavComponent } from './shared/sidenav/sidenav.component';
     LoginComponent,
     HeaderComponent,
     SidebarComponent,
-    SidenavComponent
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,

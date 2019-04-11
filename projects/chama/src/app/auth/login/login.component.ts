@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
     //     'warning'
     //   );
     // }
-    if (this.authService.getToken() !== null) {
+    if (this.currentUserSubject) {
       this.router.navigate(['/home']);
     }
   }
@@ -84,9 +84,14 @@ export class LoginComponent implements OnInit {
             JSON.stringify(authData)
           );
           this.currentUserSubject.next(authData);
+        
+          this.router.navigate(['/home']);
+          
+          this.loading = false;
+          // this.notificationService.emit(
+          //   'Welcome, successful login',
+          //   'success');
         }
-        this.router.navigate(['/home']);
-        this.loading = false;
       });
   
   }

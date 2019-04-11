@@ -1,4 +1,5 @@
-<app-header [userData]="currentUser" [title]="title" [sidenav]="sidenav" (logout)="logout($event)">
+<app-spinner *ngIf="this.loaderService.isLoading.getValue()"></app-spinner>
+<app-header  [userData]="currentUser" [title]="title" [sidenav]="sidenav" (logout)="logout($event)">
 </app-header>
 
 <mat-sidenav-container>

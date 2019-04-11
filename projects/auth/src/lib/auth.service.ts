@@ -35,8 +35,8 @@ export class AuthService {
       .post<Auth>(`${url}`, {
         username: email,
         password: password,
-        client_id: '4',
-        client_secret: 'DZlqHEjFDNESHnHakD4tzZA5N2vwzEq3RMPfY8Oy',
+        client_id: '3',
+        client_secret: 'OvehxOzBdiSlrEgYSonBvHGAGqVaooV9brfFOYCe',
         grant_type: 'password',
         scope: ''
       })
@@ -61,6 +61,7 @@ export class AuthService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('authData');
+    this.router.navigate(['/login']);
     this.currentUserSubject.next(null);
   }
 

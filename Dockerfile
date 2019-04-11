@@ -1,5 +1,5 @@
 # Installs the current application on a Node Image.
-FROM node:10.5
+FROM node:10.15.3-jessie
 # The qq is for silent output in the console
 # You are welcome to modify this part as it
 #RUN apt-get update -qq && apt-get install -y build-essential libpq-dev vim
