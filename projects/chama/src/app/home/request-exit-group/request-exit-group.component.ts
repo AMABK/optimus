@@ -89,7 +89,6 @@ export class RequestExitGroupComponent implements OnInit {
     this.chamaService.create(chama).subscribe(
       response => {
         this.closeRequestExitGroupDialog();
-        this.notificationService.emit("Chama successfully created!", "success");
         this.getChama();
         this.resetCurrentChama();
       },
@@ -99,9 +98,9 @@ export class RequestExitGroupComponent implements OnInit {
 
   updateChama(chama) {
     this.chamaService.update(chama).subscribe(response => {
-      this.notificationService.emit("Chama details saved!");
       this.getChama();
       this.resetCurrentChama();
+      this.notificationService.emit("Chama details saved!");
     });
   }
   resetCurrentChama() {

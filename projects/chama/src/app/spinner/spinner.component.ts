@@ -7,7 +7,6 @@ import { MatRipple } from '@angular/material';
   styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent implements OnInit {
-  message = 'hjghj';
   constructor() { }
 
   ngOnInit() {

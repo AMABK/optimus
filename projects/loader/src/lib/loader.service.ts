@@ -10,9 +10,5 @@ export class LoaderService {
     this.isLoading.next(arg0);
 
   }
-
-  // A BehaviorSubject is an Observable with a default value
-
-
   constructor() { }
 }

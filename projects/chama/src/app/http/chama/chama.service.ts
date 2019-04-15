@@ -68,12 +68,23 @@ export class ChamaService {
       paymentMode
     );
   }
-
+  createInvite(createInvite) {
+    return this.http.post(
+      `http://localhost:8000/api/user/invite`,
+      createInvite
+    )
+  }
+  createContributionType(createContributionType) {
+    return this.http.post(
+      `http://localhost:8000/api/chama/create-contribution-type`,
+      createContributionType
+    )
+  }
   update(chama: Chama) {
     return this.http.post<Chama>(
       `http://localhost:8000/api/chama/update`,
       chama
-    );
+    ).pipe(share());
   }
   updatePaymentMode(paymentMode) {
     return this.http.post(

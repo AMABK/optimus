@@ -10,7 +10,9 @@
         {{link.label}}
       </a>
     </nav>
-    <app-sidenav></app-sidenav>
+    <mat-nav-list>
+      <app-sidenav *ngFor="let item of navItems" [item]="item"></app-sidenav>
+    </mat-nav-list>
   </mat-sidenav>
 
   <div class="app-content" >

@@ -3,6 +3,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } fr
 import { LoaderService } from 'projects/loader/src/public_api';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { NotificationService } from 'projects/notification/src/public_api';
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +12,13 @@ export class LoaderInterceptorService implements HttpInterceptor {
 
   private totalRequests = 0;
 
-  constructor(private loaderService: LoaderService) { }
+  constructor(private loaderService: LoaderService, private notificationService: NotificationService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.totalRequests++;
     this.loaderService.setLoading(true);
     return next.handle(request).pipe(
       tap(res => {
-        console.log('load');
         if (res instanceof HttpResponse) {
           this.decreaseRequests();
         }
@@ -33,9 +33,20 @@ export class LoaderInterceptorService implements HttpInterceptor {
   private decreaseRequests() {
     this.totalRequests--;
     if (this.totalRequests == 0) {
-      console.log('show');
       this.loaderService.setLoading(false);
-      console.log(this.loaderService.isLoading.getValue());
+      if (sessionStorage.getItem('alert') !== null) {
+        const item = JSON.parse(sessionStorage.getItem('alert'));
+        this.notificationService.emit(item.message, item.status);
+        sessionStorage.removeItem('alert');
+      }
     }
+  }
+  public storeNotificationMessage(message: string, status: string) {
+    const item = {
+      message,
+      status
+    };
+    // set message to be emitted by loader interceptor after http request end
+    sessionStorage.setItem('alert', JSON.stringify(item));
   }
 }

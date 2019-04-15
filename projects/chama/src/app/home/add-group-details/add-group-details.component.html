@@ -1,4 +1,9 @@
-<h1 mat-dialog-title>Add Group Details</h1>
+<h1 mat-dialog-title *ngIf="data.key.id != null">
+  Edit <b>{{data.key.name}}</b> Group Details
+</h1>
+<h1 mat-dialog-title *ngIf="data.key.id == null">
+  Add Group Details
+</h1>
 <div mat-dialog-content>
   <form (ngSubmit)="onSubmit()">
     <mat-form-field style="display: none;">
@@ -46,8 +51,9 @@
       </mat-error>
     </mat-form-field>
     <div mat-dialog-actions>
-      <button type="submit" mat-button cdkFocusInitial class="button-primary"> Add Group Details</button>
-      <button mat-button (click)="closeCreateGroupDialog(); $event.preventDefault()"  class="button-default">Cancel</button>
+      <button *ngIf="data.key.id != null" type="submit" mat-button cdkFocusInitial class="button-primary"> Update Group Details</button>
+      <button *ngIf="data.key.id == null" type="submit" mat-button cdkFocusInitial class="button-primary"> Add Group Details</button>
+      <button mat-button [mat-dialog-close] cdkFocusInitial class="button-default">Cancel</button>
     </div>
   </form>
 </div>

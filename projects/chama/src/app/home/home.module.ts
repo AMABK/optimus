@@ -13,6 +13,7 @@ import { InviteGroupMembersComponent } from './invite-group-members/invite-group
 import { CdkColumnDef } from '@angular/cdk/table';
 import { AddGroupPaymentDetailsComponent } from './add-group-payment-details/add-group-payment-details.component';
 import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
+import { AddGroupContributionTypeComponent } from './add-group-contribution-type/add-group-contribution-type.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor'
     AddGroupDetailsComponent,
     RequestExitGroupComponent,
     InviteGroupMembersComponent,
-    AddGroupPaymentDetailsComponent
+    AddGroupPaymentDetailsComponent,
+    AddGroupContributionTypeComponent
   ],
   imports: [
     CommonModule,
@@ -42,7 +44,8 @@ import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor'
     AddGroupDetailsComponent,
     InviteGroupMembersComponent,
     RequestExitGroupComponent,
-    AddGroupPaymentDetailsComponent
+    AddGroupPaymentDetailsComponent,
+    AddGroupContributionTypeComponent
   ],
   providers: [CdkColumnDef]
 })

@@ -31,7 +31,7 @@
                 
                     <!-- Position Column -->
                     <ng-container matColumnDef="position">
-                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                         <th mat-header-cell *matHeaderCellDef> No. </th>
                         <td mat-cell *matCellDef="let element"> {{element.position}} </td>
                     </ng-container>
                 
@@ -163,7 +163,10 @@
                         <ng-template matStepLabel>GROUP<br>Set Up Group Details</ng-template>
                         <div class="center">
 
-                            <button mat-button class="edit-group-button" (click)="openAddGroupDetails()">
+                            <button *ngIf="!noChamaData" [disabled]="user.chama_id == null" mat-button class="edit-group-button" (click)="openAddGroupDetails()">
+                                <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
+                            </button>
+                            <button *ngIf="noChamaData" mat-button class="edit-group-button" (click)="openAddGroupDetails()">
                                 <mat-icon>group</mat-icon> ADD GROUP DETAILS HERE
                             </button>
                         </div>
@@ -171,7 +174,7 @@
                     <mat-step [stepControl]="secondFormGroup" optional>
                         <ng-template matStepLabel>GROUP MEMBERS<br>Add Group Members</ng-template>
                         <div class="center">
-                            <button mat-button class="edit-group-button" (click)="openInviteGroupMembersDialog()">
+                            <button mat-button [disabled]="user.chama_id == null" class="edit-group-button" (click)="openInviteGroupMembersDialog()">
                                 <mat-icon>group_add</mat-icon> ADD GROUP MEMBERS
                             </button>
                         </div>
@@ -179,7 +182,7 @@
                     <mat-step [stepControl]="secondFormGroup">
                         <ng-template matStepLabel>CONTRIBUTIONS<br>Set Up Group Contributions</ng-template>
                         <div class="center">
-                            <button mat-button class="edit-group-button" (click)="openAddGroupDetails()">
+                            <button mat-button [disabled]="user.chama_id == null" class="edit-group-button" (click)="openAddGroupContributionTypes()">
                                 <mat-icon>ac_unit</mat-icon> SET UP GROUP CONTRIBUTIONS
                             </button>
                         </div>

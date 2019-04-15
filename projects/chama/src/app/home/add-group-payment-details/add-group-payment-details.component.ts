@@ -127,11 +127,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   createChamaPaymentMode(paymentMode) {
     this.chamaService.createPaymentMode(paymentMode).subscribe(
       response => {
-        this.closeAddGroupPaymentDialog();
-        this.notificationService.emit(
-          'Payment mode successfully addedd!',
-          'success'
-        );
+        this.dialogRef.close('success');
       },
       error => {
         this.notificationService.emit('Payment mode creation failed!');
@@ -142,11 +138,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   updateChamaPaymentMode(chama) {
     this.chamaService.updatePaymentMode(chama).subscribe(
       response => {
-        this.closeAddGroupPaymentDialog();
-        this.notificationService.emit(
-          'Chama payment details updated!',
-          'success'
-        );
+        this.dialogRef.close('success');
         this.getChama();
       },
       error => {
@@ -158,8 +150,5 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   getChama() {
     let url = environment.apiUrl + '/api/chama';
     this.chamas$ = this.chamaService.all(url);
-  }
-  closeAddGroupPaymentDialog(): void {
-    this.dialogRef.close();
   }
 }

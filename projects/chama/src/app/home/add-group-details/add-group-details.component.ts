@@ -29,6 +29,7 @@ const emptyChama: Chama = {
   styleUrls: ['./add-group-details.component.css']
 })
 export class AddGroupDetailsComponent implements OnInit {
+  responseStatus: string;
   chamas$: Observable<Chama>;
   currentChama: Chama;
   activeButton: boolean = true;
@@ -111,20 +112,17 @@ export class AddGroupDetailsComponent implements OnInit {
     this.chamaService.create(chama).subscribe(
       response => {
         this.closeCreateGroupDialog();
-        this.notificationService.emit('Chama successfully created!', 'success');
         this.getChama();
         this.resetCurrentChama();
+        this.notificationService.emit('Chama successfully created!', 'success');
       },
       error => {}
     );
   }
 
   updateChama(chama) {
-    this.chamaService.update(chama).subscribe(response => {
-      this.closeCreateGroupDialog();
-      this.notificationService.emit('Chama details update!', 'success');
-      this.getChama();
-      this.resetCurrentChama();
+    return this.chamaService.update(chama).subscribe(response => {
+      this.dialogRef.close('success');
     });
   }
   resetCurrentChama() {
