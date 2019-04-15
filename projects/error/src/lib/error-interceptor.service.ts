@@ -47,7 +47,10 @@ export class ErrorInterceptorService implements HttpInterceptor {
               }
             }
 
-          } else {
+          }
+          else if (response.status === 452) {
+            message = 'Consindering the circumstances, the serve might have taken a leave of absence';
+          }else {
             message = response.error.message;
           }
 
