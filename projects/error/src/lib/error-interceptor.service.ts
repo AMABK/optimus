@@ -29,7 +29,7 @@ export class ErrorInterceptorService implements HttpInterceptor {
           let responseStatus = 'danger';
           let message = '';
           if (response.status === 401) {
-            `${response.error.message}`
+            message = response.error.message;
             // auto logout if 401 response returned from api
             this.authService.logout();
             //location.reload(true);
@@ -48,8 +48,8 @@ export class ErrorInterceptorService implements HttpInterceptor {
             }
 
           }
-          else if (response.status === 452) {
-            message = 'Consindering the circumstances, the serve might have taken a leave of absence';
+          else if (response.status === 0) {
+            message = 'Considering the circumstances, the server might have taken leave without notice';
           }else {
             message = response.error.message;
           }

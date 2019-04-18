@@ -67,32 +67,30 @@ export class LoginComponent implements OnInit {
     //   );
     // }
     if (this.currentUserSubject) {
-      this.router.navigate(['/home']);
+     //this.router.navigate(['/home']);
     }
   }
   public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
   }
   login(email: string, password: string) {
-    this.loading = true;
-    this.authService.login(environment.apiUrl + '/api/oauth/token', email, password)
-      .pipe()
-      .subscribe(authData => {
-        if (authData && authData.access_token) {
-          sessionStorage.setItem(
-            "currentUser",
-            JSON.stringify(authData)
-          );
-          this.currentUserSubject.next(authData);
-        
-          this.router.navigate(['/home']);
-          
-          this.loading = false;
-          // this.notificationService.emit(
-          //   'Welcome, successful login',
-          //   'success');
-        }
-      });
-  
+    this.authService.getClientSecret(environment.apiUrl + 'api/oauth/authorize?', environment.clientId, environment.hostUrl + '/login').subscribe(result => {
+      let clientId = result.client_id;
+      let clientSecret = result.client_secret;
+      this.authService.login(environment.apiUrl + '/api/oauth/token', email, password, clientId, clientSecret)
+        .pipe()
+        .subscribe(authData => {
+          if (authData && authData.access_token) { 
+            sessionStorage.setItem(
+              "currentUser",
+              JSON.stringify(authData)
+            );
+            this.currentUserSubject.next(authData);
+
+            this.router.navigate(['/home']);
+          }
+        });
+    });
+
   }
 }

@@ -16,6 +16,7 @@ import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor'
 import { AddGroupContributionTypeComponent } from './add-group-contribution-type/add-group-contribution-type.component';
 
 
+
 @NgModule({
   declarations: [
     HomeComponent,

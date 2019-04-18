@@ -4,6 +4,7 @@ import { LoaderService } from 'projects/loader/src/public_api';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { NotificationService } from 'projects/notification/src/public_api';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class LoaderInterceptorService implements HttpInterceptor {
 
   private totalRequests = 0;
 
-  constructor(private loaderService: LoaderService, private notificationService: NotificationService) { }
+  constructor(private loaderService: LoaderService, private notificationService: NotificationService, private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.totalRequests++;
@@ -32,7 +33,7 @@ export class LoaderInterceptorService implements HttpInterceptor {
 
   private decreaseRequests() {
     this.totalRequests--;
-    if (this.totalRequests == 0) {
+    if ((this.totalRequests == 0)||(this.router.url === 'login')) {
       this.loaderService.setLoading(false);
       if (sessionStorage.getItem('alert') !== null) {
         const item = JSON.parse(sessionStorage.getItem('alert'));

@@ -17,7 +17,6 @@ export class AddGroupContributionTypeComponent implements OnInit {
   constructor(
     private chamaService: ChamaService,
     private authService: AuthService,
-    private notificationService: NotificationService,
     private loaderIService: LoaderInterceptorService,
     public dialogRef: MatDialogRef<AddGroupContributionTypeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -51,11 +50,6 @@ export class AddGroupContributionTypeComponent implements OnInit {
     this.chamaService.createContributionType(currentContributionType).subscribe(
       response => {
         this.dialogRef.close('success');
-
-        // this.notificationService.emit(
-        //   'Invite successfully sent out',
-        //   'success'
-        // );
       },
       error => { }
     );

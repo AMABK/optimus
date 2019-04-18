@@ -111,10 +111,8 @@ export class AddGroupDetailsComponent implements OnInit {
   createChama(chama) {
     this.chamaService.create(chama).subscribe(
       response => {
-        this.closeCreateGroupDialog();
-        this.getChama();
-        this.resetCurrentChama();
-        this.notificationService.emit('Chama successfully created!', 'success');
+        this.dialogRef.close('success');
+        //this.notificationService.emit('Chama successfully created!', 'success');
       },
       error => {}
     );

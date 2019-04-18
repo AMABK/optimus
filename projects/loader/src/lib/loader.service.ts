@@ -8,7 +8,6 @@ export class LoaderService {
   public isLoading = new BehaviorSubject(true);
   setLoading(arg0: boolean) {
     this.isLoading.next(arg0);
-
   }
   constructor() { }
 }

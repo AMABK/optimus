@@ -5,6 +5,7 @@ import { NotificationService } from 'projects/notification/src/public_api';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Auth } from 'projects/chama/src/app/models/auth/auth';
+import { Client } from 'projects/chama/src/app/models/client/client';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,6 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private notificationService: NotificationService
   ) {
     const userData = JSON.parse(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<Auth>(userData);
@@ -29,16 +29,20 @@ export class AuthService {
   getUrl(url) {
     return `${url}`;
   }
+  getClientSecret(url, clientId, redirectUri) {
+    let params = '/api/oauth/authorize?client_id=' + clientId + '&redirect_uri=http://localhost:4200/login&response_type=token&scope='
+    return this.http.get<Client>("http://localhost:8000" + params);
+  }
 
-  login(url: string, email: string, password: string) {
+  login(url: string, email: string, password: string, clientId: string, clientSecret:string) {
     return this.http
       .post<Auth>(`${url}`, {
         username: email,
         password: password,
-        client_id: '3',
-        client_secret: 'OvehxOzBdiSlrEgYSonBvHGAGqVaooV9brfFOYCe',
+        client_id: clientId,
+        client_secret: clientSecret,
         grant_type: 'password',
-        scope: ''
+        scope: '*'
       })
       .pipe(
         map(authData => {

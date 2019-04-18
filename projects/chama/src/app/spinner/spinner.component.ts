@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatRipple } from '@angular/material';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-spinner',
@@ -7,7 +8,7 @@ import { MatRipple } from '@angular/material';
   styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent implements OnInit {
-  constructor() { }
+  constructor(private router:Router) { }
 
   ngOnInit() {
   }
@@ -17,6 +18,7 @@ export class SpinnerComponent implements OnInit {
 
   /** Shows a centered and persistent ripple. */
   launchRipple() {
+    alert(this.router.url);
     const rippleRef = this.ripple.launch({
       persistent: true,
       centered: true
