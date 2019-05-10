@@ -230,9 +230,7 @@ export class HomeComponent implements OnInit {
     });
     dialogRef.afterClosed()
       .subscribe(result => {
-        alert('result');
         if (result === 'success') {
-          alert('after');
           this.chamas$ = this.getChamas(this.authService.getUserId());
           this.getDefaultChamaDetails();
           this.loaderIService.storeNotificationMessage('Contribution type successfully added', 'success');

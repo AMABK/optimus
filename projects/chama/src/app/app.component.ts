@@ -7,17 +7,19 @@ import { LoaderService } from 'projects/loader/src/public_api';
 import { Sidenav } from './shared/sidenav/sidenav';
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = "Chama App";
+  title = 'Chama App';
   currentUser: Auth;
   links = [
-    { path: "/home", icon: "home", label: "Home" },
-    { path: "/customers", icon: "face", label: "Customers" },
-    { path: "/projects", icon: "work", label: "Projects" }
+    { path: '/landing', icon: 'credit_card', label: 'Transcations' },
+    { path: '/home', icon: 'home', label: 'Home' },
+    { path: '/customers', icon: 'face', label: 'Customers' },
+    { path: '/customers', icon: 'face', label: 'Customers' },
+    { path: '/projects', icon: 'work', label: 'Projects' }
   ];
   navItems: Sidenav[] = [
     {
@@ -381,11 +383,11 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(["login"]);
+    this.router.navigate(['login']);
   }
 
   prepareRouterState(router: RouterOutlet) {
-    return router.activatedRouteData["animation"] || "initial";
+    return router.activatedRouteData['animation'] || 'initial';
   }
 
   isSidenaveOpen(component, authentication) {

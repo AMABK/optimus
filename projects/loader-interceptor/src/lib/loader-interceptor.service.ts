@@ -33,7 +33,7 @@ export class LoaderInterceptorService implements HttpInterceptor {
 
   private decreaseRequests() {
     this.totalRequests--;
-    if ((this.totalRequests == 0)||(this.router.url === 'login')) {
+    if ((this.totalRequests == 0)) {
       this.loaderService.setLoading(false);
       if (sessionStorage.getItem('alert') !== null) {
         const item = JSON.parse(sessionStorage.getItem('alert'));
