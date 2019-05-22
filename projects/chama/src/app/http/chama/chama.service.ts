@@ -62,6 +62,19 @@ export class ChamaService {
       headers: headers
     });
   }
+  createDeposit(deposit) {
+    this.token = this.authService.getUserData()["access_token"];
+    let headers = new HttpHeaders({
+      Authorization: "Bearer " + this.token
+    });
+    return this.http.post(
+      `http://localhost:8000/api/chama/create-deposit`,
+      deposit,
+      {
+        headers: headers
+      }
+    );
+  }
   createPaymentMode(paymentMode) {
     return this.http.post(
       `http://localhost:8000/api/chama/create-payment-mode`,
@@ -72,19 +85,18 @@ export class ChamaService {
     return this.http.post(
       `http://localhost:8000/api/user/invite`,
       createInvite
-    )
+    );
   }
   createContributionType(createContributionType) {
     return this.http.post(
       `http://localhost:8000/api/chama/create-contribution-type`,
       createContributionType
-    )
+    );
   }
   update(chama: Chama) {
-    return this.http.post<Chama>(
-      `http://localhost:8000/api/chama/update`,
-      chama
-    ).pipe(share());
+    return this.http
+      .post<Chama>(`http://localhost:8000/api/chama/update`, chama)
+      .pipe(share());
   }
   updatePaymentMode(paymentMode) {
     return this.http.post(

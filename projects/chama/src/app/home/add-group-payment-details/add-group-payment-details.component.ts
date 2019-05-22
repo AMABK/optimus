@@ -24,51 +24,51 @@ const emptyChama: Chama = {
 };
 
 @Component({
-  selector: 'app-add-group-payment-details',
-  templateUrl: './add-group-payment-details.component.html',
-  styleUrls: ['./add-group-payment-details.component.css']
+  selector: "app-add-group-payment-details",
+  templateUrl: "./add-group-payment-details.component.html",
+  styleUrls: ["./add-group-payment-details.component.css"]
 })
 export class AddGroupPaymentDetailsComponent implements OnInit {
   list = [
-    { value: '0', viewValue: 'Active ' },
-    { value: '1', viewValue: 'In Active' }
+    { value: "0", viewValue: "Active " },
+    { value: "1", viewValue: "In Active" }
   ];
   public tools: object = {
     items: [
-      'Bold',
-      'Italic',
-      'Underline',
-      'StrikeThrough',
-      '|',
-      'FontName',
-      'FontSize',
-      'FontColor',
-      'BackgroundColor',
-      '|',
-      'LowerCase',
-      'UpperCase',
-      '|',
-      'Undo',
-      'Redo',
-      '|',
-      'Formats',
-      'Alignments',
-      '|',
-      'OrderedList',
-      'UnorderedList',
-      '|',
-      'Indent',
-      'Outdent',
-      '|',
-      'CreateLink',
-      'CreateTable',
-      'Image',
-      '|',
-      'ClearFormat',
-      'Print',
-      'SourceCode',
-      '|',
-      'FullScreen'
+      "Bold",
+      "Italic",
+      "Underline",
+      "StrikeThrough",
+      "|",
+      "FontName",
+      "FontSize",
+      "FontColor",
+      "BackgroundColor",
+      "|",
+      "LowerCase",
+      "UpperCase",
+      "|",
+      "Undo",
+      "Redo",
+      "|",
+      "Formats",
+      "Alignments",
+      "|",
+      "OrderedList",
+      "UnorderedList",
+      "|",
+      "Indent",
+      "Outdent",
+      "|",
+      "CreateLink",
+      "CreateTable",
+      "Image",
+      "|",
+      "ClearFormat",
+      "Print",
+      "SourceCode",
+      "|",
+      "FullScreen"
     ]
   };
 
@@ -86,7 +86,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
 
   id = new FormControl(this.data.key.id, []);
   bank = new FormControl(this.data.key.bank, [Validators.required]);
-  status = new FormControl('', [Validators.required]);
+  status = new FormControl("", [Validators.required]);
   country = new FormControl(this.data.key.country, [
     Validators.required,
     Validators.minLength(2)
@@ -104,7 +104,12 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   registerChama(form) {}
 
   onSubmit() {
-    if (this.bank.valid && this.country.valid && this.description.valid && this.status.valid) {
+    if (
+      this.bank.valid &&
+      this.country.valid &&
+      this.description.valid &&
+      this.status.valid
+    ) {
       this.paymentDetails = {
         id: this.id.value,
         bank: this.bank.value,
@@ -127,28 +132,30 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   createChamaPaymentMode(paymentMode) {
     this.chamaService.createPaymentMode(paymentMode).subscribe(
       response => {
-        this.dialogRef.close('success');
+        this.dialogRef.close("success");
       },
       error => {
-        this.notificationService.emit('Payment mode creation failed!');
+        this.notificationService.emit("Payment mode creation failed!");
       }
     );
   }
-
+  closeAddGroupPaymentDialog(): void {
+    this.dialogRef.close();
+  }
   updateChamaPaymentMode(chama) {
     this.chamaService.updatePaymentMode(chama).subscribe(
       response => {
-        this.dialogRef.close('success');
+        this.dialogRef.close("success");
         this.getChama();
       },
       error => {
-        this.notificationService.emit('Chama payment creation failed!');
+        this.notificationService.emit("Chama payment creation failed!");
       }
     );
   }
 
   getChama() {
-    let url = environment.apiUrl + '/api/chama';
+    let url = environment.apiUrl + "/api/chama";
     this.chamas$ = this.chamaService.all(url);
   }
 }

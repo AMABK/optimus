@@ -7,13 +7,15 @@ import { MaterialModule } from 'projects/material/src/public_api';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule, MatStepperModule, MatFormFieldModule, MatInputModule, MatTabsModule, MatRadioModule } from '@angular/material';
+import { MatDialogModule, MatStepperModule, MatFormFieldModule, MatInputModule, MatTabsModule, MatRadioModule, MatPaginatorModule, MatNativeDateModule } from '@angular/material';
 import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
 import { InviteGroupMembersComponent } from './invite-group-members/invite-group-members.component';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { AddGroupPaymentDetailsComponent } from './add-group-payment-details/add-group-payment-details.component';
 import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
 import { AddGroupContributionTypeComponent } from './add-group-contribution-type/add-group-contribution-type.component';
+import { AddGroupContributionComponent } from './add-group-contribution/add-group-contribution.component';
+import { MatDatepickerModule } from "@angular/material/datepicker";
 
 
 
@@ -24,7 +26,8 @@ import { AddGroupContributionTypeComponent } from './add-group-contribution-type
     RequestExitGroupComponent,
     InviteGroupMembersComponent,
     AddGroupPaymentDetailsComponent,
-    AddGroupContributionTypeComponent
+    AddGroupContributionTypeComponent,
+    AddGroupContributionComponent
   ],
   imports: [
     CommonModule,
@@ -39,14 +42,18 @@ import { AddGroupContributionTypeComponent } from './add-group-contribution-type
     MatInputModule,
     MatTabsModule,
     MatRadioModule,
-    RichTextEditorAllModule
+    MatPaginatorModule,
+    RichTextEditorAllModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   entryComponents: [
     AddGroupDetailsComponent,
     InviteGroupMembersComponent,
     RequestExitGroupComponent,
     AddGroupPaymentDetailsComponent,
-    AddGroupContributionTypeComponent
+    AddGroupContributionTypeComponent,
+    AddGroupContributionComponent
   ],
   providers: [CdkColumnDef]
 })
