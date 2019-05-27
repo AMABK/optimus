@@ -3,15 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-         production: false,
-         apiUrl: 'http://localhost:8000',
-         CLOUDANARY_API_KEY: '729124627913516',
-         CLOUDANARY_API_SECRET: 'Nad0g9Z24r4J2CUUqXAWayK4TXc',
-         CLOUDINARY_URL: 'Cloudinary://729124627913516:Nad0g9Z24r4J2CUUqXAWayK4TXc@optimus-e-solutions',
-  CLOUDINARY_BASE: 'http://res.cloudinary.com/optimus-e-solutions',
-       clientId: '1',
-       hostUrl:'http://localhost:4200'
-       };
+  production: false,
+  apiUrl: "http://localhost:8000",
+  CLOUDANARY_API_KEY: "729124627913516",
+  CLOUDANARY_API_SECRET: "Nad0g9Z24r4J2CUUqXAWayK4TXc",
+  CLOUDINARY_URL:
+    "Cloudinary://729124627913516:Nad0g9Z24r4J2CUUqXAWayK4TXc@optimus-e-solutions",
+  CLOUDINARY_BASE: "http://res.cloudinary.com/optimus-e-solutions",
+  clientId: "1",
+  hostUrl: "http://localhost:4200"
+};
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

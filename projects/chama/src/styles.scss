@@ -10,6 +10,7 @@ body {
     font-family: Roboto, sans-serif;
     height: 100%;
     display: flex;
+    overflow-x: hidden;
 }
 
 md-toolbar-row {
@@ -425,4 +426,64 @@ table {
     border-right: 1px solid #428bca;
     border-bottom: 1px solid #428bca;
     border-top: 1px solid #428bca;
+}
+.mat-button{
+    border-radius: 20px !important;
+}
+.input-container {
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+.input-field {
+  margin: 5px;
+  height: 30px;
+  width: 150px;
+  border: 1px solid #b9b7b7;
+  border-radius: 20px !important;
+  padding-left: 10px;
+  font-size: 14px;
+}
+.select{
+  width: 164px;
+  cursor: pointer;
+  background-color: #ffffff;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   height: 34px !important;
+  background-image:
+    linear-gradient(45deg, transparent 50%, gray 50%),
+    linear-gradient(135deg, gray 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) calc(0.8em + 2px),
+    calc(100% - 15px) calc(0.8em + 2px);
+  background-size:
+    5px 5px,
+    5px 5px,
+    1px 1.5em;
+  background-repeat: no-repeat;
+}
+
+*:focus {
+    outline: none;
+}
+.search-panel {
+  display: flex;
+  width: 95%;
+  flex-flow: row wrap;
+  margin: -40px auto 0 !important;
+}
+
+.small-button{
+    margin: 5px;
+  height: 34px;
+  width: 164px;
+  border: 1px solid #b9b7b7;
+  border-radius: 20px;
+  padding-left: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #b9b7b773;
+}
+.small-button:hover{
+    background: #b9b7b7;
 }

@@ -62,19 +62,7 @@ export class ChamaService {
       headers: headers
     });
   }
-  createDeposit(deposit) {
-    this.token = this.authService.getUserData()["access_token"];
-    let headers = new HttpHeaders({
-      Authorization: "Bearer " + this.token
-    });
-    return this.http.post(
-      `http://localhost:8000/api/chama/create-deposit`,
-      deposit,
-      {
-        headers: headers
-      }
-    );
-  }
+
   createPaymentMode(paymentMode) {
     return this.http.post(
       `http://localhost:8000/api/chama/create-payment-mode`,

@@ -22,6 +22,9 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { TokenInterceptorService } from 'projects/token-interceptor/src/public_api';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { InputFieldComponent } from './shared/input-field/input-field.component';
+import { WithdrawalComponent } from './transactions/withdrawal/withdrawal.component';
+import { DepositComponent } from './transactions/deposit/deposit.component';
 
 
 @NgModule({
@@ -31,7 +34,10 @@ import { SpinnerComponent } from './spinner/spinner.component';
     AuthComponent,
     PasswordResetComponent,
     SidenavComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    InputFieldComponent,
+    WithdrawalComponent,
+    DepositComponent
   ],
   imports: [
     AppRoutingModule,

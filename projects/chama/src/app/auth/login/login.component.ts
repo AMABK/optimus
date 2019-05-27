@@ -75,8 +75,8 @@ export class LoginComponent implements OnInit {
   }
   login(email: string, password: string) {
     this.authService.getClientSecret(environment.apiUrl + 'api/oauth/authorize?', environment.clientId, environment.hostUrl + '/login').subscribe(result => {
-      let clientId = result.client_id;
-      let clientSecret = result.client_secret;
+      const clientId = result.client_id;
+      const clientSecret = result.client_secret;
       this.authService.login(environment.apiUrl + '/api/oauth/token', email, password, clientId, clientSecret)
         .pipe()
         .subscribe(authData => {

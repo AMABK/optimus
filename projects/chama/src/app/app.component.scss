@@ -10,3 +10,14 @@ $app-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+.button-dropdown{
+    opacity: .6;
+    border-style: solid;
+    border-width: 1px;
+    border-top-left-radius: 0px!important;
+    border-top-right-radius: 0px!important;
+}
+.app-content{
+    overflow-x: hidden;
+}

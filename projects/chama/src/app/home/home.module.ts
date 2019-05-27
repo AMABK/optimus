@@ -16,6 +16,7 @@ import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor'
 import { AddGroupContributionTypeComponent } from './add-group-contribution-type/add-group-contribution-type.component';
 import { AddGroupContributionComponent } from './add-group-contribution/add-group-contribution.component';
 import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatSortModule } from '@angular/material/sort'; 
 
 
 
@@ -45,7 +46,8 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
     MatPaginatorModule,
     RichTextEditorAllModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSortModule
   ],
   entryComponents: [
     AddGroupDetailsComponent,

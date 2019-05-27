@@ -6,10 +6,10 @@ import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
-import { ChamaService } from '../../http/chama/chama.service';
 import { Chama } from '../../models/chama/chama';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
+import { DepositService } from '../../http/deposit/deposit.service';
 
 
 
@@ -25,7 +25,7 @@ export class AddGroupContributionComponent implements OnInit {
   @ViewChild("autosize") autosize: CdkTextareaAutosize;
   constructor(
     private notificationService: NotificationService,
-    private chamaService: ChamaService,
+    private depositService: DepositService,
     private authService: AuthService,
     public dialogRef: MatDialogRef<AddGroupContributionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -94,28 +94,22 @@ export class AddGroupContributionComponent implements OnInit {
     }
   }
   createDeposit(deposit) {
-    this.chamaService.createDeposit(deposit).subscribe(
+    this.depositService.createDeposit(deposit).subscribe(
       response => {
-        this.dialogRef.close('success');
+        this.dialogRef.close("success");
       },
       error => {}
     );
   }
 
   updateDeposit(chama) {
-    this.chamaService.update(chama).subscribe(response => {
-      this.getChama();
-      this.resetCurrentChama();
-      this.notificationService.emit("Chama details saved!");
-    });
+    // this.depositService.updateDeposit(chama).subscribe(response => {
+    //   this.resetCurrentChama();
+    //   this.notificationService.emit("Chama details saved!");
+    // });
   }
   resetCurrentChama() {
     //this.currentChama = '';
-  }
-  getChama() {
-    this.chama$ = this.chamaService.all(
-      environment.apiUrl + "/api/chama?user=1"
-    );
   }
   closeAddGroupContribution(): void {
     this.dialogRef.close();

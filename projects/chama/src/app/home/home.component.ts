@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { AuthService } from 'projects/auth/src/public_api';
-import { MatDialog, MatSort, MatTableDataSource } from '@angular/material';
+import { MatDialog, MatSort, MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
 import { InviteGroupMembersComponent } from './invite-group-members/invite-group-members.component';
 import { ChamaService } from '../http/chama/chama.service';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Observable, of, BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user/user';
 import { AddGroupPaymentDetailsComponent } from './add-group-payment-details/add-group-payment-details.component';
@@ -14,97 +14,57 @@ import { AddGroupContributionTypeComponent } from './add-group-contribution-type
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import * as Chart from 'chart.js';
 import { AddGroupContributionComponent } from './add-group-contribution/add-group-contribution.component';
-import { Chama } from "../models/chama/chama";
-import { Deposi } from "../models/deposit/deposit";
+import { Chama } from '../models/chama/chama';
+import { DepositService } from '../http/deposit/deposit.service';
+import * as moment from 'moment';
 export interface PeriodicElement1 {
-  name: string;
   position: number;
   weight: number;
   symbol: string;
+  payment: string;
+  submission: string;
   verified: string;
 }
-const ELEMENT_DATA: PeriodicElement1[] = [
-  {
-    position: 1,
-    name: "Hydrogen",
-    weight: 1.0079,
-    symbol: "H",
-    verified: "Yes"
-  },
-  {
-    position: 2,
-    name: "Helium",
-    weight: 4.0026,
-    symbol: "He",
-    verified: "Yes"
-  },
-  {
-    position: 3,
-    name: "Lithium",
-    weight: 6.941,
-    symbol: "Li",
-    verified: "Yes"
-  },
-  {
-    position: 4,
-    name: "Beryllium",
-    weight: 9.0122,
-    symbol: "Be",
-    verified: "Yes"
-  },
-  { position: 5, name: "Boron", weight: 10.811, symbol: "B", verified: "Yes" },
-  {
-    position: 6,
-    name: "Carbon",
-    weight: 12.0107,
-    symbol: "C",
-    verified: "Yes"
-  },
-  {
-    position: 7,
-    name: "Nitrogen",
-    weight: 14.0067,
-    symbol: "N",
-    verified: "Yes"
-  },
-  {
-    position: 8,
-    name: "Oxygen",
-    weight: 15.9994,
-    symbol: "O",
-    verified: "Yes"
-  },
-  {
-    position: 9,
-    name: "Fluorine",
-    weight: 18.9984,
-    symbol: "F",
-    verified: "Yes"
-  },
-  { position: 10, name: "Neon", weight: 20.1797, symbol: "Ne", verified: "Yes" }
-];
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-  displayedColumn: string[] = [
+  searchTerm$ = new Subject<any>();
+  subscriptions: Subscription[] = [];
+  @Output() queryEvt = new EventEmitter<any>();
+  depositColumns: string[] = [
     "position",
-    "name",
-    "weight",
-    "symbol",
-    "payment",
-    "submission",
+    "bank",
+    "type_name",
+    "amount",
+    "payment_date",
+    "created_at",
     "verified"
   ];
   //dataSource = ELEMENT_DATA;
   @ViewChild("lineChart") private chartRef;
   chart: any;
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  deposits: any = [];
+  depositData = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  pageEvent: PageEvent;
+  @ViewChild("searchRef") searchRef;
+  pFromDate = "";
+  pToDate: string = "";
+  sFromDate: string = "";
+  sToDate: string = "";
+  search: string = "";
+  verified: string = "";
+  paginationData: any;
   @ViewChild(AddGroupDetailsComponent) child;
-  responseStatus = "";
+  statuses = [
+    { value: "", display: "Verified Status" },
+    { value: "yes", display: "Yes" },
+    { value: "no", display: "No" }
+  ];
   contributionColumns: string[] = [
     "position",
     "amount",
@@ -113,7 +73,6 @@ export class HomeComponent implements OnInit {
     "verified"
   ];
   chamas$: Observable<Chama>;
-  deposits$: Observable<Deposit>;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   defaultGroup: any;
@@ -142,6 +101,7 @@ export class HomeComponent implements OnInit {
     public dialog: MatDialog,
     private _formBuilder: FormBuilder,
     private chamaService: ChamaService,
+    private depositService: DepositService,
     private authService: AuthService,
     private loaderIService: LoaderInterceptorService
   ) {
@@ -149,20 +109,37 @@ export class HomeComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    // this.responseStatus = this.child.responseStatus;
     this.getDefaultChamaDetails();
   }
   // events on slice click
   public chartClicked(e: any): void {
-    console.log(e);
+    // console.log(e);
   }
 
   // event on pie chart slice hover
   public chartHovered(e: any): void {
-    console.log(e);
+    // console.log(e);
   }
   ngOnInit() {
-    this.dataSource.sort = this.sort;
+    this.depositService.search(this.searchTerm$).subscribe(response => {
+      this.paginationData = {
+        current_page: response.data.current_page - 1,
+        total: response.data.total,
+        per_page: response.data.per_page
+      };
+      this.deposits = response.data.data;
+      this.depositData.data = this.deposits;
+      if (this.depositData.data) {
+        this.depositData.sort = this.sort;
+        //  this.depositData.paginator = this.sortDeposits;
+      }
+      //this.depositData = new MatTableDataSource<PeriodicElement1>(this.deposits);
+    });
+    // if (this.depositData.data) {
+    //   this.depositData.sort = this.sort;
+    //   //  this.depositData.paginator = this.sortDeposits;
+    // }
+
     this.getDefaultChamaDetails();
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
@@ -171,8 +148,6 @@ export class HomeComponent implements OnInit {
       secondCtrl: ["", Validators.required]
     });
     this.chamas$ = this.getChamas(this.authService.getUserId());
-    this.getDefaultChamaDetails();
-
     // Line chart:
     this.LineChart = new Chart("lineChart", {
       type: "line",
@@ -237,6 +212,93 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+  formatDateInput(date) {
+    if (date === "" || date == null) {
+      return "";
+    }
+    const momentDate = new Date(date); // Replace event.value with your date value
+    const formattedDate = moment(momentDate).format("YYYY-MM-DD");
+    return formattedDate;
+  }
+  handleSearch(query: string, model: string) {
+    switch (model) {
+      case "search":
+        // General search can only be done in exclusivity
+        this.clearSearch();
+        this.search = query;
+        break;
+      case "pFromDate":
+        this.search = "";
+        this.pFromDate = query;
+        break;
+      case "pToDate":
+        this.search = "";
+        this.pToDate = query;
+        break;
+      case "sFromDate":
+        this.search = "";
+        this.sFromDate = query;
+        break;
+      case "sToDate":
+        this.search = "";
+        this.sToDate = query;
+        break;
+      case "verified":
+        this.search = "";
+        this.verified = query;
+        break;
+      default:
+        break;
+    }
+    this.pFromDate = query === "" ? "" : this.formatDateInput(this.pFromDate);
+    this.pToDate = query === "" ? "" : this.formatDateInput(this.pToDate);
+    this.sFromDate = query === "" ? "" : this.formatDateInput(this.sFromDate);
+    this.sToDate = query === "" ? "" : this.formatDateInput(this.sToDate);
+    this.searchTerm$.next({
+      q: this.search,
+      pFromDate: this.pFromDate,
+      pToDate: this.pToDate,
+      sFromDate: this.sFromDate,
+      sToDate: this.sToDate,
+      verified: this.verified
+    });
+    this.paginator.pageIndex = 0;
+  }
+  clearSearch(activate = null) {
+    this.pFromDate = "";
+    this.pToDate = "";
+    this.sFromDate = "";
+    this.sToDate = "";
+    this.verified = "";
+    this.search = "";
+    if (activate === "activate") {
+      this.handleSearch("", "");
+    }
+  }
+  paginate() {
+    const pageIndex = this.pageEvent.pageIndex;
+    const pageSize = this.pageEvent.pageSize;
+    const query = this.search;
+    const pFromDate =
+      this.pFromDate === "" ? "" : this.formatDateInput(this.pFromDate);
+    const pToDate =
+      this.pToDate === "" ? "" : this.formatDateInput(this.pToDate);
+    const sFromDate =
+      this.sFromDate === "" ? "" : this.formatDateInput(this.sFromDate);
+    const sToDate =
+      this.sToDate === "" ? "" : this.formatDateInput(this.sToDate);
+    const verified = this.verified;
+    this.searchTerm$.next({
+      q: query,
+      pFromDate,
+      pToDate,
+      sFromDate,
+      sToDate,
+      verified,
+      page: pageIndex + 1,
+      size: pageSize
+    });
+  }
   getChamas(userId) {
     const url = environment.apiUrl + "/api/chama?user_id=" + userId;
     return this.chamaService.all(url);
@@ -278,10 +340,10 @@ export class HomeComponent implements OnInit {
         .subscribe(result => {
           this.getDefaultChamaDetails();
         });
-      // this.chama$ = this.getChamas(this.authService.getUserId());
     }
   }
   ngOnDestroy() {
+    // this.deposits.unsubscribe();
   }
   openAddGroupDetails() {
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
@@ -416,8 +478,10 @@ export class HomeComponent implements OnInit {
       { id: 3, type_name: "Trip" },
       { id: 4, type_name: "CSR" }
     ];
-    var dChama: any;
-    this.chama.subscribe(res => { dChama= res})
+    let dChama: any;
+    this.chama.subscribe(res => {
+      dChama = res;
+    });
     const dialogRef = this.dialog.open(AddGroupContributionComponent, {
       height: "auto",
       width: "600px",
@@ -428,14 +492,14 @@ export class HomeComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === "success") {
-          this.chamas$ = this.getChamas(this.authService.getUserId());
-          this.getDefaultChamaDetails();
-          // set message to be emitted by loader interceptor after http requests end
-          this.loaderIService.storeNotificationMessage(
-            "Chama successfully updated!",
-            "success"
-          );
-        }
+        this.chamas$ = this.getChamas(this.authService.getUserId());
+        this.getDefaultChamaDetails();
+        // set message to be emitted by loader interceptor after http requests end
+        this.loaderIService.storeNotificationMessage(
+          "Chama successfully updated!",
+          "success"
+        );
+      }
     });
   }
   tabPosition(key) {
@@ -444,5 +508,5 @@ export class HomeComponent implements OnInit {
   }
   numberWithCommas(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+  }
 }
