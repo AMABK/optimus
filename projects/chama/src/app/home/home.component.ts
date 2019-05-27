@@ -131,15 +131,9 @@ export class HomeComponent implements OnInit {
       this.depositData.data = this.deposits;
       if (this.depositData.data) {
         this.depositData.sort = this.sort;
-        //  this.depositData.paginator = this.sortDeposits;
       }
       //this.depositData = new MatTableDataSource<PeriodicElement1>(this.deposits);
     });
-    // if (this.depositData.data) {
-    //   this.depositData.sort = this.sort;
-    //   //  this.depositData.paginator = this.sortDeposits;
-    // }
-
     this.getDefaultChamaDetails();
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]

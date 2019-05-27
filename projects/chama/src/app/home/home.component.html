@@ -5,6 +5,12 @@
                 <button mat-button (click)="openAddGroupContributionDialog()" style="border: 1px solid #428bca;">
                     <mat-icon class="success-icon">add</mat-icon>Add Contribution/Deposit
                 </button>
+                <button mat-button (click)="openAddGroupContributionDialog()" style="border: 1px solid #428bca;">
+                    <mat-icon class="success-icon">add</mat-icon>Pay Loan/Fine
+                </button>
+                <button mat-button (click)="openAddGroupContributionDialog()" style="border: 1px solid #428bca;">
+                    <mat-icon class="success-icon">add</mat-icon>Request A Loan
+                </button>
                 <div class="search-panel">
                     <div class="input-container">
                         <input class="input-field" (ngModelChange)="handleSearch($event,'search')" [(ngModel)]="search" placeholder="General search">

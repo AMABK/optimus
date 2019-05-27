@@ -15,18 +15,29 @@ export class AppComponent implements OnInit {
   title = "Chama App";
   currentUser: Auth;
   links = [
-    { path: "", icon: "", label: "Your Home" },
-    { path: "/landing", icon: "credit_card", label: "Transcations" },
-    { path: "/home", icon: "home", label: "Home" },
-    { path: "/payouts", icon: "money", label: "Payouts" },
-    { path: "/withdrawals", icon: "zoom_out_map", label: "Withdrawals" },
+    { path: "/home", icon: "home", label: "Your Home" },
+    { path: "/transactions", icon: "credit_card", label: "Transactions" },
+    { path: "/transactions/deposit", icon: "money", label: "Deposits" },
+    {
+      path: "/transactions/withdrawal",
+      icon: "zoom_out_map",
+      label: "Withdrawals"
+    },
     { path: "/disputes", icon: "flare", label: "Disputes" },
     { path: "/insights", icon: "pie_chart", label: "Insights" },
     { path: "/admin", icon: "", label: "Administration" },
     { path: "/admin/users", icon: "person", label: "Manage Users" },
     { path: "/admin/group", icon: "group_work", label: "Manage Groups" },
-    { path: "/admin/system/users", icon: "assignment_ind", label: "Manage System Users" },
-    { path: "/admin/system/groups", icon: "supervisor_account", label: "Manage System Groups" }
+    {
+      path: "/admin/system/users",
+      icon: "assignment_ind",
+      label: "Manage System Users"
+    },
+    {
+      path: "/admin/system/groups",
+      icon: "supervisor_account",
+      label: "Manage System Groups"
+    }
   ];
 
   constructor(

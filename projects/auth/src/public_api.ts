@@ -6,5 +6,5 @@ export {AuthService} from './lib/auth.service';
 export {AuthComponent} from './lib/auth.component';
 export { AuthModule } from './lib/auth.module';
 
-export { AuthGuardService } from './lib/auth-guard.service';
+export { AuthGuardService as AuthGuard } from './lib/auth-guard.service';
 

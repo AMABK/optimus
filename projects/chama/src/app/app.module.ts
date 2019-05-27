@@ -10,7 +10,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { AuthGuardService } from 'projects/auth/src/public_api';
+import { AuthGuard } from 'projects/auth/src/public_api';
 import { ErrorInterceptorService } from 'projects/error/src/public_api';
 import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
 import { AuthComponent } from './auth/auth.component';
@@ -23,8 +23,7 @@ import { TokenInterceptorService } from 'projects/token-interceptor/src/public_a
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { InputFieldComponent } from './shared/input-field/input-field.component';
-import { WithdrawalComponent } from './transactions/withdrawal/withdrawal.component';
-import { DepositComponent } from './transactions/deposit/deposit.component';
+import { InsightsComponent } from './insights/insights.component';
 
 
 @NgModule({
@@ -36,8 +35,6 @@ import { DepositComponent } from './transactions/deposit/deposit.component';
     SidenavComponent,
     SpinnerComponent,
     InputFieldComponent,
-    WithdrawalComponent,
-    DepositComponent
   ],
   imports: [
     AppRoutingModule,
@@ -54,7 +51,7 @@ import { DepositComponent } from './transactions/deposit/deposit.component';
     FlexLayoutModule
   ],
   providers: [
-    AuthGuardService,
+    AuthGuard,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptorService,
