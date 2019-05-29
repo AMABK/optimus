@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chama } from '../../models/chama/chama';
 import { Validators, FormControl } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from 'projects/auth/src/public_api';
 import { Observable } from 'rxjs';
 import { NotificationService } from 'projects/notification/src/public_api';

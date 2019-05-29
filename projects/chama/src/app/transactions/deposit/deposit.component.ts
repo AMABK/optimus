@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort, MatPaginator, PageEvent } from '@angular/material';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DepositService } from '../../http/deposit/deposit.service';
 import { Subject } from 'rxjs';
 import * as moment from 'moment';
@@ -14,9 +16,9 @@ export interface PeriodicElement {
   verified: string;
 }
 @Component({
-  selector: 'app-deposit',
-  templateUrl: './deposit.component.html',
-  styleUrls: ['./deposit.component.css']
+  selector: "app-deposit",
+  templateUrl: "./deposit.component.html",
+  styleUrls: ["./deposit.component.css"]
 })
 export class DepositComponent implements OnInit {
   searchTerm$ = new Subject<any>();
@@ -29,19 +31,26 @@ export class DepositComponent implements OnInit {
   verified: string = "";
   depositDataSource;
   txn_type = -1;
-  displayedColumns: string[] = ['position', 'payment_mode.bank', 'contribution_type.type_name', 'amount','payment_date','created_at','verified'];
+  displayedColumns: string[] = [
+    "position",
+    "payment_mode.bank",
+    "contribution_type.type_name",
+    "amount",
+    "payment_date",
+    "created_at",
+    "verified"
+  ];
   statuses = [
     { value: "", display: "Verified Status" },
     { value: "yes", display: "Yes" },
     { value: "no", display: "No" }
   ];
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private depositService: DepositService) { 
-  }
+  constructor(private depositService: DepositService) {}
   ngOnInit() {
-    this.depositService.search(this.searchTerm$, '1').subscribe(response => {
+    this.depositService.search(this.searchTerm$, "1").subscribe(response => {
       this.paginationData = {
         current_page: response.data.current_page - 1,
         total: response.data.total,
@@ -50,9 +59,9 @@ export class DepositComponent implements OnInit {
       this.depositDataSource = new MatTableDataSource(response.data.data);
       this.depositDataSource.sortingDataAccessor = (item, property) => {
         switch (property) {
-          case 'contribution_type.type_name':
+          case "contribution_type.type_name":
             return item.contribution_type.type_name;
-          case 'payment_mode.bank':
+          case "payment_mode.bank":
             if (item.payment_mode != null) {
               return item.payment_mode.bank;
             }
@@ -140,7 +149,7 @@ export class DepositComponent implements OnInit {
       sFromDate,
       sToDate,
       verified,
-      txnType:this.txn_type,
+      txnType: this.txn_type,
       page: pageIndex + 1,
       size: pageSize
     });
@@ -153,13 +162,15 @@ export class DepositComponent implements OnInit {
       return "";
     }
     const momentDate = new Date(date); // Replace event.value with your date value
-    const formattedDate = moment(momentDate).format('YYYY-MM-DD');
+    const formattedDate = moment(momentDate).format("YYYY-MM-DD");
     return formattedDate;
   }
   /** Gets the total amount of all transactions. */
   getTotalAmount() {
     if (this.depositDataSource) {
-      return this.depositDataSource.data.map(t => t.amount).reduce((acc, value) => acc + value, 0);
+      return this.depositDataSource.data
+        .map(t => t.amount)
+        .reduce((acc, value) => acc + value, 0);
     }
   }
 }

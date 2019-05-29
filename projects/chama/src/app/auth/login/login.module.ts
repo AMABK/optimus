@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Route, RouterModule } from '@angular/router';
 import { MaterialModule } from 'projects/material/src/public_api';
 import { LoginComponent } from './login.component';
-import { MatFormFieldModule, MatCardModule } from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 export const uiLoginRoutes: Route[] = [];

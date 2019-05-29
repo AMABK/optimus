@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormErrorComponent } from './form-error.component';
-import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 @NgModule({
   declarations: [FormErrorComponent],

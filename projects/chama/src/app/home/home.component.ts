@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
 import { AuthService } from 'projects/auth/src/public_api';
-import { MatDialog, MatSort, MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
@@ -44,14 +47,14 @@ export class HomeComponent implements OnInit {
     "verified"
   ];
   //dataSource = ELEMENT_DATA;
-  @ViewChild("lineChart") private chartRef;
+  @ViewChild("lineChart", { static: true }) private chartRef;
   chart: any;
   deposits: any = [];
   depositData;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  @ViewChild("searchRef") searchRef;
+  @ViewChild("searchRef", { static: true }) searchRef;
   pFromDate = "";
   pToDate: string = "";
   sFromDate: string = "";
@@ -59,7 +62,7 @@ export class HomeComponent implements OnInit {
   search: string = "";
   verified: string = "";
   paginationData: any;
-  @ViewChild(AddGroupDetailsComponent) child;
+  @ViewChild(AddGroupDetailsComponent, { static: true }) child;
   statuses = [
     { value: "", display: "Verified Status" },
     { value: "yes", display: "Yes" },

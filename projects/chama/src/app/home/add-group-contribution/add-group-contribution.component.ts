@@ -3,7 +3,7 @@ import { environment } from 'projects/chama/src/environments/environment';
 import { Observable } from 'rxjs';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { Chama } from '../../models/chama/chama';
@@ -22,7 +22,7 @@ export class AddGroupContributionComponent implements OnInit {
   chama$: Observable<Chama>;
   currentDeposit: any;
   activeButton: boolean = true;
-  @ViewChild("autosize") autosize: CdkTextareaAutosize;
+  @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
   constructor(
     private notificationService: NotificationService,
     private depositService: DepositService,

@@ -1,20 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatRipple } from '@angular/material';
+import { MatRipple } from '@angular/material/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-spinner',
-  templateUrl: './spinner.component.html',
-  styleUrls: ['./spinner.component.scss']
+  selector: "app-spinner",
+  templateUrl: "./spinner.component.html",
+  styleUrls: ["./spinner.component.scss"]
 })
 export class SpinnerComponent implements OnInit {
-  constructor(private router:Router) { }
+  constructor(private router: Router) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-    /** Reference to the directive instance of the ripple. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  /** Reference to the directive instance of the ripple. */
+  @ViewChild(MatRipple, { static: true }) ripple: MatRipple;
 
   /** Shows a centered and persistent ripple. */
   launchRipple() {
@@ -27,5 +26,4 @@ export class SpinnerComponent implements OnInit {
     // Fade out the ripple later.
     rippleRef.fadeOut();
   }
-
 }
