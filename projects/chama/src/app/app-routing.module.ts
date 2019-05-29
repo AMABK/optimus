@@ -3,18 +3,18 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 
 const routes: Routes = [
-  { path: "home", loadChildren: "./home/home.module#HomeModule" },
+  { path: "home", loadChildren: () => import('./home/home.module').then(m => m.HomeModule) },
   {
     path: "transactions",
-    loadChildren: "./transactions/transactions.module#TransactionsModule"
+    loadChildren: () => import('./transactions/transactions.module').then(m => m.TransactionsModule)
   },
   {
     path: "insights",
-    loadChildren: "./insights/insights.module#InsightsModule"
+    loadChildren: () => import('./insights/insights.module').then(m => m.InsightsModule)
   },
   {
     path: "disputes",
-    loadChildren: "./disputes/disputes.module#DisputesModule"
+    loadChildren: () => import('./disputes/disputes.module').then(m => m.DisputesModule)
   },
   { path: "login", component: LoginComponent },
   { path: "**", redirectTo: "/home", pathMatch: "full" }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Subject } from 'rxjs';
 import {
   MatSort,
@@ -47,8 +47,8 @@ export class WithdrawalComponent implements OnInit {
     { value: "paid", display: "Paid" },
     { value: "unpaid", display: "Unpaid" }
   ];
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
   constructor(private depositService: DepositService) {}
   ngOnInit() {
