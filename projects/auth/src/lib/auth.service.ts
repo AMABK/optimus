@@ -46,7 +46,6 @@ export class AuthService {
       })
       .pipe(
         map(authData => {
-          // console.log(authData);
           if (authData && authData.access_token) {
             this.storeResult(authData);
             this.currentUserSubject.next(authData);

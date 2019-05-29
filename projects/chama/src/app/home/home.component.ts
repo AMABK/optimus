@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
   @ViewChild("lineChart") private chartRef;
   chart: any;
   deposits: any = [];
-  depositData = new MatTableDataSource([]);
+  depositData;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   pageEvent: PageEvent;
@@ -127,12 +127,11 @@ export class HomeComponent implements OnInit {
         total: response.data.total,
         per_page: response.data.per_page
       };
-      this.deposits = response.data.data;
+      this.deposits = new MatTableDataSource(response.data.data);
       this.depositData.data = this.deposits;
       if (this.depositData.data) {
         this.depositData.sort = this.sort;
       }
-      //this.depositData = new MatTableDataSource<PeriodicElement1>(this.deposits);
     });
     this.getDefaultChamaDetails();
     this.firstFormGroup = this._formBuilder.group({

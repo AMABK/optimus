@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     {
       path: "/transactions/withdrawal",
       icon: "zoom_out_map",
-      label: "Withdrawals"
+      label: "Withdrawals/Debits"
     },
     { path: "/disputes", icon: "flare", label: "Disputes" },
     { path: "/insights", icon: "pie_chart", label: "Insights" },
