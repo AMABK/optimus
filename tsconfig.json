@@ -94,6 +94,12 @@
       ],
       "loader-interceptor/*": [
         "dist/loader-interceptor/*"
+      ],
+      "export-pdf": [
+        "dist/export-pdf"
+      ],
+      "export-pdf/*": [
+        "dist/export-pdf/*"
       ]
     }
   }

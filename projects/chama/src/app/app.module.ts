@@ -14,23 +14,22 @@ import { AuthGuard } from 'projects/auth/src/public_api';
 import { ErrorInterceptorService } from 'projects/error/src/public_api';
 import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
 import { AuthComponent } from './auth/auth.component';
-import { LoginModule } from './auth/login/login.module';
 import { MatTreeModule } from '@angular/material/tree';
 import { SidenavComponent } from './shared/sidenav/sidenav.component';
 import { SidenavModule } from './shared/sidenav/sidenav.module';
-import { FlexLayoutModule } from "@angular/flex-layout";
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { TokenInterceptorService } from 'projects/token-interceptor/src/public_api';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { InputFieldComponent } from './shared/input-field/input-field.component';
-import { InsightsComponent } from './insights/insights.component';
-
+import { LoginComponent } from './auth/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     AuthComponent,
+    LoginComponent,
     PasswordResetComponent,
     SidenavComponent,
     SpinnerComponent,
@@ -44,7 +43,6 @@ import { InsightsComponent } from './insights/insights.component';
     HttpClientModule,
     RouterModule,
     FormsModule,
-    LoginModule,
     MatTreeModule,
     SidenavModule,
     BrowserAnimationsModule,

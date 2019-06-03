@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DepositService } from '../../http/deposit/deposit.service';
 import * as moment from 'moment';
+import { ExportPdf } from 'projects/export-pdf/src/public-api';
 
 @Component({
   selector: "app-withdrawal",
@@ -23,12 +24,11 @@ export class WithdrawalComponent implements OnInit {
   debitType = "";
   paymentStatus = "";
   depositDataSource;
-  txn_type = -1;
+  txn_type = "withdrawal";
   displayedColumns: string[] = [
     "position",
     "contribution_type.type_name",
     "amount",
-    "paid",
     "payment_mode.bank",
     "payment_date",
     "created_at",
@@ -44,33 +44,41 @@ export class WithdrawalComponent implements OnInit {
     { value: "paid", display: "Paid" },
     { value: "unpaid", display: "Unpaid" }
   ];
+  download: string = '';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private depositService: DepositService) {}
+  constructor(private depositService: DepositService,private exportPdf: ExportPdf) {}
   ngOnInit() {
-    this.depositService.search(this.searchTerm$, "-1").subscribe(response => {
-      this.paginationData = {
-        current_page: response.data.current_page - 1,
-        total: response.data.total,
-        per_page: response.data.per_page
-      };
-      this.depositDataSource = new MatTableDataSource(response.data.data);
-      this.depositDataSource.sortingDataAccessor = (item, property) => {
-        switch (property) {
-          case "contribution_type.type_name":
-            return item.contribution_type.type_name;
-          case "payment_mode.bank":
-            if (item.payment_mode != null) {
-              return item.payment_mode.bank;
-            }
-            return null;
-          default:
-            return item[property];
+    this.depositService
+      .search(this.searchTerm$, "withdrawal")
+      .subscribe(response => {
+        if(this.download !='download'){
+        this.paginationData = {
+          current_page: response.data.current_page - 1,
+          total: response.data.total,
+          per_page: response.data.per_page
+        };
+        this.depositDataSource = new MatTableDataSource(response.data.data);
+        this.depositDataSource.sortingDataAccessor = (item, property) => {
+          switch (property) {
+            case "contribution_type.type_name":
+              return item.contribution_type.type_name;
+            case "payment_mode.bank":
+              if (item.payment_mode != null) {
+                return item.payment_mode.bank;
+              }
+              return null;
+            default:
+              return item[property];
+          }
+        };
+          this.depositDataSource.sort = this.sort;
+        } else {
+          this.downloadPDF(response.data);
+          this.download = '';
         }
-      };
-      this.depositDataSource.sort = this.sort;
-    });
+      });
   }
   handleSearch(query: string, model: string) {
     switch (model) {
@@ -78,6 +86,9 @@ export class WithdrawalComponent implements OnInit {
         // General search can only be done in exclusivity
         this.clearSearch();
         this.search = query;
+        break;
+      case "download":
+        this.download = 'download';
         break;
       case "pFromDate":
         this.search = "";
@@ -123,7 +134,8 @@ export class WithdrawalComponent implements OnInit {
       verified: this.verified,
       txnType: this.txn_type,
       paymentStatus: this.paymentStatus,
-      debitType: this.debitType
+      debitType: this.debitType,
+      download: this.download
     });
     this.paginator.pageIndex = 0;
   }
@@ -181,5 +193,32 @@ export class WithdrawalComponent implements OnInit {
         .map(t => t.amount)
         .reduce((acc, value) => acc + value, 0);
     }
+  }
+  downloadPDF(pdfData) {
+    const data = [];
+    let subData = [];
+    let x = 1;
+    for (const item of pdfData) {
+      subData = [];
+      subData.push(x);
+      if (item.payment_mode == null) {
+        subData.push('-');
+      } else {
+        subData.push(item.payment_mode.bank);
+      }
+      if (item.contribution_type == null) {
+        subData.push('-');
+      } else {
+        subData.push(item.contribution_type.type_name);
+      }
+      subData.push(this.numberWithCommas(item.amount));
+      subData.push(item.payment_date);
+      subData.push(item.created_at);
+      subData.push(item.verified.toUpperCase());
+      data.push(subData);
+      x++;
+    }
+    const head = ['No.', 'Bank','Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    this.exportPdf.createPDF(data, head, 'landscape');
   }
 }

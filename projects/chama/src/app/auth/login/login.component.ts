@@ -51,15 +51,35 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
   ) {
-    this.currentUserSubject = new BehaviorSubject<Auth>(
-      JSON.parse(sessionStorage.getItem('currentUser'))
-    );
-    this.currentUser = this.currentUserSubject.asObservable();
+     this.route.queryParams.subscribe(params => {
+       if (params["loginType"] === "social") {
+         if (params["status"] === "error") {
+           this.notificationService.emit(params["message"]);
+         } else {
+           this.authService.storeResult(JSON.parse(params["authData"]));
+           this.router.navigate(["/home"]);
+         }
+       }
+     });
   }
 
   ngOnInit() {
+   
+          //this.router.navigate(["/home"]);
+
+  
+  
+    // if (this.route.snapshot.paramMap.get("loginType") == "social") {
+    //   const authData = this.route.snapshot.paramMap.get("authData");
+    //   alert(authData);
+      
+    //   //sessionStorage.setItem("currentUser", JSON.stringify(authData));
+    //   // this.currentUserSubject.next(authData);
+
+    //   this.router.navigate(["/home"]);
+    // }
     // if (this.route.snapshot.paramMap.get('redirectUrl') !== '') {
     //   this.notificationService.emit(
     //     'Please login first to access this page',
@@ -67,8 +87,11 @@ export class LoginComponent implements OnInit {
     //   );
     // }
     if (this.currentUserSubject) {
-     //this.router.navigate(['/home']);
+     this.router.navigate(['/home']);
     }
+  }
+  facebookLogin() {
+    window.location.href = "http://localhost:8000/login/fb";
   }
   public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
@@ -81,10 +104,10 @@ export class LoginComponent implements OnInit {
         .pipe()
         .subscribe(authData => {
           if (authData && authData.access_token) { 
-            sessionStorage.setItem(
-              "currentUser",
-              JSON.stringify(authData)
-            );
+            // sessionStorage.setItem(
+            //   "currentUser",
+            //   JSON.stringify(authData)
+            // );
             this.currentUserSubject.next(authData);
 
             this.router.navigate(['/home']);

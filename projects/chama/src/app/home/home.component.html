@@ -291,13 +291,17 @@
                         <ng-template matStepLabel>GROUP<br>Set Up Group Details</ng-template>
                         <div class="center">
 
-                            <button *ngIf="noChamaData" [disabled]="user.chama_id == null" mat-button
+                            <!-- <button *ngIf="noChamaData" [disabled]="user.chama_id == null" mat-button
                                 class="edit-group-button" (click)="openAddGroupDetails()">
                                 <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
+                            </button> -->
+                            <button *ngIf="user.chama_id != null" mat-button class="edit-group-button"
+                                (click)="openAddGroupDetails('update')">
+                                <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
                             </button>
-                            <button *ngIf="!noChamaData" mat-button class="edit-group-button"
-                                (click)="openAddGroupDetails()">
-                                <mat-icon>group</mat-icon> ADD GROUP DETAILS HERE
+                            <button mat-button class="edit-group-button"
+                                (click)="openAddGroupDetails('create')">
+                                <mat-icon>group</mat-icon> ADD NEW GROUP HERE
                             </button>
                         </div>
                     </mat-step>
@@ -324,7 +328,7 @@
         </div>
     </mat-tab>
 </mat-tab-group>
-<mat-card>
+    <mat-card>
     <div fxLayout="row">
         <canvas id="lineChart" height="500" width="1050"></canvas>
     </div>

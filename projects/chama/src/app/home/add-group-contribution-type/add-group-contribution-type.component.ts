@@ -35,7 +35,7 @@ export class AddGroupContributionTypeComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.name.valid && this.description.valid,this.status.valid) {
+    if (this.name.valid && this.description.valid&&this.status.valid) {
       let currentContributionType = {
         name: this.name.value,
         status: this.status.value,

@@ -14,15 +14,15 @@ import { DepositService } from '../../http/deposit/deposit.service';
 
 
 @Component({
-  selector: "app-add-group-contribution",
-  templateUrl: "./add-group-contribution.component.html",
-  styleUrls: ["./add-group-contribution.component.css"]
+  selector: 'app-add-group-contribution',
+  templateUrl: './add-group-contribution.component.html',
+  styleUrls: ['./add-group-contribution.component.css']
 })
 export class AddGroupContributionComponent implements OnInit {
   chama$: Observable<Chama>;
   currentDeposit: any;
   activeButton: boolean = true;
-  @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
+  @ViewChild('autosize', { static: true }) autosize: CdkTextareaAutosize;
   constructor(
     private notificationService: NotificationService,
     private depositService: DepositService,
@@ -37,26 +37,27 @@ export class AddGroupContributionComponent implements OnInit {
       .pipe(take(1))
       .subscribe(() => this.autosize.resizeToFitContent(true));
   }
-  paymentDate = new FormControl("", [
+  paymentDate = new FormControl('', [
     Validators.required,
     Validators.minLength(4)
   ]);
-  deposit = new FormControl("", [Validators.required, Validators.minLength(1)]);
-  email = new FormControl("", [Validators.email, Validators.minLength(4)]);
-  phoneNumber = new FormControl("", [
+  deposit = new FormControl('', [Validators.required, Validators.minLength(1)]);
+  email = new FormControl('', [Validators.email, Validators.minLength(4)]);
+  phoneNumber = new FormControl('', [
     Validators.required,
     Validators.minLength(4)
   ]);
-  amount = new FormControl("", [
+  amount = new FormControl('', [
     Validators.required,
     Validators.minLength(1),
-    Validators.pattern("[0]*([1-9]+|[1-9][0-9][0-9]*)")
+    Validators.pattern('[0]*([1-9]+|[1-9][0-9][0-9]*)')
   ]);
-  location = new FormControl("", [
+// tslint:disable-next-line: member-ordering
+  location = new FormControl('', [
     Validators.required,
     Validators.minLength(4)
   ]);
-  desc = new FormControl("", [Validators.required, Validators.minLength(4)]);
+  desc = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
   matcher = new FormErrorService();
 
@@ -78,7 +79,7 @@ export class AddGroupContributionComponent implements OnInit {
         description: this.desc.value,
         paymentDate: this.paymentDate.value,
         chamaId: this.data.group.id,
-        createdBy: this.authService.getUserData()["user"]["id"],
+        createdBy: this.authService.getUserData()['user']['id'],
         status: 0
       };
 
@@ -96,7 +97,7 @@ export class AddGroupContributionComponent implements OnInit {
   createDeposit(deposit) {
     this.depositService.createDeposit(deposit).subscribe(
       response => {
-        this.dialogRef.close("success");
+        this.dialogRef.close('success');
       },
       error => {}
     );

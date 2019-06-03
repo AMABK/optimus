@@ -1,0 +1,256 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { RequestLoanDialogComponent } from '../request-loan-dialog/request-loan-dialog.component';
+import { Subject } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { DepositService } from '../../http/deposit/deposit.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import * as moment from 'moment';
+import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
+import { ChamaService } from '../../http/chama/chama.service';
+import { ExportPdf } from 'projects/export-pdf/src/public-api';
+
+@Component({
+  selector: 'app-loan-request',
+  templateUrl: './loan-request.component.html',
+  styleUrls: ['./loan-request.component.css']
+})
+export class LoanRequestComponent implements OnInit {
+  searchTerm$ = new Subject<any>();
+  paginationData: any;
+  pFromDate = '';
+  pToDate = '';
+  sFromDate = '';
+  sToDate = '';
+  search = '';
+  verified = '';
+  debitType = '';
+  paymentStatus = '';
+  loanRequestDataSource;
+  txn_type = 'payable';
+  displayedColumns: string[] = [
+    'position',
+    'amount',
+    'payment_date',
+    'created_at',
+    'verified'
+  ];
+  statuses = [
+    { value: '', display: 'Verified Status' },
+    { value: 'yes', display: 'Yes' },
+    { value: 'no', display: 'No' }
+  ];
+  paymentStatuses = [
+    { value: '', display: 'Payment Status' },
+    { value: 'paid', display: 'Paid' },
+    { value: 'unpaid', display: 'Unpaid' }
+  ];
+  download = '';
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  pageEvent: PageEvent;
+  constructor(
+    private depositService: DepositService,
+    public dialog: MatDialog,
+    private loaderIService: LoaderInterceptorService,
+    private chamaService: ChamaService,
+    private exportPdf: ExportPdf
+  ) {}
+  ngOnInit() {
+    this.getLoanRequests();
+  }
+  getLoanRequests() {
+        this.depositService
+          .getLoanRequests(this.searchTerm$)
+          .subscribe(response => {
+            if (this.download !== 'download') {
+            this.paginationData = {
+              current_page: response.data.current_page - 1,
+              total: response.data.total,
+              per_page: response.data.per_page
+            };
+            this.loanRequestDataSource = new MatTableDataSource(
+              response.data.data
+            );
+            this.loanRequestDataSource.sortingDataAccessor = (item, property) => {
+              switch (property) {
+                case 'contribution_type.type_name':
+                  return item.contribution_type.type_name;
+                case 'payment_mode.bank':
+                  if (item.payment_mode != null) {
+                    return item.payment_mode.bank;
+                  }
+                  return null;
+                default:
+                  return item[property];
+              }
+            };
+            this.loanRequestDataSource.sort = this.sort;
+            } else {
+              this.downloadPDF(response.data);
+              this.download = '';
+            }
+          });
+
+  }
+  handleSearch(query: string, model: string) {
+    switch (model) {
+      case 'search':
+        // General search can only be done in exclusivity
+        this.clearSearch();
+        this.search = query;
+        break;
+      case 'pFromDate':
+        this.search = '';
+        this.pFromDate = query;
+        break;
+      case 'download':
+        this.download = 'download';
+        break;
+      case 'pToDate':
+        this.search = '';
+        this.pToDate = query;
+        break;
+      case 'sFromDate':
+        this.search = '';
+        this.sFromDate = query;
+        break;
+      case 'sToDate':
+        this.search = '';
+        this.sToDate = query;
+        break;
+      case 'verified':
+        this.search = '';
+        this.verified = query;
+        break;
+      case 'debitType':
+        this.search = '';
+        this.debitType = query;
+        break;
+      case 'paymentStatus':
+        this.search = '';
+        this.paymentStatus = query;
+        break;
+      default:
+        break;
+    }
+    this.pFromDate = query === '' ? '' : this.formatDateInput(this.pFromDate);
+    this.pToDate = query === '' ? '' : this.formatDateInput(this.pToDate);
+    this.sFromDate = query === '' ? '' : this.formatDateInput(this.sFromDate);
+    this.sToDate = query === '' ? '' : this.formatDateInput(this.sToDate);
+    this.searchTerm$.next({
+      q: this.search,
+      pFromDate: this.pFromDate,
+      pToDate: this.pToDate,
+      sFromDate: this.sFromDate,
+      sToDate: this.sToDate,
+      verified: this.verified,
+      txnType: this.txn_type,
+      paymentStatus: this.paymentStatus,
+      debitType: this.debitType,
+      download: this.download
+    });
+    this.paginator.pageIndex = 0;
+  }
+  clearSearch(activate = null) {
+    this.pFromDate = '';
+    this.pToDate = '';
+    this.sFromDate = '';
+    this.sToDate = '';
+    this.verified = '';
+    this.search = '';
+    if (activate === 'activate') {
+      this.handleSearch('', '');
+    }
+  }
+  paginate() {
+    const pageIndex = this.pageEvent.pageIndex;
+    const pageSize = this.pageEvent.pageSize;
+    const query = this.search;
+    const pFromDate =
+      this.pFromDate === '' ? '' : this.formatDateInput(this.pFromDate);
+    const pToDate =
+      this.pToDate === '' ? '' : this.formatDateInput(this.pToDate);
+    const sFromDate =
+      this.sFromDate === '' ? '' : this.formatDateInput(this.sFromDate);
+    const sToDate =
+      this.sToDate === '' ? '' : this.formatDateInput(this.sToDate);
+    const verified = this.verified;
+    this.searchTerm$.next({
+      q: query,
+      pFromDate,
+      pToDate,
+      sFromDate,
+      sToDate,
+      verified,
+      txnType: this.txn_type,
+      page: pageIndex + 1,
+      size: pageSize
+    });
+  }
+  numberWithCommas(value: number = 0) {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+  formatDateInput(date) {
+    if (date === '' || date == null) {
+      return '';
+    }
+    const momentDate = new Date(date); // Replace event.value with your date value
+    const formattedDate = moment(momentDate).format('YYYY-MM-DD');
+    return formattedDate;
+  }
+  /** Gets the total amount of all transactions. */
+  getTotalAmount() {
+    if (this.loanRequestDataSource) {
+      return this.loanRequestDataSource.data
+        .map(t => t.amount)
+        .reduce((acc, value) => acc + value, 0);
+    }
+  }
+  openRequestLoanDialog() {
+    let dData = {
+      depositTypes: null
+    };
+    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+        if (result.chama_id != null) {
+          dData = {
+            depositTypes: {},
+          };
+        }
+    });
+
+    const dialogRef = this.dialog.open(RequestLoanDialogComponent, {
+      height: 'auto',
+      width: '600px',
+      data: dData
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'success') {
+        this.getLoanRequests();
+        // set message to be emitted by loader interceptor after http requests end
+        this.loaderIService.storeNotificationMessage(
+          'Request successfully added!',
+          'success'
+        );
+      }
+    });
+  }
+  downloadPDF(pdfData) {
+    const data = [];
+    let subData = [];
+    let x = 1;
+    for (const item of pdfData) {
+      subData = [];
+      subData.push(x);
+      subData.push(this.numberWithCommas(item.amount));
+      subData.push(item.payment_date);
+      subData.push(item.created_at);
+      subData.push(item.status);
+      data.push(subData);
+      x++;
+    }
+    const head = ['No.', 'Amount', 'Date Of Payment', 'Date Of Submission', 'Verified'];
+    this.exportPdf.createPDF(data, head, 'landscape');
+  }
+}

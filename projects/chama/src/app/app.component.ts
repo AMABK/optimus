@@ -19,15 +19,25 @@ export class AppComponent implements OnInit {
     { path: "/transactions", icon: "credit_card", label: "Transactions" },
     { path: "/transactions/deposit", icon: "money", label: "Deposits" },
     {
+      path: "/transactions/payable",
+      icon: "money_off",
+      label: "Payables(Fines&Loans)"
+    },
+    {
       path: "/transactions/withdrawal",
       icon: "zoom_out_map",
       label: "Withdrawals/Debits"
+    },
+    {
+      path: "/transactions/loan-request",
+      icon: "shopping_basket",
+      label: "Loan Requests"
     },
     { path: "/disputes", icon: "flare", label: "Disputes" },
     { path: "/insights", icon: "pie_chart", label: "Insights" },
     { path: "/admin", icon: "", label: "Administration" },
     { path: "/admin/users", icon: "person", label: "Manage Users" },
-    { path: "/admin/group", icon: "group_work", label: "Manage Groups" },
+    { path: "/admin/groups", icon: "group_work", label: "Manage Groups" },
     {
       path: "/admin/system/users",
       icon: "assignment_ind",
@@ -51,9 +61,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     if (this.loaderService.isLoading.getValue()) {
-      console.log(this.loaderService.isLoading.getValue());
+      // console.log(this.loaderService.isLoading.getValue());
     } else {
-      console.log(this.loaderService.isLoading.getValue());
+      //console.log(this.loaderService.isLoading.getValue());
     }
   }
 

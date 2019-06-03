@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit {
         per_page: response.data.per_page
       };
       this.deposits = new MatTableDataSource(response.data.data);
-      this.depositData.data = this.deposits;
+      this.depositData = this.deposits;
       if (this.depositData.data) {
         this.depositData.sort = this.sort;
       }
@@ -144,6 +144,7 @@ export class HomeComponent implements OnInit {
       secondCtrl: ["", Validators.required]
     });
     this.chamas$ = this.getChamas(this.authService.getUserId());
+    
     // Line chart:
     this.LineChart = new Chart("lineChart", {
       type: "line",
@@ -339,12 +340,13 @@ export class HomeComponent implements OnInit {
     }
   }
   ngOnDestroy() {
-    // this.deposits.unsubscribe();
+    //this.chamas$.unsubscribe();
   }
-  openAddGroupDetails() {
+  openAddGroupDetails(status = 'create') {
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
       let modalData = {};
-      if (result.default_chama == null) {
+     // alert(result)
+      if ((result.default_chama == null)||(status=='create')) {
         modalData = {
           id: null,
           name: "",
@@ -357,7 +359,6 @@ export class HomeComponent implements OnInit {
       } else {
         modalData = result.default_chama;
       }
-
       const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
         height: "auto",
         width: "600px",

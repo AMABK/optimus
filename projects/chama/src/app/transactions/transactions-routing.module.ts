@@ -1,27 +1,39 @@
-import { NgModule } from "@angular/core";
-import { AuthGuard } from "projects/auth/src/public_api";
-import { TransactionsComponent } from "./transactions.component";
-import { Routes, RouterModule } from "@angular/router";
-import { WithdrawalComponent } from "./withdrawal/withdrawal.component";
-import { DepositComponent } from "./deposit/deposit.component";
+import { NgModule } from '@angular/core';
+import { AuthGuard } from 'projects/auth/src/public_api';
+import { TransactionsComponent } from './transactions.component';
+import { Routes, RouterModule } from '@angular/router';
+import { WithdrawalComponent } from './withdrawal/withdrawal.component';
+import { DepositComponent } from './deposit/deposit.component';
+import { PayableComponent } from './payable/payable.component';
+import { LoanRequestComponent } from './loan-request/loan-request.component';
 
 const routes: Routes = [
   {
-    path: "",
+    path: '',
     component: TransactionsComponent,
     canActivate: [AuthGuard],
     data: {
-      animation: "transactions"
+      animation: 'transactions'
     }
   },
   {
-    path: "deposit",
+    path: 'deposit',
     component: DepositComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: "withdrawal",
+    path: 'payable',
+    component: PayableComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'withdrawal',
     component: WithdrawalComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'loan-request',
+    component: LoanRequestComponent,
     canActivate: [AuthGuard]
   }
 ];
