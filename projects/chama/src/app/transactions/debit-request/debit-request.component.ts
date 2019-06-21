@@ -1,34 +1,31 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RequestLoanDialogComponent } from '../request-loan-dialog/request-loan-dialog.component';
 import { Subject } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { DepositService } from '../../http/deposit/deposit.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
 import { ExportPdf } from 'projects/export-pdf/src/public-api';
+import { DebitService } from '../../http/debit/debit.service';
+import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
 
 @Component({
-  selector: 'app-loan-request',
-  templateUrl: './loan-request.component.html',
-  styleUrls: ['./loan-request.component.css']
+  selector: 'app-debit-request',
+  templateUrl: './debit-request.component.html',
+  styleUrls: ['./debit-request.component.css']
 })
-export class LoanRequestComponent implements OnInit {
+export class DebitRequestComponent implements OnInit {
   searchTerm$ = new Subject<any>();
   paginationData: any;
-  pFromDate = '';
-  pToDate = '';
+  aFromDate = '';
+  aToDate = '';
   sFromDate = '';
   sToDate = '';
   search = '';
   verified = '';
-  debitType = '';
-  paymentStatus = '';
   loanRequestDataSource;
-  txn_type = 'payable';
   displayedColumns: string[] = [
     'position',
     'amount',
@@ -38,8 +35,8 @@ export class LoanRequestComponent implements OnInit {
   ];
   statuses = [
     { value: '', display: 'Verified Status' },
-    { value: 'yes', display: 'Yes' },
-    { value: 'no', display: 'No' }
+    { value: '1', display: 'Yes' },
+    { value: '0', display: 'No' }
   ];
   paymentStatuses = [
     { value: '', display: 'Payment Status' },
@@ -51,7 +48,7 @@ export class LoanRequestComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
   constructor(
-    private depositService: DepositService,
+    private debitService: DebitService,
     public dialog: MatDialog,
     private loaderIService: LoaderInterceptorService,
     private chamaService: ChamaService,
@@ -61,8 +58,8 @@ export class LoanRequestComponent implements OnInit {
     this.getLoanRequests();
   }
   getLoanRequests() {
-        this.depositService
-          .getLoanRequests(this.searchTerm$)
+        this.debitService
+          .searchLoanRequests(this.searchTerm$)
           .subscribe(response => {
             if (this.download !== 'download') {
             this.paginationData = {
@@ -101,16 +98,16 @@ export class LoanRequestComponent implements OnInit {
         this.clearSearch();
         this.search = query;
         break;
-      case 'pFromDate':
+      case 'aFromDate':
         this.search = '';
-        this.pFromDate = query;
+        this.aFromDate = query;
         break;
       case 'download':
         this.download = 'download';
         break;
-      case 'pToDate':
+      case 'aToDate':
         this.search = '';
-        this.pToDate = query;
+        this.aToDate = query;
         break;
       case 'sFromDate':
         this.search = '';
@@ -124,38 +121,27 @@ export class LoanRequestComponent implements OnInit {
         this.search = '';
         this.verified = query;
         break;
-      case 'debitType':
-        this.search = '';
-        this.debitType = query;
-        break;
-      case 'paymentStatus':
-        this.search = '';
-        this.paymentStatus = query;
-        break;
       default:
         break;
     }
-    this.pFromDate = query === '' ? '' : this.formatDateInput(this.pFromDate);
-    this.pToDate = query === '' ? '' : this.formatDateInput(this.pToDate);
+    this.aFromDate = query === '' ? '' : this.formatDateInput(this.aFromDate);
+    this.aToDate = query === '' ? '' : this.formatDateInput(this.aToDate);
     this.sFromDate = query === '' ? '' : this.formatDateInput(this.sFromDate);
     this.sToDate = query === '' ? '' : this.formatDateInput(this.sToDate);
     this.searchTerm$.next({
       q: this.search,
-      pFromDate: this.pFromDate,
-      pToDate: this.pToDate,
+      aFromDate: this.aFromDate,
+      aToDate: this.aToDate,
       sFromDate: this.sFromDate,
       sToDate: this.sToDate,
       verified: this.verified,
-      txnType: this.txn_type,
-      paymentStatus: this.paymentStatus,
-      debitType: this.debitType,
       download: this.download
     });
     this.paginator.pageIndex = 0;
   }
   clearSearch(activate = null) {
-    this.pFromDate = '';
-    this.pToDate = '';
+    this.aFromDate = '';
+    this.aToDate = '';
     this.sFromDate = '';
     this.sToDate = '';
     this.verified = '';
@@ -168,10 +154,10 @@ export class LoanRequestComponent implements OnInit {
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
     const query = this.search;
-    const pFromDate =
-      this.pFromDate === '' ? '' : this.formatDateInput(this.pFromDate);
-    const pToDate =
-      this.pToDate === '' ? '' : this.formatDateInput(this.pToDate);
+    const aFromDate =
+      this.aFromDate === '' ? '' : this.formatDateInput(this.aFromDate);
+    const aToDate =
+      this.aToDate === '' ? '' : this.formatDateInput(this.aToDate);
     const sFromDate =
       this.sFromDate === '' ? '' : this.formatDateInput(this.sFromDate);
     const sToDate =
@@ -179,12 +165,11 @@ export class LoanRequestComponent implements OnInit {
     const verified = this.verified;
     this.searchTerm$.next({
       q: query,
-      pFromDate,
-      pToDate,
+      aFromDate,
+      aToDate,
       sFromDate,
       sToDate,
       verified,
-      txnType: this.txn_type,
       page: pageIndex + 1,
       size: pageSize
     });
@@ -220,7 +205,7 @@ export class LoanRequestComponent implements OnInit {
         }
     });
 
-    const dialogRef = this.dialog.open(RequestLoanDialogComponent, {
+    const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: 'auto',
       width: '600px',
       data: dData

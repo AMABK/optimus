@@ -1,23 +1,23 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { OnInit, Inject, Component } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
-import { DepositService } from '../../http/deposit/deposit.service';
+import { DebitService } from '../../http/debit/debit.service';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
 
 @Component({
-  selector: "app-request-loan-dialog",
-  templateUrl: "./request-loan-dialog.component.html",
-  styleUrls: ["./request-loan-dialog.component.css"]
+  selector: "app-request-debit-dialog",
+  templateUrl: "./request-debit-dialog.component.html",
+  styleUrls: ["./request-debit-dialog.component.css"]
 })
-export class RequestLoanDialogComponent implements OnInit {
+export class RequestDebitDialogComponent implements OnInit {
   chamaData: any;
   loanRequest: any;
   constructor(
-    public dialogRef: MatDialogRef<RequestLoanDialogComponent>,
+    public dialogRef: MatDialogRef<RequestDebitDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
-    private depositService: DepositService,
+    private debitService: DebitService,
     private notificationService: NotificationService,
     private chamaService: ChamaService
   ) {}
@@ -53,7 +53,7 @@ export class RequestLoanDialogComponent implements OnInit {
         disbursement_date: this.disbursementDate.value,
         payment_date: this.paymentDate.value,
         reason: this.reason.value,
-        loan_from: this.loanFrom.value,
+        debit_from: this.loanFrom.value,
         amount: this.amount.value,
         status: 0
       };
@@ -70,7 +70,7 @@ export class RequestLoanDialogComponent implements OnInit {
     }
   }
   createLoanRequest(loan) {
-    this.depositService.createLoanRequest(loan).subscribe(
+    this.debitService.createDebitRequest(loan).subscribe(
       response => {
         this.notificationService.emit(
           "Loan request successfully made",
@@ -82,7 +82,7 @@ export class RequestLoanDialogComponent implements OnInit {
     );
   }
   updateLoanRequest(loan) {
-    this.depositService.createDeposit(loan).subscribe(
+    this.debitService.updateDebitRequest(loan).subscribe(
       response => {
         this.dialogRef.close("success");
       },

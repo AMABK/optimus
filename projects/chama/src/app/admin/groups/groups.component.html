@@ -1,6 +1,7 @@
 <mat-tab-group>
   <mat-tab label="Groups">
     <mat-card>
+      <h3>Admin >> Groups </h3>
        <button mat-button style="border: 1px solid #428bca;" (click)="handleSearch($event,'download')">
                     <mat-icon>get_app</mat-icon>Export
       </button>
@@ -45,7 +46,7 @@
   </ng-container>
 
   <!-- Symbol Column -->
-  <ng-container m a tColumnDef="email" >
+  <ng-container matColumnDef="email" >
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
     <td mat-cell *matCellDef="let group"> {{group.email}} </td>
   </ng-container>

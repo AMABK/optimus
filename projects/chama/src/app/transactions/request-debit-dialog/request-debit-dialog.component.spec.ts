@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RequestLoanDialogComponent } from './request-loan-dialog.component';
+import { RequestDebitDialogComponent } from './request-debit-dialog.component';
 
 describe('RequestLoanDialogComponent', () => {
-  let component: RequestLoanDialogComponent;
-  let fixture: ComponentFixture<RequestLoanDialogComponent>;
+  let component: RequestDebitDialogComponent;
+  let fixture: ComponentFixture<RequestDebitDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RequestLoanDialogComponent ]
+      declarations: [ RequestDebitDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RequestLoanDialogComponent);
+    fixture = TestBed.createComponent(RequestDebitDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

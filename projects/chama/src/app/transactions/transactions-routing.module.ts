@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { WithdrawalComponent } from './withdrawal/withdrawal.component';
 import { DepositComponent } from './deposit/deposit.component';
 import { PayableComponent } from './payable/payable.component';
-import { LoanRequestComponent } from './loan-request/loan-request.component';
+import { DebitRequestComponent } from './debit-request/debit-request.component';
 
 const routes: Routes = [
   {
@@ -33,7 +33,7 @@ const routes: Routes = [
   },
   {
     path: 'loan-request',
-    component: LoanRequestComponent,
+    component: DebitRequestComponent,
     canActivate: [AuthGuard]
   }
 ];

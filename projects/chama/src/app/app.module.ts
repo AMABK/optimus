@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { MatExpansionModule } from '@angular/material/expansion';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { MaterialModule } from 'projects/material/src/public_api';
@@ -46,7 +46,8 @@ import { LoginComponent } from './auth/login/login.component';
     MatTreeModule,
     SidenavModule,
     BrowserAnimationsModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatExpansionModule
   ],
   providers: [
     AuthGuard,

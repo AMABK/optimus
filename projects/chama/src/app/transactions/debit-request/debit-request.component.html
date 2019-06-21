@@ -1,5 +1,6 @@
 <div fxLayout="row" fxLayout.xs="column">
   <mat-card fxFlex="1 2 72">
+    <h3>Transactions >> Loan Requests</h3>
     <button
       mat-button
       style="border: 1px solid #428bca;"
@@ -25,27 +26,6 @@
         />
         <input
           class="input-field"
-          (ngModelChange)="handleSearch($event, 'pFromDate')"
-          placeholder="From Date of Payment"
-          [(ngModel)]="pFromDate"
-          format="YYYY/MM/DD"
-          (click)="fromDatePayment.open()"
-          [matDatepicker]="fromDatePayment"
-        />
-        <mat-datepicker #fromDatePayment></mat-datepicker>
-        <input
-          class="input-field"
-          (ngModelChange)="handleSearch($event, 'pToDate')"
-          placeholder="To Date of Payment"
-          [(ngModel)]="pToDate"
-          format="YYYY/MM/DD"
-          (click)="toDatePayment.open()"
-          page="paginate((pageEvent = $event))"
-          [matDatepicker]="toDatePayment"
-        />
-        <mat-datepicker #toDatePayment></mat-datepicker>
-        <input
-          class="input-field"
           (ngModelChange)="handleSearch($event, 'sFromDate')"
           placeholder="From Date of Submission"
           [(ngModel)]="sFromDate"
@@ -64,6 +44,27 @@
           [matDatepicker]="toDateSubmission"
         />
         <mat-datepicker #toDateSubmission></mat-datepicker>
+        <input
+          class="input-field"
+          (ngModelChange)="handleSearch($event, 'aFromDate')"
+          placeholder="From Date of Approval"
+          [(ngModel)]="aFromDate"
+          format="YYYY/MM/DD"
+          (click)="fromDateApproval.open()"
+          [matDatepicker]="fromDateApproval"
+        />
+        <mat-datepicker #fromDateApproval></mat-datepicker>
+        <input
+          class="input-field"
+          (ngModelChange)="handleSearch($event, 'aToDate')"
+          placeholder="To Date of Approval"
+          [(ngModel)]="aToDate"
+          format="YYYY/MM/DD"
+          (click)="toDateApproval.open()"
+          page="paginate((pageEvent = $event))"
+          [matDatepicker]="toDateApproval"
+        />
+        <mat-datepicker #toDateApproval></mat-datepicker>
         <select
           class="input-field select"
           (ngModelChange)="handleSearch($event, 'verified')"
@@ -72,26 +73,6 @@
           <option *ngFor="let status of statuses" [(value)]="status.value">{{
             status.display
           }}</option>
-        </select>
-        <select
-          class="input-field select"
-          (ngModelChange)="handleSearch($event, 'debitType')"
-          [(ngModel)]="debitType"
-        >
-          <option value="">Debit Type</option>
-          <option value="">Fines</option>
-          <option value="">Withdrawal</option>
-        </select>
-        <select
-          class="input-field select"
-          (ngModelChange)="handleSearch($event, 'paymentStatus')"
-          [(ngModel)]="paymentStatus"
-        >
-          <option
-            *ngFor="let paymentStatus of paymentStatuses"
-            [(value)]="paymentStatus.value"
-            >{{ paymentStatus.display }}</option
-          >
         </select>
         <button (click)="clearSearch('activate')" class="small-button">
           Clear Search

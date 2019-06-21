@@ -29,10 +29,9 @@ export class UsersComponent implements OnInit {
   dataSource = ELEMENT_DATA;
   searchTerm$ = new Subject<any>();
   paginationData: any;
-  pFromDate = '';
-  pToDate: string = '';
-  sFromDate: string = '';
-  sToDate: string = '';
+  gender = '';
+  cFromDate: string = '';
+  cToDate: string = '';
   search: string = '';
   verified: string = '';
   download: string = '';
@@ -40,8 +39,15 @@ export class UsersComponent implements OnInit {
   txn_type = 'deposit';
   statuses = [
     { value: '', display: 'Verified Status' },
-    { value: 'yes', display: 'Yes' },
-    { value: 'no', display: 'No' }
+    { value: '0', display: 'Unverified' },
+    { value: '1', display: 'Verified' },
+    { value: '2', display: 'Suspended' },
+    { value: '3', display: 'Deactivated' },
+  ];
+  sexes = [
+    {value:'',display:'Gender'},
+    {value:'male',display:'Male'},
+    {value:'female',display:'Female'}
   ];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -94,24 +100,20 @@ export class UsersComponent implements OnInit {
         this.clearSearch();
         this.search = query;
         break;
-      case 'pFromDate':
+      case 'gender':
         this.search = '';
-        this.pFromDate = query;
+        this.gender = query;
         break;
       case 'download':
         this.download = 'download';
         break;
-      case 'pToDate':
+      case 'cFromDate':
         this.search = '';
-        this.pToDate = query;
+        this.cFromDate = query;
         break;
-      case 'sFromDate':
+      case 'cToDate':
         this.search = '';
-        this.sFromDate = query;
-        break;
-      case 'sToDate':
-        this.search = '';
-        this.sToDate = query;
+        this.cToDate = query;
         break;
       case 'verified':
         this.search = '';
@@ -120,16 +122,14 @@ export class UsersComponent implements OnInit {
       default:
         break;
     }
-    this.pFromDate = query === '' ? '' : this.formatDateInput(this.pFromDate);
-    this.pToDate = query === '' ? '' : this.formatDateInput(this.pToDate);
-    this.sFromDate = query === '' ? '' : this.formatDateInput(this.sFromDate);
-    this.sToDate = query === '' ? '' : this.formatDateInput(this.sToDate);
+    this.gender = query === '' ? '' : this.formatDateInput(this.gender);
+    this.cFromDate = query === '' ? '' : this.formatDateInput(this.cFromDate);
+    this.cToDate = query === '' ? '' : this.formatDateInput(this.cToDate);
     this.searchTerm$.next({
       q: this.search,
-      pFromDate: this.pFromDate,
-      pToDate: this.pToDate,
-      sFromDate: this.sFromDate,
-      sToDate: this.sToDate,
+      gender: this.gender,
+      cFromDate: this.cFromDate,
+      cToDate: this.cToDate,
       verified: this.verified,
       txnType: this.txn_type,
       download: this.download
@@ -137,10 +137,9 @@ export class UsersComponent implements OnInit {
     this.paginator.pageIndex = 0;
   }
   clearSearch(activate = null) {
-    this.pFromDate = '';
-    this.pToDate = '';
-    this.sFromDate = '';
-    this.sToDate = '';
+    this.gender = '';
+    this.cFromDate = '';
+    this.cToDate = '';
     this.verified = '';
     this.search = '';
     if (activate === 'activate') {
@@ -151,21 +150,18 @@ export class UsersComponent implements OnInit {
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
     const query = this.search;
-    const pFromDate =
-      this.pFromDate === '' ? '' : this.formatDateInput(this.pFromDate);
-    const pToDate =
-      this.pToDate === '' ? '' : this.formatDateInput(this.pToDate);
-    const sFromDate =
-      this.sFromDate === '' ? '' : this.formatDateInput(this.sFromDate);
-    const sToDate =
-      this.sToDate === '' ? '' : this.formatDateInput(this.sToDate);
+    const gender =
+      this.gender === '' ? '' : this.formatDateInput(this.gender);
+    const cFromDate =
+      this.cFromDate === '' ? '' : this.formatDateInput(this.cFromDate);
+    const cToDate =
+      this.cToDate === '' ? '' : this.formatDateInput(this.cToDate);
     const verified = this.verified;
     this.searchTerm$.next({
       q: query,
-      pFromDate,
-      pToDate,
-      sFromDate,
-      sToDate,
+      gender,
+      cFromDate,
+      cToDate,
       verified,
       txnType: this.txn_type,
       page: pageIndex + 1,

@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DepositService } from '../../http/deposit/deposit.service';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import * as moment from 'moment';
-import { RequestLoanDialogComponent } from '../request-loan-dialog/request-loan-dialog.component';
+import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from '../../models/user/user';
 import { ChamaService } from '../../http/chama/chama.service';
@@ -38,7 +38,7 @@ export class DepositComponent implements OnInit {
   search: string = "";
   verified: string = "";
   depositDataSource;
-  txn_type = "deposit";
+  txnType = "deposit";
   displayedColumns: string[] = [
     "position",
     "payment_mode.bank",
@@ -151,7 +151,7 @@ export class DepositComponent implements OnInit {
       sFromDate: this.sFromDate,
       sToDate: this.sToDate,
       verified: this.verified,
-      txnType: this.txn_type,
+      txnType: this.txnType,
       download: this.download
     });
     this.paginator.pageIndex = 0;
@@ -187,7 +187,7 @@ export class DepositComponent implements OnInit {
       sFromDate,
       sToDate,
       verified,
-      txnType: this.txn_type,
+      txnType: this.txnType,
       page: pageIndex + 1,
       size: pageSize
     });
@@ -215,7 +215,7 @@ export class DepositComponent implements OnInit {
     }
   }
   openRequestLoanDialog() {
-    const dialogRef = this.dialog.open(RequestLoanDialogComponent, {
+    const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: "auto",
       width: "600px",
       data: {

@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { DepositService } from '../../http/deposit/deposit.service';
 import { MatDialog } from '@angular/material/dialog';
-import { RequestLoanDialogComponent } from '../request-loan-dialog/request-loan-dialog.component';
+import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
 import { ExportPdf } from 'projects/export-pdf/src/public-api';
 
 @Component({
@@ -203,7 +203,7 @@ export class PayableComponent implements OnInit {
     }
   }
   openRequestLoanDialog() {
-    const dialogRef = this.dialog.open(RequestLoanDialogComponent, {
+    const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: 'auto',
       width: '600px',
       data: {

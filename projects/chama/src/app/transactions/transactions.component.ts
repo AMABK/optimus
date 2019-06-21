@@ -10,7 +10,7 @@ import { ChamaService } from '../http/chama/chama.service';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
-import { RequestLoanDialogComponent } from './request-loan-dialog/request-loan-dialog.component';
+import { RequestDebitDialogComponent } from './request-debit-dialog/request-debit-dialog.component';
 
 @Component({
   selector: 'app-transactions',
@@ -197,7 +197,7 @@ export class TransactionsComponent implements OnInit {
     this.chama.subscribe(res => {
       this.dChama = res;
     });
-    const dialogRef = this.dialog.open(RequestLoanDialogComponent, {
+    const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: 'auto',
       width: '600px',
       data: {

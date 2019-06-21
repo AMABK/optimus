@@ -4,49 +4,98 @@ import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { Auth } from './models/auth/auth';
 import { LoaderService } from 'projects/loader/src/public_api';
-import { Sidenav } from './shared/sidenav/sidenav';
 
 @Component({
-  selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = "Chama App";
+  title = 'Chama App';
   currentUser: Auth;
+  menus = [
+    {
+      main: { label: 'Transactions', icon: 'credit_card' },
+      sub: [
+        { path: '/transactions', icon: 'credit_card', label: 'Transactions' },
+        {
+          path: '/transactions/deposit',
+          icon: 'money',
+          label: 'Deposits'
+        },
+        {
+          path: '/transactions/payable',
+          icon: 'money_off',
+          label: 'Payables(Fines&Loans)'
+        },
+        {
+          path: '/transactions/withdrawal',
+          icon: 'zoom_out_map',
+          label: 'Withdrawals/Debits'
+        },
+        {
+          path: '/transactions/loan-request',
+          icon: 'shopping_basket',
+          label: 'Loan Requests'
+        }
+      ]
+    },
+    {
+      main: { label: 'Admin', icon: 'build' },
+      sub: [
+        { path: '/admin/users', icon: 'person', label: 'Manage Users' },
+        { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups' }
+      ]
+    },
+    {
+      main: { label: 'System Admin', icon: 'settings' },
+      sub: [
+        {
+          path: '/admin/system/users',
+          icon: 'assignment_ind',
+          label: 'Manage System Users'
+        },
+        {
+          path: '/admin/system/groups',
+          icon: 'supervisor_account',
+          label: 'Manage System Groups'
+        }
+      ]
+    }
+  ];
   links = [
-    { path: "/home", icon: "home", label: "Your Home" },
-    { path: "/transactions", icon: "credit_card", label: "Transactions" },
-    { path: "/transactions/deposit", icon: "money", label: "Deposits" },
+    { path: '/home', icon: 'home', label: 'Your Home' },
+    { path: '/transactions', icon: 'credit_card', label: 'Transactions' },
+    { path: '/transactions/deposit', icon: 'money', label: 'Deposits' },
     {
-      path: "/transactions/payable",
-      icon: "money_off",
-      label: "Payables(Fines&Loans)"
+      path: '/transactions/payable',
+      icon: 'money_off',
+      label: 'Payables(Fines&Loans)'
     },
     {
-      path: "/transactions/withdrawal",
-      icon: "zoom_out_map",
-      label: "Withdrawals/Debits"
+      path: '/transactions/withdrawal',
+      icon: 'zoom_out_map',
+      label: 'Withdrawals/Debits'
     },
     {
-      path: "/transactions/loan-request",
-      icon: "shopping_basket",
-      label: "Loan Requests"
+      path: '/transactions/loan-request',
+      icon: 'shopping_basket',
+      label: 'Loan Requests'
     },
-    { path: "/disputes", icon: "flare", label: "Disputes" },
-    { path: "/insights", icon: "pie_chart", label: "Insights" },
-    { path: "/admin", icon: "", label: "Administration" },
-    { path: "/admin/users", icon: "person", label: "Manage Users" },
-    { path: "/admin/groups", icon: "group_work", label: "Manage Groups" },
+    { path: '/disputes', icon: 'flare', label: 'Disputes' },
+    { path: '/insights', icon: 'pie_chart', label: 'Insights' },
+    { path: '/admin', icon: '', label: 'Administration' },
+    { path: '/admin/users', icon: 'person', label: 'Manage Users' },
+    { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups' },
     {
-      path: "/admin/system/users",
-      icon: "assignment_ind",
-      label: "Manage System Users"
+      path: '/admin/system/users',
+      icon: 'assignment_ind',
+      label: 'Manage System Users'
     },
     {
-      path: "/admin/system/groups",
-      icon: "supervisor_account",
-      label: "Manage System Groups"
+      path: '/admin/system/groups',
+      icon: 'supervisor_account',
+      label: 'Manage System Groups'
     }
   ];
 
@@ -69,11 +118,11 @@ export class AppComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(["login"]);
+    this.router.navigate(['login']);
   }
 
   prepareRouterState(router: RouterOutlet) {
-    return router.activatedRouteData["animation"] || "initial";
+    return router.activatedRouteData['animation'] || 'initial';
   }
 
   isSidenaveOpen(component, authentication) {

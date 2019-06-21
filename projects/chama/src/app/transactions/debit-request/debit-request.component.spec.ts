@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { DebitRequestComponent } from './debit-request.component';
 
-import { LoanRequestComponent } from './loan-request.component';
 
-describe('LoanRequestComponent', () => {
-  let component: LoanRequestComponent;
-  let fixture: ComponentFixture<LoanRequestComponent>;
+describe('DebitRequestComponent', () => {
+  let component: DebitRequestComponent;
+  let fixture: ComponentFixture<DebitRequestComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoanRequestComponent ]
+      declarations: [ DebitRequestComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LoanRequestComponent);
+    fixture = TestBed.createComponent(DebitRequestComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

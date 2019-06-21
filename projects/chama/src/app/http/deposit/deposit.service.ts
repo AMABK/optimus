@@ -55,7 +55,7 @@ export class DepositService {
           download
         }) => {
           // tslint:disable-next-line:max-line-length
-          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&txnType=${defaultTxnType}&debitType=${debitType}&paymentStatus=${paymentStatus}&download=${download}`;
+          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&txnType=${txnType}&debitType=${debitType}&paymentStatus=${paymentStatus}&download=${download}`;
           return this.getDefaultChamaDeposits(queryParams);
         }
       )
@@ -72,8 +72,6 @@ export class DepositService {
         sFromDate: "",
         sToDate: "",
         verified: "",
-        debitType: "",
-        paymentStatus: "",
         download:""
       }),
       debounceTime(500),
@@ -89,12 +87,10 @@ export class DepositService {
           sFromDate = "",
           sToDate = "",
           verified,
-          debitType,
-          paymentStatus,
           download
         }) => {
           // tslint:disable-next-line:max-line-length
-          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&debitType=${debitType}&paymentStatus=${paymentStatus}&download=${download}`;
+          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&download=${download}`;
           return this.getDefaultChamaLoanRequests(queryParams);
         }
       )

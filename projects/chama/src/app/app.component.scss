@@ -21,3 +21,9 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 .app-content{
     overflow-x: hidden;
 }
+.mat-accordion .mat-expansion-panel:last-of-type {
+    border-bottom-right-radius: 0px; 
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 0px; 
+    border-top-left-radius: 0px;
+}
