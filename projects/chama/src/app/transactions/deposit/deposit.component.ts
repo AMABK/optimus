@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { User } from '../../models/user/user';
 import { ChamaService } from '../../http/chama/chama.service';
 import { AuthService } from 'projects/auth/src/public_api';
-import { AddDepositComponent } from '../add-deposit/add-deposit.component';
+import { AddDepositDialogComponent } from '../add-deposit/add-deposit-dialog.component';
 import { ExportPdf } from 'projects/export-pdf/src/public-api';
 
 export interface PeriodicElement {
@@ -263,7 +263,7 @@ export class DepositComponent implements OnInit {
     this.chama.subscribe(res => {
       dChama = res;
     });
-    const dialogRef = this.dialog.open(AddDepositComponent, {
+    const dialogRef = this.dialog.open(AddDepositDialogComponent, {
       height: "auto",
       width: "600px",
       data: {

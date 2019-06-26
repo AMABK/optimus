@@ -21,7 +21,8 @@ export class DebitService {
         sFromDate: "",
         sToDate: "",
         verified: "",
-        download:""
+        download: "",
+        requestType:''
       }),
       debounceTime(500),
       distinctUntilChanged(),
@@ -36,10 +37,11 @@ export class DebitService {
           sFromDate = "",
           sToDate = "",
           verified,
-          download
+          download,
+          requestType
         }) => {
           // tslint:disable-next-line:max-line-length
-          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&download=${download}`;
+          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&download=${download}&requestType=${requestType}`;
           return this.getDefaultChamaDebitRequests(queryParams);
         }
       )

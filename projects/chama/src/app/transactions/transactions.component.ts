@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AddDepositComponent } from './add-deposit/add-deposit.component';
+import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.component';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user/user';
 import { MatSort } from '@angular/material/sort';
@@ -239,7 +239,7 @@ export class TransactionsComponent implements OnInit {
     this.chama.subscribe(res => {
       this.dChama = res;
     });
-    const dialogRef = this.dialog.open(AddDepositComponent, {
+    const dialogRef = this.dialog.open(AddDepositDialogComponent, {
       height: 'auto',
       width: '600px',
       data: {

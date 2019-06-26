@@ -25,10 +25,13 @@ export class DebitRequestComponent implements OnInit {
   sToDate = '';
   search = '';
   verified = '';
+  requestType=''
   loanRequestDataSource;
   displayedColumns: string[] = [
     'position',
     'amount',
+    'chama',
+    'request_type',
     'payment_date',
     'created_at',
     'verified'
@@ -37,6 +40,11 @@ export class DebitRequestComponent implements OnInit {
     { value: '', display: 'Verified Status' },
     { value: '1', display: 'Yes' },
     { value: '0', display: 'No' }
+  ];
+  requestTypes = [
+    { value: '', display: 'Request Type' },
+    { value: 'withdrawal', display: 'Withdrawal' },
+    { value: 'loan', display: 'Loan' }
   ];
   paymentStatuses = [
     { value: '', display: 'Payment Status' },
@@ -121,6 +129,10 @@ export class DebitRequestComponent implements OnInit {
         this.search = '';
         this.verified = query;
         break;
+      case 'requestType':
+        this.search = '';
+        this.requestType = query;
+        break;
       default:
         break;
     }
@@ -135,6 +147,7 @@ export class DebitRequestComponent implements OnInit {
       sFromDate: this.sFromDate,
       sToDate: this.sToDate,
       verified: this.verified,
+      requestType: this.requestType,
       download: this.download
     });
     this.paginator.pageIndex = 0;
@@ -146,6 +159,7 @@ export class DebitRequestComponent implements OnInit {
     this.sToDate = '';
     this.verified = '';
     this.search = '';
+    this.requestType = '';
     if (activate === 'activate') {
       this.handleSearch('', '');
     }
@@ -194,21 +208,23 @@ export class DebitRequestComponent implements OnInit {
     }
   }
   openRequestLoanDialog() {
-    let dData = {
-      depositTypes: null
-    };
-    this.chamaService.getDefaultChamaDetails().subscribe(result => {
-        if (result.chama_id != null) {
-          dData = {
-            depositTypes: {},
-          };
-        }
-    });
+    // let dData = {
+    //   depositTypes: null
+    // };
+    // this.chamaService.getDefaultChamaDetails().subscribe(result => {
+    //     if (result.chama_id != null) {
+    //       dData = {
+    //         depositTypes: {},
+    //       };
+    //     }
+    // });
 
     const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: 'auto',
       width: '600px',
-      data: dData
+      data: {
+        requestType:'loan'
+      }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {

@@ -1,90 +1,49 @@
 <div fxLayout="row" fxLayout.xs="column">
   <mat-card fxFlex="1 2 72">
-    <h3>Transactions >> Loan Requests</h3>
-    <button
-      mat-button
-      style="border: 1px solid #428bca;"
-      (click)="openRequestLoanDialog()"
-    >
+    <h3>Transactions >> Debit Requests</h3>
+    <button mat-button style="border: 1px solid #428bca;" (click)="openRequestLoanDialog()">
       <mat-icon class="success-icon">add</mat-icon>
-      Request A Loan
+      Request A Withdrawal/Loan
     </button>
-    <button
-      mat-button
-      style="border: 1px solid #428bca;"
-      (click)="handleSearch($event, 'download')"
-    >
+    <button mat-button style="border: 1px solid #428bca;" (click)="handleSearch($event, 'download')">
       <mat-icon>get_app</mat-icon>Export
     </button>
     <div class="search-panel">
       <div class="input-container">
-        <input
-          class="input-field"
-          (ngModelChange)="handleSearch($event, 'search')"
-          [(ngModel)]="search"
-          placeholder="General search"
-        />
-        <input
-          class="input-field"
-          (ngModelChange)="handleSearch($event, 'sFromDate')"
-          placeholder="From Date of Submission"
-          [(ngModel)]="sFromDate"
-          format="YYYY/MM/DD"
-          (click)="fromDateSubmission.open()"
-          [matDatepicker]="fromDateSubmission"
-        />
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'search')" [(ngModel)]="search"
+          placeholder="General search" />
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'sFromDate')"
+          placeholder="From Date of Submission" [(ngModel)]="sFromDate" format="YYYY/MM/DD"
+          (click)="fromDateSubmission.open()" [matDatepicker]="fromDateSubmission" />
         <mat-datepicker #fromDateSubmission></mat-datepicker>
-        <input
-          class="input-field"
-          (ngModelChange)="handleSearch($event, 'sToDate')"
-          placeholder="To Date of Submission"
-          [(ngModel)]="sToDate"
-          format="YYYY/MM/DD"
-          (click)="toDateSubmission.open()"
-          [matDatepicker]="toDateSubmission"
-        />
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'sToDate')" placeholder="To Date of Submission"
+          [(ngModel)]="sToDate" format="YYYY/MM/DD" (click)="toDateSubmission.open()"
+          [matDatepicker]="toDateSubmission" />
         <mat-datepicker #toDateSubmission></mat-datepicker>
-        <input
-          class="input-field"
-          (ngModelChange)="handleSearch($event, 'aFromDate')"
-          placeholder="From Date of Approval"
-          [(ngModel)]="aFromDate"
-          format="YYYY/MM/DD"
-          (click)="fromDateApproval.open()"
-          [matDatepicker]="fromDateApproval"
-        />
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'aFromDate')"
+          placeholder="From Date of Approval" [(ngModel)]="aFromDate" format="YYYY/MM/DD"
+          (click)="fromDateApproval.open()" [matDatepicker]="fromDateApproval" />
         <mat-datepicker #fromDateApproval></mat-datepicker>
-        <input
-          class="input-field"
-          (ngModelChange)="handleSearch($event, 'aToDate')"
-          placeholder="To Date of Approval"
-          [(ngModel)]="aToDate"
-          format="YYYY/MM/DD"
-          (click)="toDateApproval.open()"
-          page="paginate((pageEvent = $event))"
-          [matDatepicker]="toDateApproval"
-        />
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'aToDate')" placeholder="To Date of Approval"
+          [(ngModel)]="aToDate" format="YYYY/MM/DD" (click)="toDateApproval.open()"
+          page="paginate((pageEvent = $event))" [matDatepicker]="toDateApproval" />
         <mat-datepicker #toDateApproval></mat-datepicker>
-        <select
-          class="input-field select"
-          (ngModelChange)="handleSearch($event, 'verified')"
-          [(ngModel)]="verified"
-        >
+        <select class="input-field select" (ngModelChange)="handleSearch($event, 'requestType')" [(ngModel)]="requestType">
+          <option *ngFor="let type of requestTypes" [(value)]="type.value">{{
+                    type.display
+                  }}</option>
+        </select>
+        <select class="input-field select" (ngModelChange)="handleSearch($event, 'verified')" [(ngModel)]="verified">
           <option *ngFor="let status of statuses" [(value)]="status.value">{{
-            status.display
-          }}</option>
+                    status.display
+                  }}</option>
         </select>
         <button (click)="clearSearch('activate')" class="small-button">
           Clear Search
         </button>
       </div>
     </div>
-    <table
-      mat-table
-      [dataSource]="loanRequestDataSource"
-      matSort
-      class="mat-elevation-z8"
-    >
+    <table mat-table [dataSource]="loanRequestDataSource" matSort class="mat-elevation-z8">
       <!-- Position Column -->
       <ng-container matColumnDef="position">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
@@ -96,9 +55,25 @@
 
       <!-- Position Column -->
       <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount.</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
         <td mat-cell *matCellDef="let element">
           {{ numberWithCommas(element.amount) }}
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="chama">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>From</th>
+        <td mat-cell *matCellDef="let element">
+          {{ (element.chama==null)?'-':element.chama.name }}
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="request_type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Request Type</th>
+        <td mat-cell *matCellDef="let element">
+          {{ numberWithCommas(element.request_type.charAt(0).toUpperCase() + element.request_type.slice(1)) }}
         </td>
       </ng-container>
 
@@ -125,19 +100,15 @@
       <!-- Symbol Column -->
       <ng-container matColumnDef="verified">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Verified.</th>
-        <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+        <td mat-cell *matCellDef="let element">{{ (element.status===1)?'YES': 'NO'}}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <mat-paginator
-      [length]="paginationData?.total"
-      [pageSize]="paginationData?.per_page"
-      [pageSizeOptions]="[10, 20, 50, 100]"
-      (page)="paginate((pageEvent = $event))"
-    >
+    <mat-paginator [length]="paginationData?.total" [pageSize]="paginationData?.per_page"
+      [pageSizeOptions]="[10, 20, 50, 100]" (page)="paginate((pageEvent = $event))">
     </mat-paginator>
   </mat-card>
   <div fxFlex="1 2 28" fxLayout.xs="row" fxLayout="row">
@@ -164,28 +135,17 @@
         <mat-list-item> <b>Total(KES)</b></mat-list-item>
         <mat-divider></mat-divider>
         <mat-list-item>
-          <b>{{ numberWithCommas(3526899) }}</b></mat-list-item
-        >
+          <b>{{ numberWithCommas(3526899) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(535345) }}</b></mat-list-item
-        >
+        <mat-list-item><b>{{ numberWithCommas(535345) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(26899) }}</b></mat-list-item
-        >
+        <mat-list-item><b>{{ numberWithCommas(26899) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(3529) }}</b></mat-list-item
-        >
+        <mat-list-item><b>{{ numberWithCommas(3529) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(3529) }}</b></mat-list-item
-        >
+        <mat-list-item><b>{{ numberWithCommas(3529) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(3529) }}</b></mat-list-item
-        >
+        <mat-list-item><b>{{ numberWithCommas(3529) }}</b></mat-list-item>
         <mat-divider></mat-divider>
       </mat-list>
     </mat-card>

@@ -32,7 +32,7 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'loan-request',
+    path: 'debit-request',
     component: DebitRequestComponent,
     canActivate: [AuthGuard]
   }

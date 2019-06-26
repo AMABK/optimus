@@ -30,24 +30,23 @@ export class UsersComponent implements OnInit {
   searchTerm$ = new Subject<any>();
   paginationData: any;
   gender = '';
-  cFromDate: string = '';
-  cToDate: string = '';
-  search: string = '';
-  verified: string = '';
-  download: string = '';
-  userDataSource;  
-  txn_type = 'deposit';
+  cFromDate = '';
+  cToDate = '';
+  search = '';
+  verified = '';
+  download = '';
+  userDataSource;
   statuses = [
-    { value: '', display: 'Verified Status' },
+    { value: '', display: 'Status' },
     { value: '0', display: 'Unverified' },
     { value: '1', display: 'Verified' },
     { value: '2', display: 'Suspended' },
     { value: '3', display: 'Deactivated' },
   ];
   sexes = [
-    {value:'',display:'Gender'},
-    {value:'male',display:'Male'},
-    {value:'female',display:'Female'}
+    {value: '', display: 'Gender'},
+    {value: 'male', display: 'Male'},
+    {value: 'female', display: 'Female'}
   ];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -56,7 +55,7 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     this.userService.searchUser(this.searchTerm$).subscribe(response => {
-      if(this.download !='download'){
+      if (this.download != 'download') {
       this.paginationData = {
         current_page: response.data.current_page - 1,
         total: response.data.total,
@@ -80,14 +79,12 @@ export class UsersComponent implements OnInit {
             return item.default_chama.name;
           case 'name':
             return item.first_name + item.middle_name + item.last_name;
-
-          //return null;
           default:
             return item[property];
         }
       };
       this.userDataSource.sort = this.sort;
-    }else{
+    } else {
         this.downloadPDF(response.data);
         this.download = '';
     }
@@ -122,7 +119,6 @@ export class UsersComponent implements OnInit {
       default:
         break;
     }
-    this.gender = query === '' ? '' : this.formatDateInput(this.gender);
     this.cFromDate = query === '' ? '' : this.formatDateInput(this.cFromDate);
     this.cToDate = query === '' ? '' : this.formatDateInput(this.cToDate);
     this.searchTerm$.next({
@@ -131,7 +127,6 @@ export class UsersComponent implements OnInit {
       cFromDate: this.cFromDate,
       cToDate: this.cToDate,
       verified: this.verified,
-      txnType: this.txn_type,
       download: this.download
     });
     this.paginator.pageIndex = 0;
@@ -163,7 +158,6 @@ export class UsersComponent implements OnInit {
       cFromDate,
       cToDate,
       verified,
-      txnType: this.txn_type,
       page: pageIndex + 1,
       size: pageSize
     });
@@ -183,12 +177,12 @@ export class UsersComponent implements OnInit {
     return formattedDate;
   }
   userChama(userId) {
-    //get user details
+    // get user details
   }
   downloadPDF(pdfdata) {
         const data = [];
         let subData = [];
-    let x = 0;
+        let x = 0;
         for (const item of pdfdata) {
           subData = [];
           subData.push(x);
@@ -206,7 +200,7 @@ export class UsersComponent implements OnInit {
           data.push(subData);
           x++;
         }
-        const head = ['No.','Name', 'Email', 'Gender', 'Phone No.', 'Address', 'Default Group', 'No. Of Reg Groups'];
+        const head = ['No.', 'Name', 'Email', 'Gender', 'Phone No.', 'Address', 'Default Group', 'No. Of Reg Groups'];
         this.exportPdf.createPDF(data, head, 'landscape');
   }
 }

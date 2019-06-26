@@ -11,7 +11,7 @@ import { Client } from 'projects/chama/src/app/models/client/client';
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<Auth>;
+  public currentUserSubject: BehaviorSubject<Auth>;
   public currentUser: Observable<Auth>;
   token: string;
   constructor(

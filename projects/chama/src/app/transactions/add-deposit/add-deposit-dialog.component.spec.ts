@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddDepositComponent } from './add-deposit.component';
+import { AddDepositDialogComponent } from './add-deposit-dialog.component';
 
 describe('AddDepositComponent', () => {
-  let component: AddDepositComponent;
-  let fixture: ComponentFixture<AddDepositComponent>;
+  let component: AddDepositDialogComponent;
+  let fixture: ComponentFixture<AddDepositDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddDepositComponent ]
+      declarations: [ AddDepositDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddDepositComponent);
+    fixture = TestBed.createComponent(AddDepositDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

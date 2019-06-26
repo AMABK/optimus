@@ -8,6 +8,11 @@ const routes: Routes = [
     path: '',
     component: GroupsComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: ':/groupId',
+    component: GroupsComponent,
+    canActivate: [AuthGuard]
   }
 ];
 

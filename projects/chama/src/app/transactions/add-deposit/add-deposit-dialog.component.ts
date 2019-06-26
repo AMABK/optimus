@@ -13,11 +13,12 @@ import { FormErrorService } from 'projects/form-error/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
 
 @Component({
-  selector: "app-add-deposit",
-  templateUrl: "./add-deposit.component.html",
-  styleUrls: ["./add-deposit.component.css"]
+  selector: "app-add-deposit-dialog",
+  templateUrl: "./add-deposit-dialog.component.html",
+  styleUrls: ["./add-deposit-dialog.component.css"]
 })
-export class AddDepositComponent implements OnInit {
+export class AddDepositDialogComponent implements OnInit {
+  maxPaymentDate = new Date();
   chama$: Observable<Chama>;
   currentDeposit: any;
   activeButton: boolean = true;

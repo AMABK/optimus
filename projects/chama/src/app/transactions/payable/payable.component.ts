@@ -29,10 +29,10 @@ export class PayableComponent implements OnInit {
   txn_type = 'payable';
   displayedColumns: string[] = [
     'position',
+    'payment_mode.bank',
     'contribution_type.type_name',
     'amount',
     'paid',
-    'payment_mode.bank',
     'payment_date',
     'created_at',
     'verified'

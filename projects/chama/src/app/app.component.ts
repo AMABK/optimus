@@ -78,9 +78,9 @@ export class AppComponent implements OnInit {
       label: 'Withdrawals/Debits'
     },
     {
-      path: '/transactions/loan-request',
-      icon: 'shopping_basket',
-      label: 'Loan Requests'
+      path: '/transactions/debit-request',
+      icon: 'settings_ethernet',
+      label: 'Debit Requests'
     },
     { path: '/disputes', icon: 'flare', label: 'Disputes' },
     { path: '/insights', icon: 'pie_chart', label: 'Insights' },

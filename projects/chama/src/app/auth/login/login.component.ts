@@ -17,6 +17,7 @@ import { Auth } from '../../models/auth/auth';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
+  routeTo: string;
   filters = [
     'ig-xpro2',
     'ig-willow',
@@ -43,14 +44,12 @@ export class LoginComponent implements OnInit {
   userLogin = { email: '', password: '' };
   loading = false;
   private currentUserSubject: BehaviorSubject<Auth>;
-  public currentUser: Observable<Auth>;
+  public currentUser: Auth;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer,
     private notificationService: NotificationService,
   ) {
      this.route.queryParams.subscribe(params => {
@@ -59,6 +58,10 @@ export class LoginComponent implements OnInit {
            this.notificationService.emit(params["message"]);
          } else {
            this.authService.storeResult(JSON.parse(params["authData"]));
+           //this.currentUserSubject.next((params["authData"]));
+           //this.currentUserSubject = new BehaviorSubject<Auth>(JSON.parse(params["authData"]));
+           //this.currentUser = this.currentUserSubject.asObservable();
+           this.authService.currentUser.subscribe(x => (this.currentUser = x));
            this.router.navigate(["/home"]);
          }
        }
@@ -66,8 +69,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-   
-          //this.router.navigate(["/home"]);
+    this.routeTo = this.route.snapshot.queryParams.returnUrl || 'people';
+    if (this.authService.currentUserValue) {
+      this.router.navigate(['/home']);
+    }
 
   
   
@@ -89,6 +94,12 @@ export class LoginComponent implements OnInit {
     if (this.currentUserSubject) {
      this.router.navigate(['/home']);
     }
+  }
+    ngAfterViewInit() {
+    this.authService.currentUserSubject.subscribe(user => {
+      this.router.navigate([this.routeTo]);
+     // this.loading = false;
+    });
   }
   facebookLogin() {
     window.location.href = "http://localhost:8000/login/fb";

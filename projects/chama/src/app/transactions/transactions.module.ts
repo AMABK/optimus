@@ -18,7 +18,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DebitRequestComponent } from './debit-request/debit-request.component';
-import { AddDepositComponent } from './add-deposit/add-deposit.component';
+import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,7 @@ import { AddDepositComponent } from './add-deposit/add-deposit.component';
     PayableComponent,
     RequestDebitDialogComponent,
     DebitRequestComponent,
-    AddDepositComponent
+    AddDepositDialogComponent
   ],
   imports: [
     CommonModule,
@@ -45,7 +45,7 @@ import { AddDepositComponent } from './add-deposit/add-deposit.component';
     MatFormFieldModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [RequestDebitDialogComponent,AddDepositComponent],
+  entryComponents: [RequestDebitDialogComponent,AddDepositDialogComponent],
   providers: [CdkColumnDef]
 })
 export class TransactionsModule {}

@@ -3,7 +3,7 @@
 </ng-container>
 <ng-template #loanRequest>
 <div *ngIf="chamaData?.name!=''">
-  <h1 mat-dialog-title>Request Loan From [{{chamaData?.name}}]</h1>
+  <h1 mat-dialog-title>Request {{data.requestType.charAt(0).toUpperCase() + data.requestType.slice(1)}} From [{{chamaData?.name}}]</h1>
   <div mat-dialog-content>
       <form (ngSubmit)="onSubmit()">
           <mat-form-field>

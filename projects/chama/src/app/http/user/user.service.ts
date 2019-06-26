@@ -26,41 +26,35 @@ export class UserService {
   updateDeposit(deposit: Deposit) {
     return this.http.post(`${this.apiUrl}/api/chama/update-deposit`, deposit);
   }
-  searchUser(searchQueries?: any,download='') {
+  searchUser(searchQueries?) {
     return searchQueries.pipe(
       startWith({
         q: "",
         page: 1,
         size: 10,
-        pFromDate: "",
-        pToDate: "",
-        sFromDate: "",
-        sToDate: "",
+        cFromDate: "",
+        cToDate: "",
         verified: "",
-        debitType: "",
-        paymentStatus: "",
-        download
+        gender: '',
+        download:''
       }),
       debounceTime(500),
       distinctUntilChanged(),
       // tslint:disable-next-line:max-line-length
       switchMap(
         ({
-          q = "",
+          q = '',
           page = 1,
           size: resultPerPage = 10,
-          pFromDate = "",
-          pToDate = "",
-          sFromDate = "",
-          sToDate = "",
+          cFromDate = '',
+          cToDate = '',
           verified='',
-          debitType='',
-          paymentStatus = '',
+          gender = '',
           download=''
           
         }) => {
           // tslint:disable-next-line:max-line-length
-          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&debitType=${debitType}&paymentStatus=${paymentStatus}&download=${download}`;
+          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&cFromDate=${cFromDate}&cToDate=${cToDate}&verified=${verified}&gender=${gender}&download=${download}`;
           return this.getUsers(queryParams);
         }
       )
