@@ -81,7 +81,7 @@
     [length]="paginationData?.total"
     [pageSize]="paginationData?.per_page"
     [pageSizeOptions]="[10, 20, 50, 100]"
-    (page)="paginate((pageEvent = $event))"
+    (page)="paginate($event)"
     >
 </mat-paginator>
                 <ng-template #noDepositData>

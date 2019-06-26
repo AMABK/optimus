@@ -28,8 +28,6 @@ import { LoginComponent } from './auth/login/login.component';
   declarations: [
     AppComponent,
     FooterComponent,
-    AuthComponent,
-    LoginComponent,
     PasswordResetComponent,
     SidenavComponent,
     SpinnerComponent,

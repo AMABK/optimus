@@ -150,7 +150,8 @@ export class WithdrawalComponent implements OnInit {
       this.handleSearch("", "");
     }
   }
-  paginate() {
+  paginate($event) {
+    this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
     const query = this.search;
