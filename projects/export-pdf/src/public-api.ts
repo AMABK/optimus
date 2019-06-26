@@ -1,4 +1,4 @@
-import { ExportPdfService } from '../../../.history/projects/export-pdf/src/lib/export-pdf.service_20190619094857';
+import { ExportPdfService } from './lib/export-pdf.service';
 /*
  * Public API Surface of export-pdf
  */
