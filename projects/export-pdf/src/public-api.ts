@@ -5,4 +5,4 @@ import { ExportPdfService } from './lib/export-pdf.service';
 
 export {ExportPdfService as ExportPdf}  from './lib/export-pdf.service';
 export * from './lib/export-pdf.component';
-export * from './lib/export-pdf.module';
+export * from './lib/export-pdf.module'; 

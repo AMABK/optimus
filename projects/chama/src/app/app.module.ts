@@ -30,6 +30,7 @@ import { LoginComponent } from './auth/login/login.component';
     FooterComponent,
     PasswordResetComponent,
     SidenavComponent,
+    LoginComponent,
     SpinnerComponent,
     InputFieldComponent,
   ],
