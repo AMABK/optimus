@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from 'projects/material/src/public_api';
 
 @NgModule({
-  declarations: [AuthComponent],
+  declarations: [AuthComponent, LoginComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -15,6 +15,6 @@ import { MaterialModule } from 'projects/material/src/public_api';
     MaterialModule
   ],
   entryComponents: [AuthComponent],
-  exports: [AuthComponent]
+  exports: [AuthComponent, LoginComponent]
 })
 export class AuthModule {}
