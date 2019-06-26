@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { AuthGuard } from 'projects/auth/src/public_api';
 import { ErrorInterceptorService } from 'projects/error/src/public_api';
 import { PasswordResetComponent } from './auth/password-reset/password-reset.component';
-import { AuthComponent } from './auth/auth.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { SidenavComponent } from './shared/sidenav/sidenav.component';
 import { SidenavModule } from './shared/sidenav/sidenav.module';
@@ -28,7 +27,6 @@ import { LoginComponent } from './auth/login/login.component';
   declarations: [
     AppComponent,
     FooterComponent,
-    AuthComponent,
     LoginComponent,
     PasswordResetComponent,
     SidenavComponent,
