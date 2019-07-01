@@ -6,7 +6,7 @@ export const environment = {
   CLOUDINARY_URL:
     "Cloudinary://729124627913516:Nad0g9Z24r4J2CUUqXAWayK4TXc@optimus-e-solutions",
   CLOUDINARY_BASE: "http://res.cloudinary.com/optimus-e-solutions",
-  clientId: "1",
-  hostUrl: "http://localhost:4200",
+  clientId: "2",
+  hostUrl: "https://topesa.com",
   path: '../../.env'
 };
