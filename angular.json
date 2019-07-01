@@ -419,7 +419,8 @@
             "tsConfig": "projects/chama/tsconfig.app.json",
             "assets": [
               "projects/chama/src/favicon.ico",
-              "projects/chama/src/assets"
+              "projects/chama/src/assets",
+              "projects/chama/src/_redirects"
             ],
             "styles": [
               "projects/chama/src/styles.scss"
