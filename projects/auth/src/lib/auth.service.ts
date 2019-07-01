@@ -29,7 +29,7 @@ export class AuthService {
     return `${url}`;
   }
   getClientSecret(url, clientId, redirectUri) {
-    let params = '/api/oauth/authorize?client_id=' + clientId + '&redirect_uri=http://localhost:4200/login&response_type=token&scope='
+    let params = '/api/oauth/authorize?client_id=' + clientId + '&redirect_uri=/login&response_type=token&scope='
     return this.http.get<Client>("http://localhost:8000" + params);
   }
 
