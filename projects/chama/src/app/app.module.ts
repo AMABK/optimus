@@ -27,7 +27,6 @@ import { LoginComponent } from './auth/login/login.component';
   declarations: [
     AppComponent,
     FooterComponent,
-    LoginComponent,
     PasswordResetComponent,
     SidenavComponent,
     SpinnerComponent,
@@ -65,6 +64,7 @@ import { LoginComponent } from './auth/login/login.component';
       multi: true
     }
   ],
+  entryComponents:[],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

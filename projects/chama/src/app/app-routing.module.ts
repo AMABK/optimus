@@ -1,45 +1,48 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './auth/login/login.component';
 
 const routes: Routes = [
   {
-    path: "",
-    loadChildren: () => import("./landing/landing.module").then(m => m.LandingModule)
+    path: '',
+    loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
   },
   {
-    path: "home",
-    loadChildren: () => import("./home/home.module").then(m => m.HomeModule)
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
   },
   {
-    path: "transactions",
+    path: 'login',
+    loadChildren: () => import('./auth/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'transactions',
     loadChildren: () =>
-      import("./transactions/transactions.module").then(
+      import('./transactions/transactions.module').then(
         m => m.TransactionsModule
       )
   },
   {
-    path: "insights",
+    path: 'insights',
     loadChildren: () =>
-      import("./insights/insights.module").then(m => m.InsightsModule)
+      import('./insights/insights.module').then(m => m.InsightsModule)
   },
   {
-    path: "disputes",
+    path: 'disputes',
     loadChildren: () =>
-      import("./disputes/disputes.module").then(m => m.DisputesModule)
+      import('./disputes/disputes.module').then(m => m.DisputesModule)
   },
   {
-    path: "admin/users",
+    path: 'admin/users',
     loadChildren: () =>
-      import("./admin/users/users.module").then(m => m.UsersModule)
+      import('./admin/users/users.module').then(m => m.UsersModule)
   },
   {
-    path: "admin/groups",
+    path: 'admin/groups',
     loadChildren: () =>
-      import("./admin/groups/groups.module").then(m => m.GroupsModule)
+      import('./admin/groups/groups.module').then(m => m.GroupsModule)
   },
-  { path: "login", component: LoginComponent },
-  { path: "**", redirectTo: "/home", pathMatch: "full" }
+  // { path: "login", component: LoginComponent },
+  { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 
 @NgModule({

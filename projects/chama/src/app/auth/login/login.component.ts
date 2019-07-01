@@ -1,12 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { NotificationService } from 'projects/notification/src/public_api';
 import { environment } from 'projects/chama/src/environments/environment';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Auth } from '../../models/auth/auth';
 
 
@@ -16,7 +14,7 @@ import { Auth } from '../../models/auth/auth';
   styleUrls: ['./login.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   routeTo: string;
   filters = [
     'ig-xpro2',
@@ -67,7 +65,8 @@ export class LoginComponent implements OnInit {
        }
      });
   }
-
+  ngOnDestroy() {
+  }
   ngOnInit() {
     this.routeTo = this.route.snapshot.queryParams.returnUrl || 'people';
     if (this.authService.currentUserValue) {
