@@ -10,4 +10,10 @@ export class LoaderService {
     this.isLoading.next(arg0);
   }
   constructor() { }
+  ngOnDestroy(): void {
+    this.isLoading.unsubscribe();
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    
+  }
 }

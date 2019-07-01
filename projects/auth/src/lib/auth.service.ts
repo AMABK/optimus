@@ -56,7 +56,7 @@ export class AuthService {
 
   requestImplicitGrantToken(url) {
     return this.http.get(
-      `${url}/api/oauth/authorize?client_id=4&redirect_uri=http://localhost:8000/callback&response_type=token&scope`
+      `${url}/api/oauth/authorize?client_id=4&redirect_uri=/callback&response_type=token&scope`
     );
   }
 
