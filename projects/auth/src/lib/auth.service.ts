@@ -28,12 +28,13 @@ export class AuthService {
   getUrl(url) {
     return `${url}`;
   }
-  getClientSecret(url, clientId, redirectUri) {
-    let params = '/api/oauth/authorize?client_id=' + clientId + '&redirect_uri=/login&response_type=token&scope='
-    return this.http.get<Client>("http://localhost:8000" + params);
+  getClientSecret(apiUrl, clientId, hostUrl) {
+    // tslint:disable-next-line:max-line-length
+    const params ='/api/oauth/authorize?' + 'client_id=' + clientId + '&redirect_uri=' + hostUrl + '/login&response_type=token&scope='
+    return this.http.get<Client>(apiUrl + params);
   }
 
-  login(url: string, email: string, password: string, clientId: string, clientSecret:string) {
+  login(url: string, email: string, password: string, clientId: string, clientSecret: string) {
     return this.http
       .post<Auth>(`${url}`, {
         username: email,

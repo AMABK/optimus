@@ -101,13 +101,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   facebookLogin() {
-    window.location.href = "http://localhost:8000/login/fb";
+    window.location.href = environment.apiUrl +"/login/fb";
   }
   public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
   }
   login(email: string, password: string) {
-    this.authService.getClientSecret(environment.apiUrl + 'api/oauth/authorize?', environment.clientId, environment.hostUrl + '/login').subscribe(result => {
+    this.authService.getClientSecret(environment.apiUrl , environment.clientId, environment.hostUrl).subscribe(result => {
       const clientId = result.client_id;
       const clientSecret = result.client_secret;
       this.authService.login(environment.apiUrl + '/api/oauth/token', email, password, clientId, clientSecret)
