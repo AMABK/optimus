@@ -118,7 +118,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             //   "currentUser",
             //   JSON.stringify(authData)
             // );
-            this.currentUserSubject.next(authData);
+           // this.currentUserSubject.next(authData);
 
             this.router.navigate(['/home']);
           }
