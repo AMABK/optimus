@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { Auth } from '../../models/auth/auth';
 
@@ -17,10 +17,12 @@ export class HeaderComponent implements OnInit {
   //@Output() logout = new EventEmitter();
   @Input() userData;
   currentUser: Auth;
-  constructor(private router: Router, private authService: AuthService) {
-    this.authService.currentUser.subscribe(user => (this.currentUser = user));
+  currentRoute: any;
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService) {
+
   }
   ngOnInit() {
+    console.log(this.router.url)
     //this.defaultChamaName = JSON.parse(localStorage.getItem('authData')).user.default_chama.name;
   }
 

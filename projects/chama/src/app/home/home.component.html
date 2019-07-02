@@ -234,8 +234,8 @@
         </mat-grid-list>
     </mat-tab>
     <mat-tab label="Select Default Group" *ngIf="chamas$ | async as chamaData">
-        <mat-card *ngIf="chamaData.length; else noChamaData">
-            <table mat-table [dataSource]="chamaData" class="mat-elevation-z8">
+        <mat-card *ngIf="chamaData.data.length; else noChamaData">
+            <table mat-table [dataSource]="chamaData.data" class="mat-elevation-z8">
                 <!--- Note that these columns can be defined in any order.
                     The actual rendered columns are set as a property on the row definition" -->
 
