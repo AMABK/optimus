@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayout.xs="column">
+  <mat-card fxFlex="1 2 50">
+    <h3>User >> Profile</h3>
+    <form (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <input matInput placeholder="First Name" [value]="" [formControl]="firstName">
+        <mat-error *ngIf="!firstName.hasError('minLength')">
+          First name is <strong>required</strong>(Minimum 4 characters)
+        </mat-error>
+      </mat-form-field>
+      </form>
+  </mat-card>
+</div>

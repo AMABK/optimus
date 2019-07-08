@@ -41,6 +41,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./admin/groups/groups.module').then(m => m.GroupsModule)
   },
+  {
+    path: 'user',
+    loadChildren: () =>
+      import('./user/user.module').then(m => m.UserModule)
+  },
   // { path: "login", component: LoginComponent },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];

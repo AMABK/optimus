@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8000',
+  apiUrl: 'https://chama.optimuse-solutions.com',
   CLOUDANARY_API_KEY: '729124627913516',
   CLOUDANARY_API_SECRET: 'Nad0g9Z24r4J2CUUqXAWayK4TXc',
   CLOUDINARY_URL:

@@ -203,11 +203,12 @@ export class PayableComponent implements OnInit {
         .reduce((acc, value) => acc + value, 0);
     }
   }
-  openRequestLoanDialog() {
+  openRequestDebitDialog(requestType) {
     const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: 'auto',
       width: '600px',
       data: {
+        requestType,
         key: ''
       }
     });

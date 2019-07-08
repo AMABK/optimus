@@ -1,9 +1,8 @@
 import { Component, OnInit, Inject, EventEmitter, Output } from '@angular/core';
-import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
 import { Chama } from '../../models/chama/chama';
 import { Observable } from 'rxjs';
-import { FormControl, Validators, FormGroup, FormBuilder, FormControlName } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -35,7 +34,6 @@ export class AddGroupDetailsComponent implements OnInit {
   activeButton: boolean = true;
   @Output() updateEvent = new EventEmitter<Chama>();
   constructor(
-    private notificationService: NotificationService,
     private chamaService: ChamaService,
     private authService: AuthService,
     public dialogRef: MatDialogRef<AddGroupDetailsComponent>,

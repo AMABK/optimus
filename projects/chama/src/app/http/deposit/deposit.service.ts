@@ -107,4 +107,9 @@ export class DepositService {
       `${this.apiUrl}/api/chama/get-loan-request${queryParams}`
     );
   }
+  getContributionType(txnType, typeId = null) {
+    return this.http.get(
+      `${this.apiUrl}/api/chama/get-contribution-type/${txnType}/${typeId}`
+    );
+  }
 }

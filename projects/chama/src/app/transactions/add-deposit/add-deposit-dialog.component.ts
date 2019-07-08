@@ -23,9 +23,9 @@ export class AddDepositDialogComponent implements OnInit {
   currentDeposit: any;
   activeButton: boolean = true;
   chamaData: any;
+  depositTypes;
   @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
   constructor(
-    private notificationService: NotificationService,
     private depositService: DepositService,
     private authService: AuthService,
     public dialogRef: MatDialogRef<AddGroupContributionComponent>,
@@ -69,6 +69,10 @@ export class AddDepositDialogComponent implements OnInit {
     }
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
+    });
+    this.depositService.getContributionType('deposit',null).subscribe(result => {
+      this.depositTypes = result;
+      //console.log(this.depositTypes);
     });
   }
   registerChama(form) {

@@ -18,11 +18,17 @@ export class HeaderComponent implements OnInit {
   @Input() userData;
   currentUser: Auth;
   currentRoute: any;
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService) {
-
+  constructor(private router: Router, private authService: AuthService) {
+    this.authService.currentUser.subscribe(x => {
+      if (window.location.pathname == '/') {
+        this.currentUser = x;
+      } else {
+        this.currentUser = x;
+      }
+  });
   }
   ngOnInit() {
-    console.log(this.router.url)
+    console.log(window.location.pathname)
     //this.defaultChamaName = JSON.parse(localStorage.getItem('authData')).user.default_chama.name;
   }
 

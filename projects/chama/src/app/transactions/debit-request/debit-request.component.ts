@@ -208,7 +208,7 @@ export class DebitRequestComponent implements OnInit {
         .reduce((acc, value) => acc + value, 0);
     }
   }
-  openRequestLoanDialog() {
+  openRequestDebitDialog(requestType) {
     // let dData = {
     //   depositTypes: null
     // };
@@ -224,7 +224,7 @@ export class DebitRequestComponent implements OnInit {
       height: 'auto',
       width: '600px',
       data: {
-        requestType:'loan'
+        requestType
       }
     });
     dialogRef.afterClosed().subscribe(result => {

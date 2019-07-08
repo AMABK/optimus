@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayout.xs="column">
   <mat-card fxFlex="1 2 72">
     <h3>Transactions >> Payable</h3>
-    <button mat-button style="border: 1px solid #428bca;" (click)="openRequestLoanDialog()">
+    <button mat-button style="border: 1px solid #428bca;" (click)="openRequestDebitDialog('loan')">
       <mat-icon class="success-icon">add</mat-icon>Request A Loan
     </button>
     <button mat-button (click)="handleSearch($event, 'download')" style="border: 1px solid #428bca;">
