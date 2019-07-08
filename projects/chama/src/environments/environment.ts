@@ -4,14 +4,14 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://2dfab56b.ngrok.io',
+  apiUrl: 'https://chama.optimuse-solutions.com',
   CLOUDANARY_API_KEY: '729124627913516',
   CLOUDANARY_API_SECRET: 'Nad0g9Z24r4J2CUUqXAWayK4TXc',
   CLOUDINARY_URL:
     'Cloudinary://729124627913516:Nad0g9Z24r4J2CUUqXAWayK4TXc@optimus-e-solutions',
   CLOUDINARY_BASE: 'http://res.cloudinary.com/optimus-e-solutions',
   clientId: '2',
-  hostUrl: 'http://localhost:4200'
+  hostUrl: 'https://topesa.com'
 } 
 /*
  * For easier debugging in development mode, you can import the following file
