@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000',
+  apiUrl: 'https://2dfab56b.ngrok.io',
   CLOUDANARY_API_KEY: '729124627913516',
   CLOUDANARY_API_SECRET: 'Nad0g9Z24r4J2CUUqXAWayK4TXc',
   CLOUDINARY_URL:

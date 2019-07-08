@@ -55,12 +55,13 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
          if (params["status"] === "error") {
            this.notificationService.emit(params["message"]);
          } else {
-           this.authService.storeResult(JSON.parse(params["authData"]));
-           //this.currentUserSubject.next((params["authData"]));
-           //this.currentUserSubject = new BehaviorSubject<Auth>(JSON.parse(params["authData"]));
-           //this.currentUser = this.currentUserSubject.asObservable();
-           this.authService.currentUser.subscribe(x => (this.currentUser = x));
-           this.router.navigate(["/home"]);
+           this.authService.socialLogin(JSON.parse(params["authData"]))
+             .pipe()
+             .subscribe(authData => {
+               if (authData && authData.access_token) { 
+                 this.router.navigate(['/home']);
+               }
+             });
          }
        }
      });
@@ -73,23 +74,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       this.router.navigate(['/home']);
     }
 
-  
-  
-    // if (this.route.snapshot.paramMap.get("loginType") == "social") {
-    //   const authData = this.route.snapshot.paramMap.get("authData");
-    //   alert(authData);
-      
-    //   //sessionStorage.setItem("currentUser", JSON.stringify(authData));
-    //   // this.currentUserSubject.next(authData);
-
-    //   this.router.navigate(["/home"]);
-    // }
-    // if (this.route.snapshot.paramMap.get('redirectUrl') !== '') {
-    //   this.notificationService.emit(
-    //     'Please login first to access this page',
-    //     'warning'
-    //   );
-    // }
     if (this.currentUserSubject) {
      this.router.navigate(['/home']);
     }
@@ -103,6 +87,15 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   facebookLogin() {
     window.location.href = environment.apiUrl +"/login/fb";
   }
+  twitterLogin() {
+    window.location.href = environment.apiUrl + "/login/tw";
+  }
+  linkedinLogin() {
+    window.location.href = environment.apiUrl + "/login/li";
+  }
+  googleLogin() {
+    window.location.href = environment.apiUrl + "/login/go";
+  }
   public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
   }
@@ -114,12 +107,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         .pipe()
         .subscribe(authData => {
           if (authData && authData.access_token) { 
-            // sessionStorage.setItem(
-            //   "currentUser",
-            //   JSON.stringify(authData)
-            // );
-           // this.currentUserSubject.next(authData);
-
             this.router.navigate(['/home']);
           }
         });

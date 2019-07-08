@@ -30,7 +30,7 @@ export class AuthService {
   }
   getClientSecret(apiUrl, clientId, hostUrl) {
     // tslint:disable-next-line:max-line-length
-    const params ='/api/oauth/authorize?' + 'client_id=' + clientId + '&redirect_uri=' + hostUrl + '/login&response_type=token&scope='
+    const params = '/api/oauth/authorize?' + 'client_id=' + clientId + '&redirect_uri=' + hostUrl + '/login&response_type=token&scope='
     return this.http.get<Client>(apiUrl + params);
   }
 
@@ -54,7 +54,13 @@ export class AuthService {
         })
       );
   }
-
+  socialLogin(authData) {
+    if (authData && authData.access_token) {
+      this.storeResult(authData);
+      this.currentUserSubject.next(authData);
+    }
+    return authData;
+  }
   requestImplicitGrantToken(url) {
     return this.http.get(
       `${url}/api/oauth/authorize?client_id=4&redirect_uri=/callback&response_type=token&scope`
