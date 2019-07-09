@@ -56,7 +56,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
            this.notificationService.emit(params["message"]);
          } else {
            this.authService.socialLogin(JSON.parse(params["authData"]))
-             .pipe()
              .subscribe(authData => {
                if (authData && authData.access_token) { 
                  this.router.navigate(['/home']);
