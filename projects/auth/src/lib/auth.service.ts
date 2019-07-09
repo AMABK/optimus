@@ -58,7 +58,9 @@ export class AuthService {
       this.storeResult(authData);
       this.currentUserSubject.next(authData);
     }
-    return authData;
+    //this.currentUserSubject = new BehaviorSubject<Auth>(authData);
+   // this.currentUser = new BehaviorSubject<Auth>(authData).asObservable();
+    return new BehaviorSubject<Auth>(authData).asObservable();//authData;
   }
   requestImplicitGrantToken(url) {
     return this.http.get(
