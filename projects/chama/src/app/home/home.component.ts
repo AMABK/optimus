@@ -304,7 +304,7 @@ export class HomeComponent implements OnInit {
   getDefaultChamaDetails() {
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
-      const authData = this.authService.getUserData();
+      let authData = this.authService.getUserData();
       authData.user.chama_id = result.chama_id;
       if (authData.user.chama_id === null) {
         if (result.chama_id != null) {
