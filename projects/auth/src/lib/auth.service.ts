@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { NotificationService } from 'projects/notification/src/public_api';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Auth } from 'projects/chama/src/app/models/auth/auth';
