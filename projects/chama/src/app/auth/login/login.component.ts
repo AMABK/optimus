@@ -104,7 +104,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       const clientId = result.client_id;
       const clientSecret = result.client_secret;
       this.authService.login(environment.apiUrl + '/api/oauth/token', email, password, clientId, clientSecret)
-        .pipe()
         .subscribe(authData => {
           if (authData && authData.access_token) { 
             this.router.navigate(['/home']);
