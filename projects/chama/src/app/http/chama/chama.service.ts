@@ -58,7 +58,7 @@ export class ChamaService {
     let headers = new HttpHeaders({
       Authorization: "Bearer " + this.token
     });
-    return this.http.post(`http://localhost:8000/api/chama/create`, chama, {
+    return this.http.post(`${environment.apiUrl}/api/${this.model}/create`, chama, {
       headers: headers
     });
   }
