@@ -65,30 +65,30 @@ export class ChamaService {
 
   createPaymentMode(paymentMode) {
     return this.http.post(
-      `http://localhost:8000/api/chama/create-payment-mode`,
+      `${environment.apiUrl}/api/${this.model}/create-payment-mode`,
       paymentMode
     );
   }
   createInvite(createInvite) {
     return this.http.post(
-      `http://localhost:8000/api/user/invite`,
+      `${environment.apiUrl}/api/user/invite`,
       createInvite
     );
   }
   createContributionType(createContributionType) {
     return this.http.post(
-      `http://localhost:8000/api/chama/create-contribution-type`,
+      `${environment.apiUrl}/api/chama/create-contribution-type`,
       createContributionType
     );
   }
   update(chama: Chama) {
     return this.http
-      .post<Chama>(`http://localhost:8000/api/chama/update`, chama)
+      .post<Chama>(`${environment.apiUrl}/api/chama/update`, chama)
       .pipe(share());
   }
   updatePaymentMode(paymentMode) {
     return this.http.post(
-      `http://localhost:8000/api/chama/update-payment-mode`,
+      `${environment.apiUrl}/api/chama/update-payment-mode`,
       paymentMode
     );
   }
@@ -99,7 +99,7 @@ export class ChamaService {
     });
 
     return this.http.post(
-      `http://localhost:8000/api/chama/update-default`,
+      `${environment.apiUrl}/api/chama/update-default`,
       {
         chamaId: chamaId
       },
