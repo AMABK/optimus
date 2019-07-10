@@ -16,11 +16,25 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field>
+      <mat-label>Transaction Type</mat-label>
+      <select matInput matNativeControl [formControl]="txn_type" [errorStateMatcher]="matcher">
+        <option value="deposit">Deposit</option>
+        <option value="payable">Payable</option>
+        <option value="withdrawal">Withdrawal</option>
+      </select>
+      <mat-error *ngIf="!txn_type.hasError('minLength')">
+        Transaction Type is <strong>required</strong>(Minimum 2 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
       <mat-label>Status</mat-label>
       <select matInput matNativeControl [formControl]="status" [errorStateMatcher]="matcher">
         <option value="0">Active</option>
         <option value="1">In Active</option>
       </select>
+      <mat-error *ngIf="!status.hasError('minLength')">
+        Status is <strong>required</strong>(Minimum 2 characters)
+      </mat-error>
     </mat-form-field>
     <div mat-dialog-actions>
       <button type="submit" mat-button cdkFocusInitial class="button-primary"> Add Group Contribution Type</button>

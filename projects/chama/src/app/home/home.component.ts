@@ -388,14 +388,14 @@ export class HomeComponent implements OnInit {
           : null,
       id: this.authService.getUserData().user.chama_id
     };
-
+console.log(defaultChama)
     const dialogRef = this.dialog.open(AddGroupContributionTypeComponent, {
       height: "auto",
       width: "600px",
       data: {
         key: defaultChama
       }
-    });
+    }); 
     dialogRef.afterClosed().subscribe(result => {
       if (result === "success") {
         this.chamas$ = this.getChamas(this.authService.getUserId());

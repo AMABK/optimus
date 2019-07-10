@@ -11,6 +11,7 @@ import { take } from 'rxjs/operators';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
+import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 
 @Component({
   selector: "app-add-deposit-dialog",
@@ -28,6 +29,7 @@ export class AddDepositDialogComponent implements OnInit {
   constructor(
     private depositService: DepositService,
     private authService: AuthService,
+    private loaderIService: LoaderInterceptorService,
     public dialogRef: MatDialogRef<AddGroupContributionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private ngZone: NgZone,
@@ -110,6 +112,10 @@ export class AddDepositDialogComponent implements OnInit {
   createDeposit(deposit) {
     this.depositService.createDeposit(deposit).subscribe(
       response => {
+        this.loaderIService.storeNotificationMessage(
+          "Transaction successful",
+          "success"
+        );
         this.dialogRef.close("success");
       },
       error => {}

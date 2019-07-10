@@ -75,35 +75,8 @@ export class DepositComponent implements OnInit {
   }
   ngOnInit() {
     this.getDefaultChamaDetails();
-    this.depositService
-      .search(this.searchTerm$, "deposit")
-      .subscribe(response => {
-        if(this.download!='download'){
-        this.paginationData = {
-          current_page: response.data.current_page - 1,
-          total: response.data.total,
-          per_page: response.data.per_page
-        };
-        this.depositDataSource = new MatTableDataSource(response.data.data);
-        this.depositDataSource.sortingDataAccessor = (item, property) => {
-          switch (property) {
-            case "contribution_type.type_name":
-              return item.contribution_type.type_name;
-            case "payment_mode.bank":
-              if (item.payment_mode != null) {
-                return item.payment_mode.bank;
-              }
-              return null;
-            default:
-              return item[property];
-          }
-        };
-        this.depositDataSource.sort = this.sort;
-        } else {
-          this.downloadPDF(response.data);
-          this.download = '';
-      }
-      });
+    this.getDefaultChamaDeposits();
+  
   }
   handleSearch(query: string, model: string) {
     switch (model) {
@@ -254,6 +227,37 @@ export class DepositComponent implements OnInit {
       this.chama = this.chamaSubject.asObservable();
     });
   }
+  getDefaultChamaDeposits() {
+    this.depositService
+      .search(this.searchTerm$, "deposit")
+      .subscribe(response => {
+        if (this.download != 'download') {
+          this.paginationData = {
+            current_page: response.data.current_page - 1,
+            total: response.data.total,
+            per_page: response.data.per_page
+          };
+          this.depositDataSource = new MatTableDataSource(response.data.data);
+          this.depositDataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case "contribution_type.type_name":
+                return item.contribution_type.type_name;
+              case "payment_mode.bank":
+                if (item.payment_mode != null) {
+                  return item.payment_mode.bank;
+                }
+                return null;
+              default:
+                return item[property];
+            }
+          };
+          this.depositDataSource.sort = this.sort;
+        } else {
+          this.downloadPDF(response.data);
+          this.download = '';
+        }
+      });
+  }
   openAddGroupContributionDialog() {
     const depositTypes = [
       { id: 1, type_name: "Savings" },
@@ -275,6 +279,7 @@ export class DepositComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === "success") {
+        this.getDefaultChamaDeposits()
         // this.chamas$ = this.getChamas(this.authService.getUserId());
         // this.getDefaultChamaDetails();
         // // set message to be emitted by loader interceptor after http requests end

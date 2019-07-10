@@ -27,6 +27,7 @@ export class AddGroupContributionTypeComponent implements OnInit {
   name = new FormControl("", [Validators.required, Validators.minLength(4)]);
   description = new FormControl("", [Validators.required, Validators.minLength(2)]);
   status = new FormControl("", [Validators.required, Validators.minLength(1)]);
+  txn_type = new FormControl("", [Validators.required, Validators.minLength(1)]);
 
   matcher = new FormErrorService();
 
@@ -35,10 +36,11 @@ export class AddGroupContributionTypeComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.name.valid && this.description.valid&&this.status.valid) {
+    if (this.name.valid && this.description.valid && this.status.valid && this.txn_type.valid) {
       let currentContributionType = {
         name: this.name.value,
         status: this.status.value,
+        txn_type: this.txn_type.value,
         description: this.description.value,
         chama_id: this.authService.getUserData().user.chama_id
       };
