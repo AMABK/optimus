@@ -4,10 +4,11 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
+  HttpResponse,
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import {  catchError } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
 
@@ -29,7 +30,7 @@ export class ErrorInterceptorService implements HttpInterceptor {
           if (response.status === 401) {
             message = response.error.message;
             // auto logout if 401 response returned from api
-            //this.authService.logout();
+            this.authService.logout();
             //location.reload(true);
           }
           else if (response.status === 452) {
