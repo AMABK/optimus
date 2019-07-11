@@ -145,36 +145,28 @@
       <mat-list>
         <mat-list-item><b>ITEM</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item>Total Fines</mat-list-item>
+        <mat-list-item>Maximum</mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item>Paid Fines </mat-list-item>
+        <mat-list-item>Minimum</mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item>Unpaid Fines</mat-list-item>
+        <mat-list-item>Average </mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item>Total Loans</mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Paid Loans</mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Unpaid Loans</mat-list-item>
+        <mat-list-item>Total</mat-list-item>
         <mat-divider></mat-divider>
       </mat-list>
     </mat-card>
     <mat-card style="width: 100%">
       <mat-list>
-        <mat-list-item> <b>Total(KES)</b></mat-list-item>
+        <mat-list-item> <b>(KES)</b></mat-list-item>
         <mat-divider></mat-divider>
         <mat-list-item>
-          <b>{{ numberWithCommas(3526899) }}</b></mat-list-item>
+          <b>{{ numberWithCommas(aggregates.maximum) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item><b>{{ numberWithCommas(535345) }}</b></mat-list-item>
+        <mat-list-item><b>{{ numberWithCommas(aggregates.minimum) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item><b>{{ numberWithCommas(26899) }}</b></mat-list-item>
+        <mat-list-item><b>{{ numberWithCommas(aggregates.average) }}</b></mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item><b>{{ numberWithCommas(3529) }}</b></mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item><b>{{ numberWithCommas(3529) }}</b></mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item><b>{{ numberWithCommas(3529) }}</b></mat-list-item>
+        <mat-list-item><b>{{ numberWithCommas(aggregates.total) }}</b></mat-list-item>
         <mat-divider></mat-divider>
       </mat-list>
     </mat-card>

@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Auth } from 'projects/chama/src/app/models/auth/auth';
 import { Client } from 'projects/chama/src/app/models/client/client';
+import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient,
+    private loaderIService:LoaderInterceptorService
   ) {
     const userData = JSON.parse(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<Auth>(userData);
@@ -87,5 +89,11 @@ export class AuthService {
   }
   getUserData() {
     return JSON.parse(localStorage.getItem('authData'));
+  }
+  updateDefaultChama(chamaId) {
+    this.loaderIService.storeNotificationMessage('Congrats, default chama updated', 'success');
+    let authData = this.getUserData();
+    authData.user.chama_id = chamaId;
+    this.storeResult(authData);
   }
 }

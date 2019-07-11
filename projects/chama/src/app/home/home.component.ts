@@ -68,13 +68,14 @@ export class HomeComponent implements OnInit {
     { value: "yes", display: "Yes" },
     { value: "no", display: "No" }
   ];
-  contributionColumns: string[] = [
+  txnTypeColumns: string[] = [
     "position",
-    "amount",
-    "type",
-    "date",
-    "verified"
+    "name",
+    "txn_type",
+    'created_by',
+    "status"
   ];
+  txnTypes$;
   chamas$: Observable<Chama>;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -124,6 +125,9 @@ export class HomeComponent implements OnInit {
     // console.log(e);
   }
   ngOnInit() {
+    this.depositService.getAllContributionTypes().subscribe(res => {
+      this.txnTypes$ = res;
+    })
     this.depositService.search(this.searchTerm$).subscribe(response => {
       this.paginationData = {
         current_page: response.data.current_page - 1,
@@ -332,10 +336,12 @@ export class HomeComponent implements OnInit {
   updateDefaultChama(chamaId) {
     const currentChamaId = this.authService.getUserData().user.chama_id;
     // allow change only if the chama id has changed
+    //console.log(chamaId+'|'+currentChamaId)
     if (currentChamaId !== chamaId) {
       this.defaultGroup = this.chamaService
         .updateDefaultChama(chamaId)
         .subscribe(result => {
+          this.authService.updateDefaultChama(chamaId);
           this.getDefaultChamaDetails();
         });
     }
@@ -388,7 +394,6 @@ export class HomeComponent implements OnInit {
           : null,
       id: this.authService.getUserData().user.chama_id
     };
-console.log(defaultChama)
     const dialogRef = this.dialog.open(AddGroupContributionTypeComponent, {
       height: "auto",
       width: "600px",

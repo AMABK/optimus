@@ -58,6 +58,12 @@ export class DepositComponent implements OnInit {
   user: any = {
     id: null
   };
+  aggregates = {
+    total: 0,
+    average: 0,
+    minimum: 0,
+    maximum:0
+  };
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
@@ -232,6 +238,10 @@ export class DepositComponent implements OnInit {
       .search(this.searchTerm$, "deposit")
       .subscribe(response => {
         if (this.download != 'download') {
+          this.aggregates.total = response.data.sum;
+          this.aggregates.average = response.data.avg;
+          this.aggregates.minimum = response.data.min;
+          this.aggregates.maximum = response.data.max;
           this.paginationData = {
             current_page: response.data.current_page - 1,
             total: response.data.total,

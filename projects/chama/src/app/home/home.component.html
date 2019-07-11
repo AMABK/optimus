@@ -150,7 +150,7 @@
             </mat-grid-tile>
             <mat-grid-tile fxFlex="50" *ngIf="chama | async as chamaData" class="mat-grid-tile-top-right">
                 <table mat-table [dataSource]="chamaData.contributions" class="mat-elevation-z8"
-                    *ngIf="chamaData.contributions; else noChamaData">
+                    *ngIf="!chamaData.contributions; else noChamaData" style="margin-top: -260px;">
 
                     <!--- Note that these columns can be defined in any order.
                         The actual rendered columns are set as a property on the row definition" -->
@@ -162,31 +162,31 @@
                     </ng-container>
 
                     <!-- Amount Column -->
-                    <ng-container matColumnDef="amount">
-                        <th mat-header-cell *matHeaderCellDef> Amount </th>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Name </th>
                         <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
                     </ng-container>
 
                     <!-- Weight Column -->
-                    <ng-container matColumnDef="type">
-                        <th mat-header-cell *matHeaderCellDef> Contribution Type </th>
+                    <ng-container matColumnDef="created_by">
+                        <th mat-header-cell *matHeaderCellDef> Created By </th>
                         <td mat-cell *matCellDef="let element"> {{element.contribution_type_name}} </td>
                     </ng-container>
 
                     <!-- Payment date Column -->
-                    <ng-container matColumnDef="date">
-                        <th mat-header-cell *matHeaderCellDef> Payment Date </th>
+                    <ng-container matColumnDef="txn_type">
+                        <th mat-header-cell *matHeaderCellDef> Transcation Type </th>
                         <td mat-cell *matCellDef="let element"> {{element.payment_date}} </td>
                     </ng-container>
 
                     <!-- Status date Column -->
-                    <ng-container matColumnDef="verified">
-                        <th mat-header-cell *matHeaderCellDef> Verified </th>
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef> Status </th>
                         <td mat-cell *matCellDef="let element"> {{element.verified}} </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="contributionColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: contributionColumns;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="txnTypeColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: txnTypeColumns;"></tr>
                 </table>
 
                 <ng-template #noChamaData>
@@ -256,7 +256,7 @@
                     <th mat-header-cell *matHeaderCellDef> Default Group </th>
                     <td mat-cell *matCellDef="let element">
                         <mat-radio-button (click)="updateDefaultChama(element.id)"
-                            [checked]="element.user_default[0]?.chama_id">
+                            [checked]="(element.user_default[0]?.chama_id !==null)">
                         </mat-radio-button>
                     </td>
                 </ng-container>
@@ -284,23 +284,22 @@
         </ng-template>
     </mat-tab>
     <mat-tab label="Edit Group Details" *ngIf="editGroup">
-        <div fxLayout="column" fxLayoutAlign="center center" class="full-row-height">
+        <div fxLayout="column" fxLayoutAlign="top center" class="full-row-height">
             <div fxFlex="50">
                 <mat-horizontal-stepper labelPosition="bottom" #stepper>
                     <mat-step [stepControl]="firstFormGroup">
                         <ng-template matStepLabel>GROUP<br>Set Up Group Details</ng-template>
                         <div class="center">
-
+        
                             <!-- <button *ngIf="noChamaData" [disabled]="user.chama_id == null" mat-button
-                                class="edit-group-button" (click)="openAddGroupDetails()">
-                                <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
-                            </button> -->
+                                                class="edit-group-button" (click)="openAddGroupDetails()">
+                                                <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
+                                            </button> -->
                             <button *ngIf="user.chama_id != null" mat-button class="edit-group-button"
                                 (click)="openAddGroupDetails('update')">
                                 <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
                             </button>
-                            <button mat-button class="edit-group-button"
-                                (click)="openAddGroupDetails('create')">
+                            <button mat-button class="edit-group-button" (click)="openAddGroupDetails('create')">
                                 <mat-icon>group</mat-icon> ADD NEW GROUP HERE
                             </button>
                         </div>

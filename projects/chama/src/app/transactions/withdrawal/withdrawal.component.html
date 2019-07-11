@@ -185,41 +185,34 @@
     </mat-paginator>
   </mat-card>
   <div fxFlex="1 2 28" fxLayout.xs="row" fxLayout="row">
-    <mat-card style="width: 100%">
-      <mat-list>
-        <mat-list-item><b>ITEM</b></mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Deposit</mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Fines </mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Savings</mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>Loans</mat-list-item>
-        <mat-divider></mat-divider>
-      </mat-list>
-    </mat-card>
-    <mat-card style="width: 100%">
-      <mat-list>
-        <mat-list-item> <b>Total(KES)</b></mat-list-item>
-        <mat-divider></mat-divider>
-        <mat-list-item>
-          <b>{{ numberWithCommas(3526899) }}</b></mat-list-item
-        >
-        <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(535345) }}</b></mat-list-item
-        >
-        <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(26899) }}</b></mat-list-item
-        >
-        <mat-divider></mat-divider>
-        <mat-list-item
-          ><b>{{ numberWithCommas(3529) }}</b></mat-list-item
-        >
-        <mat-divider></mat-divider>
-      </mat-list>
-    </mat-card>
+<mat-card style="width: 100%">
+  <mat-list>
+    <mat-list-item><b>ITEM</b></mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>Maximum</mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>Minimum</mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>Average </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>Total</mat-list-item>
+    <mat-divider></mat-divider>
+  </mat-list>
+</mat-card>
+<mat-card style="width: 100%">
+  <mat-list>
+    <mat-list-item> <b>(KES)</b></mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item>
+      <b>{{ numberWithCommas(aggregates.maximum) }}</b></mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item><b>{{ numberWithCommas(aggregates.minimum) }}</b></mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item><b>{{ numberWithCommas(aggregates.average) }}</b></mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item><b>{{ numberWithCommas(aggregates.total) }}</b></mat-list-item>
+    <mat-divider></mat-divider>
+  </mat-list>
+</mat-card>
   </div>
 </div>

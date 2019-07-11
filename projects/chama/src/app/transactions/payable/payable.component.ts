@@ -47,6 +47,12 @@ export class PayableComponent implements OnInit {
     { value: 'paid', display: 'Paid' },
     { value: 'unpaid', display: 'Unpaid' }
   ];
+  aggregates = {
+    total: 0,
+    average: 0,
+    minimum: 0,
+    maximum: 0
+  };
   download: string = '';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -61,6 +67,10 @@ export class PayableComponent implements OnInit {
       .search(this.searchTerm$, 'payable')
       .subscribe(response => {
         if (this.download != 'download') {
+          this.aggregates.total = response.data.sum;
+          this.aggregates.average = response.data.avg;
+          this.aggregates.minimum = response.data.min;
+          this.aggregates.maximum = response.data.max;
           this.paginationData = {
             current_page: response.data.current_page - 1,
             total: response.data.total,

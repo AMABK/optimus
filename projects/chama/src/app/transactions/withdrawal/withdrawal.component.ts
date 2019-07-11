@@ -44,6 +44,12 @@ export class WithdrawalComponent implements OnInit {
     { value: "paid", display: "Paid" },
     { value: "unpaid", display: "Unpaid" }
   ];
+  aggregates = {
+    total: 0,
+    average: 0,
+    minimum: 0,
+    maximum: 0
+  };
   download: string = '';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -53,7 +59,11 @@ export class WithdrawalComponent implements OnInit {
     this.depositService
       .search(this.searchTerm$, "withdrawal")
       .subscribe(response => {
-        if(this.download !='download'){
+        if (this.download != 'download') {
+          this.aggregates.total = response.data.sum;
+          this.aggregates.average = response.data.avg;
+          this.aggregates.minimum = response.data.min;
+          this.aggregates.maximum = response.data.max;
         this.paginationData = {
           current_page: response.data.current_page - 1,
           total: response.data.total,
@@ -177,6 +187,9 @@ export class WithdrawalComponent implements OnInit {
     });
   }
   numberWithCommas(value: number = 0) {
+    if (value == null) {
+      value = 0;
+    }
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   formatDateInput(date) {

@@ -112,4 +112,9 @@ export class DepositService {
       `${this.apiUrl}/api/chama/get-contribution-type/${txnType}/${typeId}`
     );
   }
+  getAllContributionTypes() {
+    return this.http.get(
+      `${this.apiUrl}/api/chama/get-all-contribution-types`
+    );
+  }
 }
