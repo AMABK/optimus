@@ -33,6 +33,12 @@
           [(ngModel)]="sToDate" format="YYYY/MM/DD" (click)="toDateSubmission.open()"
           [matDatepicker]="toDateSubmission">
         <mat-datepicker #toDateSubmission></mat-datepicker>
+        <select class="input-field select" (ngModelChange)="handleSearch($event, 'debitType')" [(ngModel)]="debitType">
+          <option [(value)]="debitType">Please Select</option>
+          <option *ngFor="let debitType of depositTypes?.data" [(value)]="debitType.id">
+            {{debitType.type_name}}
+          </option>
+        </select>
         <select class="input-field select" (ngModelChange)="handleSearch($event,'verified')" [(ngModel)]="verified">
           <option *ngFor="let status of statuses" [(value)]='status.value'>{{status.display}}</option>
         </select>
@@ -86,7 +92,7 @@
       <!-- Symbol Column -->
       <ng-container matColumnDef="verified">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Verified.</th>
-        <td mat-cell *matCellDef="let element">{{ element.verified.toUpperCase() }}</td>
+        <td mat-cell *matCellDef="let element"> <span (click)="openChangeDepositStatusDialog(element)" [className]="(element.verified==='no') ? 'noVerified' : (element.verified==='yes')?'yesVerified':'rejectedVerified'">{{ element.verified.toUpperCase() }}</span></td>
         <td mat-footer-cell *matFooterCellDef> </td>
       </ng-container>
 

@@ -19,16 +19,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DebitRequestComponent } from './debit-request/debit-request.component';
 import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.component';
+import { ChangeDebitStatusComponent } from './change-debit-status/change-debit-status.component';
+import { ChangeDepositStatusComponent } from './change-deposit-status/change-deposit-status.component';
 
 @NgModule({
   declarations: [
     TransactionsComponent,
     WithdrawalComponent,
     DepositComponent,
-    PayableComponent,
+    PayableComponent, 
     RequestDebitDialogComponent,
     DebitRequestComponent,
-    AddDepositDialogComponent
+    AddDepositDialogComponent,
+    ChangeDebitStatusComponent,
+    ChangeDepositStatusComponent
   ],
   imports: [
     CommonModule,
@@ -45,7 +49,7 @@ import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.comp
     MatFormFieldModule,
     ReactiveFormsModule,
   ],
-  entryComponents: [RequestDebitDialogComponent,AddDepositDialogComponent],
+  entryComponents: [RequestDebitDialogComponent, AddDepositDialogComponent, ChangeDebitStatusComponent,ChangeDepositStatusComponent],
   providers: [CdkColumnDef]
 })
 export class TransactionsModule {}

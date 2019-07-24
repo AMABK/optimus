@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { duration } from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class NotificationService {
   }
 
   // Second parameter sets background color
-  emit(notification: string, status= 'danger') {
-    this.snackbar.open(notification, 'OK', { duration: 3000, panelClass: [status +'-snackbar'], verticalPosition: 'top' });
+  emit(notification: string, status = 'danger', duration = 4000) {
+    this.snackbar.open(notification, 'OK', { duration: duration, panelClass: [status +'-snackbar'], verticalPosition: 'top' });
   }
 }

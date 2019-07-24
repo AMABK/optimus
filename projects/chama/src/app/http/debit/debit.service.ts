@@ -10,7 +10,7 @@ export class DebitService {
 
  apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) {}
-  searchLoanRequests(searchQueries?: any) {
+  searchDebitRequests(searchQueries?: any) {
     return searchQueries.pipe(
       startWith({
         q: "",
@@ -47,11 +47,17 @@ export class DebitService {
       )
     );
   }
-  createDebitRequest(loan) {
-    return this.http.post(`${this.apiUrl}/api/chama/create-debit-request`, loan);
+  createDebitRequest(debitData) {
+    return this.http.post(`${this.apiUrl}/api/chama/create-debit-request`, debitData);
   }
   updateDebitRequest(loan) {
     return this.http.post(`${this.apiUrl}/api/chama/update-debit-request`, loan);
+  }
+  updateDebitRequestStatus(debitData) {
+    return this.http.post(`${this.apiUrl}/api/chama/update-debit-request-status`, debitData);
+  }
+  deleteDebitRequest(debitData) {
+    return this.http.post(`${this.apiUrl}/api/chama/delete-debit-request`, debitData);
   }
   getDefaultChamaDebitRequests(queryParams: string) {
     return this.http.get(

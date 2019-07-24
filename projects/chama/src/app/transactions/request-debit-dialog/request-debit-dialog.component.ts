@@ -13,16 +13,17 @@ import { ChamaService } from '../../http/chama/chama.service';
 })
 export class RequestDebitDialogComponent implements OnInit {
   chamaData: any;
-  loanRequest: any;
+  debitRequest: any;
   constructor(
     public dialogRef: MatDialogRef<RequestDebitDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private debitService: DebitService,
     private notificationService: NotificationService,
     private chamaService: ChamaService
-  ) {}
-  amount = new FormControl("", [Validators.required, Validators.min(10)]);
-  loanFrom = new FormControl("", [Validators.required]);
+  ) { }
+  requestType = new FormControl(this.data.requestType);
+  amount = new FormControl("", [Validators.required, Validators.min(10), Validators.pattern("^[0-9]*$")]);
+  debitFrom = new FormControl("", [Validators.required]);
   reason = new FormControl("", [Validators.required, Validators.minLength(3)]);
   paymentDate = new FormControl("", [
     Validators.required,
@@ -44,20 +45,21 @@ export class RequestDebitDialogComponent implements OnInit {
   onSubmit() {
     if (
       this.amount.valid &&
-      this.loanFrom.valid &&
+      this.debitFrom.valid &&
       this.reason.valid &&
       this.disbursementDate.valid &&
       this.paymentDate.valid
     ) {
-      this.loanRequest = {
+      this.debitRequest = {
+        request_type: this.requestType.value,
         disbursement_date: this.disbursementDate.value,
         payment_date: this.paymentDate.value,
         reason: this.reason.value,
-        debit_from: this.loanFrom.value,
+        debit_from: this.debitFrom.value,
         amount: this.amount.value,
         status: 0
       };
-      this.saveLoanRequest(this.loanRequest);
+      this.saveLoanRequest(this.debitRequest);
     }
   }
   saveLoanRequest(loan) {
@@ -73,7 +75,7 @@ export class RequestDebitDialogComponent implements OnInit {
     this.debitService.createDebitRequest(loan).subscribe(
       response => {
         this.notificationService.emit(
-          "Loan request successfully made",
+          "Debit request successful",
           "success"
         );
         this.dialogRef.close("success");

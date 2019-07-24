@@ -1,16 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { MaterialModule } from 'projects/material/src/public_api';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -24,6 +20,7 @@ import { AddGroupContributionTypeComponent } from './add-group-contribution-type
 import { AddGroupContributionComponent } from './add-group-contribution/add-group-contribution.component';
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSortModule } from '@angular/material/sort';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
@@ -50,7 +47,8 @@ import { MatSortModule } from '@angular/material/sort';
     RichTextEditorAllModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSortModule
+    MatSortModule,
+    MatAutocompleteModule
   ],
   entryComponents: [
     AddGroupDetailsComponent,

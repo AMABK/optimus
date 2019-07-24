@@ -99,9 +99,7 @@ export class DepositService {
   createLoanRequest(loan) {
     return this.http.post(`${this.apiUrl}/api/chama/create-loan-request`, loan);
   }
-  updateLoanRequest(loan) {
-    return this.http.post(`${this.apiUrl}/api/chama/update-loan-request`, loan);
-  }
+
   getDefaultChamaLoanRequests(queryParams: string) {
     return this.http.get(
       `${this.apiUrl}/api/chama/get-loan-request${queryParams}`
@@ -116,5 +114,11 @@ export class DepositService {
     return this.http.get(
       `${this.apiUrl}/api/chama/get-all-contribution-types`
     );
+  }
+  updateDepositStatus(depositData) {
+    return this.http.post(`${this.apiUrl}/api/chama/update-deposit-status`, depositData);
+  }
+  deleteDeposit(depositData) {
+    return this.http.post(`${this.apiUrl}/api/chama/delete-deposit`, depositData);
   }
 }

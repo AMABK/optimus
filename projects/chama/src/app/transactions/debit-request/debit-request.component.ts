@@ -10,6 +10,7 @@ import { ChamaService } from '../../http/chama/chama.service';
 import { ExportPdf } from 'projects/export-pdf/src/public-api';
 import { DebitService } from '../../http/debit/debit.service';
 import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
+import { ChangeDebitStatusComponent } from '../change-debit-status/change-debit-status.component';
 
 @Component({
   selector: 'app-debit-request',
@@ -25,7 +26,7 @@ export class DebitRequestComponent implements OnInit {
   sToDate = '';
   search = '';
   verified = '';
-  requestType=''
+  requestType =''
   loanRequestDataSource;
   displayedColumns: string[] = [
     'position',
@@ -63,11 +64,11 @@ export class DebitRequestComponent implements OnInit {
     private exportPdf: ExportPdf
   ) {}
   ngOnInit() {
-    this.getLoanRequests();
+    this.getDebitRequests();
   }
-  getLoanRequests() {
+  getDebitRequests() {
         this.debitService
-          .searchLoanRequests(this.searchTerm$)
+          .searchDebitRequests(this.searchTerm$)
           .subscribe(response => {
             if (this.download !== 'download') {
             this.paginationData = {
@@ -186,7 +187,9 @@ export class DebitRequestComponent implements OnInit {
       sToDate,
       verified,
       page: pageIndex + 1,
-      size: pageSize
+      size: pageSize,
+      requestType: this.requestType,
+      download: this.download
     });
   }
   numberWithCommas(value: number = 0) {
@@ -229,12 +232,7 @@ export class DebitRequestComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {
-        this.getLoanRequests();
-        // set message to be emitted by loader interceptor after http requests end
-        this.loaderIService.storeNotificationMessage(
-          'Request successfully added!',
-          'success'
-        );
+        this.getDebitRequests();
       }
     });
   }
@@ -254,5 +252,19 @@ export class DebitRequestComponent implements OnInit {
     }
     const head = ['No.', 'Amount', 'Date Of Payment', 'Date Of Submission', 'Verified'];
     this.exportPdf.createPDF(data, head, 'landscape');
+  }
+  openChangeDebitStatusDialog(element): void {
+    const dialogRef = this.dialog.open(ChangeDebitStatusComponent, {
+      width: '400px',
+      data: { 
+        element
+       }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == 'success') {
+        this.getDebitRequests();
+      }
+    });
   }
 }

@@ -432,11 +432,13 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  openAddPaymentDetails() {
+  openAddPaymentDetails(chamaId) {
     const result = {
       modal: "Add",
+      chama_id:chamaId,
       bank: "",
       country: "",
+      account: "",
       description: ""
     };
     const dialogRef = this.dialog.open(AddGroupPaymentDetailsComponent, {

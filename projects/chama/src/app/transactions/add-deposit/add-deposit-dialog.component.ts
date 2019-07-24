@@ -74,7 +74,6 @@ export class AddDepositDialogComponent implements OnInit {
     });
     this.depositService.getContributionType('deposit',null).subscribe(result => {
       this.depositTypes = result;
-      //console.log(this.depositTypes);
     });
   }
   registerChama(form) {

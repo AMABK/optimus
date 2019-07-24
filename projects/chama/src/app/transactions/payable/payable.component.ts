@@ -195,6 +195,7 @@ export class PayableComponent implements OnInit {
     });
   }
   numberWithCommas(value: number = 0) {
+    //return value;
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   formatDateInput(date) {

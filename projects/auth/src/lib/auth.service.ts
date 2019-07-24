@@ -96,4 +96,8 @@ export class AuthService {
     authData.user.chama_id = chamaId;
     this.storeResult(authData);
   }
+  public getCountryJSON(): Observable<any> {
+    return this.http.get("/assets/country.json");
+
+  }
 }

@@ -12,6 +12,7 @@ import { ChamaService } from '../../http/chama/chama.service';
 import { AuthService } from 'projects/auth/src/public_api';
 import { AddDepositDialogComponent } from '../add-deposit/add-deposit-dialog.component';
 import { ExportPdf } from 'projects/export-pdf/src/public-api';
+import { ChangeDepositStatusComponent } from '../change-deposit-status/change-deposit-status.component';
 
 export interface PeriodicElement {
   position:number
@@ -37,8 +38,9 @@ export class DepositComponent implements OnInit {
   sToDate: string = "";
   search: string = "";
   verified: string = "";
-  depositDataSource;
   txnType = "deposit";
+  debitType = "";
+  depositDataSource;
   displayedColumns: string[] = [
     "position",
     "payment_mode.bank",
@@ -64,6 +66,7 @@ export class DepositComponent implements OnInit {
     minimum: 0,
     maximum:0
   };
+  depositTypes;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
@@ -80,6 +83,9 @@ export class DepositComponent implements OnInit {
     this.searchTerm$.unsubscribe();
   }
   ngOnInit() {
+    this.depositService.getContributionType('deposit', null).subscribe(result => {
+      this.depositTypes = result;
+    });
     this.getDefaultChamaDetails();
     this.getDefaultChamaDeposits();
   
@@ -116,6 +122,10 @@ export class DepositComponent implements OnInit {
         this.search = "";
         this.verified = query;
         break;
+      case "debitType":
+        this.search = "";
+        this.verified = query;
+        break;
       default:
         break;
     }
@@ -131,6 +141,7 @@ export class DepositComponent implements OnInit {
       sToDate: this.sToDate,
       verified: this.verified,
       txnType: this.txnType,
+      debitType: this.debitType,
       download: this.download
     });
     this.paginator.pageIndex = 0;
@@ -168,6 +179,7 @@ export class DepositComponent implements OnInit {
       sToDate,
       verified,
       txnType: this.txnType,
+      debitType: this.debitType,
       page: pageIndex + 1,
       size: pageSize
     });
@@ -269,12 +281,12 @@ export class DepositComponent implements OnInit {
       });
   }
   openAddGroupContributionDialog() {
-    const depositTypes = [
-      { id: 1, type_name: "Savings" },
-      { id: 2, type_name: "Fines" },
-      { id: 3, type_name: "Trip" },
-      { id: 4, type_name: "CSR" }
-    ];
+    // const depositTypes = [
+    //   { id: 1, type_name: "Savings" },
+    //   { id: 2, type_name: "Fines" },
+    //   { id: 3, type_name: "Trip" },
+    //   { id: 4, type_name: "CSR" }
+    // ];
     let dChama: any;
     this.chama.subscribe(res => {
       dChama = res;
@@ -283,7 +295,7 @@ export class DepositComponent implements OnInit {
       height: "auto",
       width: "600px",
       data: {
-        depositTypes,
+        depositTypes:this.depositTypes,
         group: dChama.default_chama
       }
     });
@@ -322,5 +334,19 @@ export class DepositComponent implements OnInit {
         }
         const head = ['No.','Bank', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
         this.exportPdf.createPDF(data, head, 'landscape');
+  }
+  openChangeDepositStatusDialog(element): void {
+    const dialogRef = this.dialog.open(ChangeDepositStatusComponent, {
+      width: '400px',
+      data: {
+        element
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == 'success') {
+        this.getDefaultChamaDeposits();
+      }
+    });
   }
 }

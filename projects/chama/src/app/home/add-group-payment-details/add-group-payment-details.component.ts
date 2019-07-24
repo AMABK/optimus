@@ -75,6 +75,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   chamas$: Observable<Chama>;
   paymentDetails: {};
   activeButton: boolean = true;
+  countries$: Observable<any>;
   @Output() updateEvent = new EventEmitter<Chama>();
   constructor(
     private notificationService: NotificationService,
@@ -85,7 +86,9 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   ) {}
 
   id = new FormControl(this.data.key.id, []);
+  chama_id = new FormControl(this.data.key.chama_id, []);
   bank = new FormControl(this.data.key.bank, [Validators.required]);
+  account = new FormControl(this.data.key.account, [Validators.required]);
   status = new FormControl("", [Validators.required]);
   country = new FormControl(this.data.key.country, [
     Validators.required,
@@ -99,6 +102,9 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
   matcher = new FormErrorService();
 
   ngOnInit() {
+    this.authService.getCountryJSON().subscribe(res => {
+      this.countries$ = res;
+    });
     //alert(JSON.stringify(this.data.key));
   }
   registerChama(form) {}
@@ -107,12 +113,16 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
     if (
       this.bank.valid &&
       this.country.valid &&
+      this.account.valid &&
       this.description.valid &&
       this.status.valid
     ) {
+      console.log('stasrt')
       this.paymentDetails = {
         id: this.id.value,
         bank: this.bank.value,
+        account_no: this.account.value,
+        chama_id: this.chama_id.value,
         country: this.country.value,
         status: this.status.value,
         description: this.description.value
