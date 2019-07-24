@@ -49,9 +49,9 @@ export class PayableComponent implements OnInit {
   ];
   aggregates = {
     total: 0,
-    average: 0,
-    minimum: 0,
-    maximum: 0
+    avg: 0,
+    min: 0,
+    max: 0
   };
   download: string = '';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -68,9 +68,9 @@ export class PayableComponent implements OnInit {
       .subscribe(response => {
         if (this.download != 'download') {
           this.aggregates.total = response.data.sum;
-          this.aggregates.average = response.data.avg;
-          this.aggregates.minimum = response.data.min;
-          this.aggregates.maximum = response.data.max;
+          this.aggregates.avg = response.data.avg;
+          this.aggregates.min = response.data.min;
+          this.aggregates.max = response.data.max;
           this.paginationData = {
             current_page: response.data.current_page - 1,
             total: response.data.total,
