@@ -27,7 +27,7 @@
     </mat-error>
   </mat-form-field>
   <div mat-dialog-actions>
-    <button *ngIf="data.element.verified!=yes" type="submit" mat-button cdkFocusInitial
+    <button *ngIf="data.element.verified!='yes'" type="submit" mat-button cdkFocusInitial
       class="button-primary border-radius">Update</button>
     <button *ngIf="((data.element.user_id==userId)&&(data.element.verified!='yes'))" mat-button (click)="deleteDeposit(data.element.id)"
       class="button-danger">Delete Request</button>
