@@ -1,0 +1,39 @@
+<form (ngSubmit)="onSubmit()">
+  <span>
+    <mat-label><b>Current Status</b>:
+      {{(data.element.status===0) ? 'Unverified' : (data.element.status===1)?'Verified':'Rejected'}}</mat-label><br>
+  </span>
+  <span>
+    <mat-label><b>Request Discription</b></mat-label><br>
+    {{data.element.reason}}<br>
+  </span>
+  <span *ngIf="data.element.status != 0">
+    <mat-label><b>Reason for current status</b></mat-label><br>
+    {{data.element.approval_justification}}
+  </span>
+
+  <input type="hidden" [formControl]="debit_id">
+  <mat-form-field *ngIf="data.element.status==0">
+    <mat-label>Select New Status</mat-label>
+    <mat-select [formControl]="status" [errorStateMatcher]="matcher">
+      <mat-option value="1">Approve</mat-option>
+      <mat-option value="2">Reject</mat-option>
+    </mat-select>
+    <mat-error *ngIf="!status.hasError('minLength')">
+      Status is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field *ngIf="data.element.status==0">
+    <textarea matInput placeholder="Give a reason for your action" [formControl]="reason"
+      [errorStateMatcher]="matcher"></textarea>
+    <mat-error *ngIf="!reason.hasError('minLength')">
+      Reason is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  <div mat-dialog-actions>
+    <button *ngIf="data.element.status==0" type="submit" mat-button cdkFocusInitial
+      class="button-primary border-radius">Update</button>
+    <button  *ngIf="data.element.status==0" mat-button (click)="deleteDebitRequest(data.element.id)" class="button-danger">Delete Request</button>
+    <button mat-button (click)="closeChangeDebitStatus()" class="button-default">Close</button>
+  </div>
+</form>
