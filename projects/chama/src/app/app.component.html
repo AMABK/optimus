@@ -44,16 +44,18 @@
         </button>
         <button mat-menu-item>Item 2</button>
       </mat-menu>
+      <ng-container  *ngFor="let link of links">
       <a
+      *ngIf="((link.designation==authService.getUserData()?.user.designation)||(link.designation=='user'))"
         mat-button
         class="nav-link"
-        *ngFor="let link of links"
         [routerLink]="link.path"
         routerLinkActive="active"
       >
         <mat-icon>{{ link.icon }}</mat-icon>
         {{ link.label }}
       </a>
+      </ng-container>
     </nav>
   </mat-sidenav>
 

@@ -100,4 +100,8 @@ export class AuthService {
     return this.http.get("/assets/country.json");
 
   }
+  userHasRole(permission) {
+    const authData = this.getUserData();
+    return authData.user.roles.includes(permission);
+  }
 }

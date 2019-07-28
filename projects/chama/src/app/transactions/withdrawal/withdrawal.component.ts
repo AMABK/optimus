@@ -6,6 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DepositService } from '../../http/deposit/deposit.service';
 import * as moment from 'moment';
 import { ExportPdf } from 'projects/export-pdf/src/public-api';
+import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: "app-withdrawal",
@@ -15,6 +18,7 @@ import { ExportPdf } from 'projects/export-pdf/src/public-api';
 export class WithdrawalComponent implements OnInit {
   searchTerm$ = new Subject<any>();
   paginationData: any;
+  asAdmin = "no";
   pFromDate = "";
   pToDate = "";
   sFromDate = "";
@@ -54,7 +58,7 @@ export class WithdrawalComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private depositService: DepositService,private exportPdf: ExportPdf) {}
+  constructor(private router: Router, private dialog: MatDialog, private depositService: DepositService,private exportPdf: ExportPdf) {}
   ngOnInit() {
     this.depositService
       .search(this.searchTerm$, "withdrawal")
@@ -128,6 +132,31 @@ export class WithdrawalComponent implements OnInit {
         this.search = "";
         this.paymentStatus = query;
         break;
+      case "asAdmin":
+        this.asAdmin = query;
+        if (query == 'yes') {
+          this.displayedColumns= [
+            "position",
+            'name',
+            "contribution_type.type_name",
+            "amount",
+            "payment_mode.bank",
+            "payment_date",
+            "created_at",
+            "verified"
+          ];
+        } else {
+          this.displayedColumns = [
+            "position",
+            "contribution_type.type_name",
+            "amount",
+            "payment_mode.bank",
+            "payment_date",
+            "created_at",
+            "verified"
+          ];
+        }
+        break;
       default:
         break;
     }
@@ -145,7 +174,8 @@ export class WithdrawalComponent implements OnInit {
       txnType: this.txn_type,
       paymentStatus: this.paymentStatus,
       debitType: this.debitType,
-      download: this.download
+      download: this.download,
+      asAdmin: this.asAdmin
     });
     this.paginator.pageIndex = 0;
   }
@@ -183,7 +213,8 @@ export class WithdrawalComponent implements OnInit {
       verified,
       txnType: this.txn_type,
       page: pageIndex + 1,
-      size: pageSize
+      size: pageSize,
+      asAdmin: this.asAdmin
     });
   }
   numberWithCommas(value: number = 0) {
@@ -207,6 +238,20 @@ export class WithdrawalComponent implements OnInit {
         .map(t => t.amount)
         .reduce((acc, value) => acc + value, 0);
     }
+  }
+  openRequestDebitDialog(requestType) {
+    const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
+      height: 'auto',
+      width: '600px',
+      data: {
+        requestType
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == 'success') {
+        this.router.navigate(['/transactions/debit-request']);
+      }
+    });
   }
   downloadPDF(pdfData) {
     const data = [];

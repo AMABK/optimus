@@ -64,38 +64,38 @@ export class AppComponent implements OnInit {
     }
   ];
   links = [
-    { path: '/home', icon: 'home', label: 'Your Home' },
-    { path: '/transactions', icon: 'credit_card', label: 'Transactions' },
-    { path: '/transactions/deposit', icon: 'money', label: 'Deposits' },
+    { path: '/home', icon: 'home', label: 'Your Home', designation: 'user' },
+    { path: '/transactions', icon: 'credit_card', label: 'Transactions', designation: 'user' },
+    { path: '/transactions/deposit', icon: 'money', label: 'Deposits', designation: 'user' },
     {
       path: '/transactions/payable',
       icon: 'money_off',
-      label: 'Payables(Fines&Loans)'
+      label: 'Payables(Fines&Loans)', designation: 'user'
     },
     {
       path: '/transactions/withdrawal',
       icon: 'zoom_out_map',
-      label: 'Withdrawals/Debits'
+      label: 'Withdrawals/Debits', designation: 'user'
     },
     {
       path: '/transactions/debit-request',
       icon: 'settings_ethernet',
-      label: 'Debit Requests'
+      label: 'Debit Requests', designation: 'user'
     },
-    { path: '/disputes', icon: 'flare', label: 'Disputes' },
-    { path: '/insights', icon: 'pie_chart', label: 'Insights' },
-    { path: '/admin', icon: '', label: 'Administration' },
-    { path: '/admin/users', icon: 'person', label: 'Manage Users' },
-    { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups' },
+    { path: '/disputes', icon: 'flare', label: 'Disputes', designation: 'user' },
+    { path: '/insights', icon: 'pie_chart', label: 'Insights', designation: 'user' },
+    { path: '/admin', icon: '', label: 'Administration', designation: 'admin' },
+    { path: '/admin/users', icon: 'person', label: 'Manage Users', designation: 'admin' },
+    { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups', designation: 'admin' },
     {
       path: '/admin/system/users',
       icon: 'assignment_ind',
-      label: 'Manage System Users'
+      label: 'Manage System Users', designation: 'admin'
     },
     {
       path: '/admin/system/groups',
       icon: 'supervisor_account',
-      label: 'Manage System Groups'
+      label: 'Manage System Groups', designation: 'admin'
     }
   ];
 

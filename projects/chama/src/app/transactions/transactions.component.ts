@@ -11,6 +11,7 @@ import { AuthService } from 'projects/auth/src/public_api';
 import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { RequestDebitDialogComponent } from './request-debit-dialog/request-debit-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transactions',
@@ -58,6 +59,7 @@ export class TransactionsComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
   constructor(
+    private router:Router,
     private depositService: DepositService,
     public dialog: MatDialog,
     private chamaService: ChamaService,
@@ -194,19 +196,19 @@ export class TransactionsComponent implements OnInit {
         .reduce((acc, value) => acc + value, 0);
     }
   }
-  openRequestLoanDialog() {
-    this.chama.subscribe(res => {
-      this.dChama = res;
-    });
+  openRequestDebitDialog(requestType) {
     const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: 'auto',
       width: '600px',
       data: {
-        depositTypes: this.depositTypes,
-        group: this.dChama.default_chama
+        requestType
       }
     });
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => {
+      if (result == 'success') {
+        this.router.navigate(['/transactions/debit-request']);
+      }
+    });
   }
   getDefaultChamaDetails() {
     this.chamaService.getDefaultChamaDetails().subscribe(result => {

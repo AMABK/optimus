@@ -7,8 +7,11 @@
                 <button mat-button style="border: 1px solid #428bca;">
                     <mat-icon class="success-icon">add</mat-icon>Pay Loan/Fine
                 </button>
-                <button mat-button (click)="openRequestLoanDialog()" style="border: 1px solid #428bca;">
-                    <mat-icon class="success-icon">add</mat-icon>Request A Loan
+                <button mat-button (click)="openRequestDebitDialog('withdrawal')" style="border: 1px solid #428bca;">
+                  <mat-icon class="success-icon">add</mat-icon>Request A Withdrawal
+                </button>
+                <button mat-button (click)="openRequestDebitDialog('loan')" style="border: 1px solid #428bca;">
+                  <mat-icon class="success-icon">add</mat-icon>Request A Loan
                 </button>
                 <div class="search-panel">
                     <div class="input-container">
@@ -73,7 +76,7 @@
       <!-- Symbol Column -->
       <ng-container matColumnDef="verified">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Verified.</th>
-        <td mat-cell *matCellDef="let element">{{ element.verified.toUpperCase() }}</td>
+        <td mat-cell *matCellDef="let element"><span [className]="(element.verified==='no') ? 'noVerified' : (element.verified==='yes')?'yesVerified':'rejectedVerified'">{{ element.verified.toUpperCase() }}</span></td>
         <td mat-footer-cell *matFooterCellDef>  </td>
       </ng-container>
 

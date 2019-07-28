@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,15 +18,17 @@ import { ChangeDebitStatusComponent } from '../change-debit-status/change-debit-
   styleUrls: ['./debit-request.component.css']
 })
 export class DebitRequestComponent implements OnInit {
+  subscription: Subscription = new Subscription();
   searchTerm$ = new Subject<any>();
   paginationData: any;
+  asAdmin = 'no';
   aFromDate = '';
   aToDate = '';
   sFromDate = '';
   sToDate = '';
   search = '';
   verified = '';
-  requestType =''
+  requestType = ''
   loanRequestDataSource;
   displayedColumns: string[] = [
     'position',
@@ -40,7 +42,8 @@ export class DebitRequestComponent implements OnInit {
   statuses = [
     { value: '', display: 'Verified Status' },
     { value: '1', display: 'Yes' },
-    { value: '0', display: 'No' }
+    { value: '0', display: 'No' },
+    { value: '2', display: 'Rejected' }
   ];
   requestTypes = [
     { value: '', display: 'Request Type' },
@@ -53,51 +56,59 @@ export class DebitRequestComponent implements OnInit {
     { value: 'unpaid', display: 'Unpaid' }
   ];
   download = '';
+  aggregates = {
+    total: 0,
+    avg: 0,
+    min: 0,
+    max: 0
+  };
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
   constructor(
     private debitService: DebitService,
     public dialog: MatDialog,
-    private loaderIService: LoaderInterceptorService,
-    private chamaService: ChamaService,
     private exportPdf: ExportPdf
-  ) {}
+  ) { }
   ngOnInit() {
     this.getDebitRequests();
   }
   getDebitRequests() {
-        this.debitService
-          .searchDebitRequests(this.searchTerm$)
-          .subscribe(response => {
-            if (this.download !== 'download') {
-            this.paginationData = {
-              current_page: response.data.current_page - 1,
-              total: response.data.total,
-              per_page: response.data.per_page
-            };
-            this.loanRequestDataSource = new MatTableDataSource(
-              response.data.data
-            );
-            this.loanRequestDataSource.sortingDataAccessor = (item, property) => {
-              switch (property) {
-                case 'contribution_type.type_name':
-                  return item.contribution_type.type_name;
-                case 'payment_mode.bank':
-                  if (item.payment_mode != null) {
-                    return item.payment_mode.bank;
-                  }
-                  return null;
-                default:
-                  return item[property];
-              }
-            };
-            this.loanRequestDataSource.sort = this.sort;
-            } else {
-              this.downloadPDF(response.data);
-              this.download = '';
+    this.subscription.add(this.debitService
+      .searchDebitRequests(this.searchTerm$)
+      .subscribe(response => {
+        if (this.download !== 'download') {
+          this.aggregates.total = response.data.sum;
+          this.aggregates.avg = response.data.avg;
+          this.aggregates.min = response.data.min;
+          this.aggregates.max = response.data.max;
+          this.paginationData = {
+            current_page: response.data.current_page - 1,
+            total: response.data.total,
+            per_page: response.data.per_page
+          };
+          this.loanRequestDataSource = new MatTableDataSource(
+            response.data.data
+          );
+          this.loanRequestDataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case 'contribution_type.type_name':
+                return item.contribution_type.type_name;
+              case 'payment_mode.bank':
+                if (item.payment_mode != null) {
+                  return item.payment_mode.bank;
+                }
+                return null;
+              default:
+                return item[property];
             }
-          });
+          };
+          this.loanRequestDataSource.sort = this.sort;
+        } else {
+          this.downloadPDF(response.data);
+          this.download = '';
+        }
+      }));
 
   }
   handleSearch(query: string, model: string) {
@@ -134,6 +145,30 @@ export class DebitRequestComponent implements OnInit {
         this.search = '';
         this.requestType = query;
         break;
+      case "asAdmin":
+        this.asAdmin = query;
+        if (query == 'yes') {
+          this.displayedColumns = [
+            'position',
+            'name',
+            'amount',
+            'chama',
+            'request_type',
+            'payment_date',
+            'created_at',
+            'verified'
+          ];
+        } else {
+          this.displayedColumns = [
+            'position',
+            'amount',
+            'chama',
+            'request_type',
+            'payment_date',
+            'created_at',
+            'verified'
+          ];
+        }
       default:
         break;
     }
@@ -149,7 +184,8 @@ export class DebitRequestComponent implements OnInit {
       sToDate: this.sToDate,
       verified: this.verified,
       requestType: this.requestType,
-      download: this.download
+      download: this.download,
+      asAdmin: this.asAdmin
     });
     this.paginator.pageIndex = 0;
   }
@@ -189,7 +225,8 @@ export class DebitRequestComponent implements OnInit {
       page: pageIndex + 1,
       size: pageSize,
       requestType: this.requestType,
-      download: this.download
+      download: this.download,
+      asAdmin: this.asAdmin
     });
   }
   numberWithCommas(value: number = 0) {
@@ -212,17 +249,6 @@ export class DebitRequestComponent implements OnInit {
     }
   }
   openRequestDebitDialog(requestType) {
-    // let dData = {
-    //   depositTypes: null
-    // };
-    // this.chamaService.getDefaultChamaDetails().subscribe(result => {
-    //     if (result.chama_id != null) {
-    //       dData = {
-    //         depositTypes: {},
-    //       };
-    //     }
-    // });
-
     const dialogRef = this.dialog.open(RequestDebitDialogComponent, {
       height: 'auto',
       width: '600px',
@@ -232,7 +258,7 @@ export class DebitRequestComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {
-        this.getDebitRequests();
+        this.handleSearch(this.asAdmin, 'asAdmin');
       }
     });
   }
@@ -256,14 +282,14 @@ export class DebitRequestComponent implements OnInit {
   openChangeDebitStatusDialog(element): void {
     const dialogRef = this.dialog.open(ChangeDebitStatusComponent, {
       width: '400px',
-      data: { 
+      data: {
         element
-       }
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == 'success') {
-        this.getDebitRequests();
+        this.handleSearch(this.asAdmin, 'asAdmin');
       }
     });
   }

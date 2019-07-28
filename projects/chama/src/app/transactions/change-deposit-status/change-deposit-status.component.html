@@ -9,7 +9,7 @@
   </span>
 
   <input type="hidden" [formControl]="deposit_id">
-  <mat-form-field *ngIf="data.element.user_id==userId">
+  <mat-form-field *ngIf="authService.userHasRole('verify-deposit')">
     <mat-label>Select New Status</mat-label>
     <mat-select [formControl]="status" (value)="showHide" [errorStateMatcher]="matcher">
       <mat-option *ngIf="data.element.verified!='yes'" value="yes">Verify</mat-option>
@@ -27,7 +27,7 @@
     </mat-error>
   </mat-form-field>
   <div mat-dialog-actions>
-    <button *ngIf="data.element.verified!='yes'" type="submit" mat-button cdkFocusInitial
+    <button *ngIf="authService.userHasRole('verify-deposit')" type="submit" mat-button cdkFocusInitial
       class="button-primary border-radius">Update</button>
     <button *ngIf="((data.element.user_id==userId)&&(data.element.verified!='yes'))" mat-button (click)="deleteDeposit(data.element.id)"
       class="button-danger">Delete Request</button>

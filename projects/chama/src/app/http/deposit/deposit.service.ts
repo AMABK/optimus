@@ -34,7 +34,8 @@ export class DepositService {
         txnType: defaultTxnType,
         debitType: "",
         paymentStatus: "",
-        download:""
+        download: "",
+        asAdmin:""
       }),
       debounceTime(500),
       distinctUntilChanged(),
@@ -52,10 +53,11 @@ export class DepositService {
           txnType = defaultTxnType,
           debitType,
           paymentStatus,
-          download
+          download,
+          asAdmin
         }) => {
           // tslint:disable-next-line:max-line-length
-          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&txnType=${txnType}&debitType=${debitType}&paymentStatus=${paymentStatus}&download=${download}`;
+          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&txnType=${txnType}&debitType=${debitType}&paymentStatus=${paymentStatus}&download=${download}&asAdmin=${asAdmin}`;
           return this.getDefaultChamaDeposits(queryParams);
         }
       )
@@ -72,7 +74,8 @@ export class DepositService {
         sFromDate: "",
         sToDate: "",
         verified: "",
-        download:""
+        download: "",
+        asAdmin:""
       }),
       debounceTime(500),
       distinctUntilChanged(),
@@ -87,10 +90,11 @@ export class DepositService {
           sFromDate = "",
           sToDate = "",
           verified,
-          download
+          download,
+          asAdmin=""
         }) => {
           // tslint:disable-next-line:max-line-length
-          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&download=${download}`;
+          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&pFromDate=${pFromDate}&pToDate=${pToDate}&sFromDate=${sFromDate}&sToDate=${sToDate}&verified=${verified}&download=${download}&asAdmin=${asAdmin}`;
           return this.getDefaultChamaLoanRequests(queryParams);
         }
       )

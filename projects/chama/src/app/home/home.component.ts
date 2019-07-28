@@ -140,7 +140,7 @@ export class HomeComponent implements OnInit {
         this.depositData.sort = this.sort;
       }
     });
-    this.getDefaultChamaDetails();
+    //this.getDefaultChamaDetails();
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
     });

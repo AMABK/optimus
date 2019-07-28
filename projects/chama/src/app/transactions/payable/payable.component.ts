@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,6 +17,7 @@ import { ExportPdf } from 'projects/export-pdf/src/public-api';
 export class PayableComponent implements OnInit {
   searchTerm$ = new Subject<any>();
   paginationData: any;
+  asAdmin = 'no';
   pFromDate = '';
   pToDate = '';
   sFromDate = '';
@@ -57,13 +58,14 @@ export class PayableComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
+  private subscription: Subscription = new Subscription();
   constructor(
     private depositService: DepositService,
     public dialog: MatDialog,
     private exportPdf: ExportPdf
   ) { }
   ngOnInit() {
-    this.depositService
+    this.subscription.add(this.depositService
       .search(this.searchTerm$, 'payable')
       .subscribe(response => {
         if (this.download != 'download') {
@@ -95,8 +97,11 @@ export class PayableComponent implements OnInit {
           this.downloadPDF(response.data);
           this.download = '';
         }
-      });
+      }));
 
+  }
+  ngOnDestory() {
+    this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
     switch (model) {
@@ -136,6 +141,33 @@ export class PayableComponent implements OnInit {
         this.search = '';
         this.paymentStatus = query;
         break;
+      case "asAdmin":
+        this.asAdmin = query;
+        if (query == 'yes') {
+          this.displayedColumns = [
+            'position',
+            'name',
+            'payment_mode.bank',
+            'contribution_type.type_name',
+            'amount',
+            'paid',
+            'payment_date',
+            'created_at',
+            'verified'
+          ];
+        } else {
+          this.displayedColumns = [
+            'position',
+            'payment_mode.bank',
+            'contribution_type.type_name',
+            'amount',
+            'paid',
+            'payment_date',
+            'created_at',
+            'verified'
+          ];
+        }
+        break;
       default:
         break;
     }
@@ -153,7 +185,8 @@ export class PayableComponent implements OnInit {
       txnType: this.txn_type,
       paymentStatus: this.paymentStatus,
       debitType: this.debitType,
-      download: this.download
+      download: this.download,
+      asAdmin: this.asAdmin
     });
     this.paginator.pageIndex = 0;
   }
@@ -191,11 +224,15 @@ export class PayableComponent implements OnInit {
       verified,
       txnType: this.txn_type,
       page: pageIndex + 1,
-      size: pageSize
+      size: pageSize,
+      asAdmin: this.asAdmin
     });
   }
   numberWithCommas(value: number = 0) {
-    //return value;
+    if (value == null) {
+      return 0;
+    }
+    
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   formatDateInput(date) {

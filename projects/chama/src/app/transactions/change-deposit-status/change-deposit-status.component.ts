@@ -29,6 +29,7 @@ export class ChangeDepositStatusComponent implements OnInit {
 
 
   closeChangeDepositStatus(): void {
+    this.status.setErrors({ 'invalid': true });
     this.dialogRef.close();
   }
   onSubmit() {
