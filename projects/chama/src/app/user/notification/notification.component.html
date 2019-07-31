@@ -1,4 +1,61 @@
-
 <div fxLayout="row" fxLayout.xs="column">
-<mat-card><h3>User >> Notifications</h3></mat-card>
+    <mat-card style="margin-left: 5%;margin-right: 5%">
+        <h3>User >> Notifications {{subTitle}}</h3>
+        <mat-card-content>
+            <div>
+                <span *ngIf="newMessage">
+                    <mat-icon (click)="composeMessage()" style="cursor:pointer">keyboard_backspace</mat-icon>
+                </span>
+                <span *ngIf="!newMessage">
+                    <mat-checkbox (click)="checkAll()" [checked]="selectAllStatus"></mat-checkbox> Select All
+                </span>
+                <button mat-button cdkFocusInitial *ngIf="!newMessage" class="button-primary border-radius"
+                    (click)="composeMessage()">
+                    <mat-icon>add</mat-icon>Compose New Message
+                </button>
+            </div>
+            <mat-tab-group *ngIf="!newMessage" #tabGroup (selectedTabChange)="tabChanged($event)">
+                <mat-tab label="Inbox">
+                    <app-list-messages [messageType]="inbox" [checked]="checked"></app-list-messages>
+                </mat-tab>
+                <mat-tab label="Outbox">
+                    <app-list-messages [messageType]="outbox" [checked]="checked"></app-list-messages>
+                </mat-tab>
+            </mat-tab-group>
+            <div *ngIf="newMessage">
+                <h3>Enter new message</h3>
+                <form (ngSubmit)="onSendNewMessage()">
+                    <mat-form-field class="example-chip-list">
+                        <mat-chip-list #chipList aria-label="user selection">
+                            <mat-chip *ngFor="let user of users" [selectable]="selectable" [removable]="removable"
+                                (removed)="remove(user)">
+                                {{user}}
+                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                            </mat-chip>
+                            <input  autocomplete="off"  (ngModelChange)="handleSearch($event,'search')" placeholder="Message to..."
+                                #userInput [formControl]="userCtrl" [matAutocomplete]="auto"
+                                [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+                        </mat-chip-list>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                            <mat-option *ngFor="let user of filteredusers | async" [value]="user">
+                                {{user}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <span class="mat-error" *ngIf="!hasUsers">
+                            Recipient(s) are <strong>required</strong>
+                        </span>
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width">
+                        <textarea [formControl]="message" [errorStateMatcher]="matcher" matInput matTextareaAutosize matAutosizeMinRows="10" matAutosizeMaxRows="20"
+                            placeholder="New message..."></textarea>
+                            <mat-error>
+                                Message is <strong>required</strong>
+                            </mat-error>
+                    </mat-form-field>
+                    <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Send Message</button>
+                </form>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>

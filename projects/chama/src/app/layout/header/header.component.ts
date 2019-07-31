@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
   });
   }
   ngOnInit() {
-    console.log(window.location.pathname)
+    console.log(this.router.url)
     //this.defaultChamaName = JSON.parse(localStorage.getItem('authData')).user.default_chama.name;
   }
 

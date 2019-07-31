@@ -1,0 +1,9 @@
+<mat-list>
+  <mat-list-item *ngFor="let message of messages;let i = index">
+    <mat-checkbox [checked]="checked"></mat-checkbox>
+    <mat-icon [ngStyle]="{'color':'green'}" style="padding-left: 5px;">check_circle_outline
+    </mat-icon>
+    <div style="width:15%; padding-left: 10px;">{{message.user.first_name}}</div>
+    <div style="min-width:85%">{{message.message}}</div>
+  </mat-list-item>
+</mat-list>
