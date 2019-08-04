@@ -370,4 +370,7 @@ export class DepositComponent implements OnInit {
       }
     });
   }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
+  }
 }

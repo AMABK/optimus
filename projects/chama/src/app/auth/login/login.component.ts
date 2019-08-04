@@ -68,6 +68,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
   }
   ngOnInit() {
+    //console.log(this.route.snapshot.parent.url[0].path)
     this.routeTo = this.route.snapshot.queryParams.returnUrl || 'people';
     if (this.authService.currentUserValue) {
       this.router.navigate(['/home']);

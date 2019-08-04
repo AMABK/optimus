@@ -1,15 +1,17 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Subscription, Subject } from 'rxjs';
+import { Component, OnInit, Input, ViewChild, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Subscription, Subject} from 'rxjs';
 import { UserService } from '../../http/user/user.service';
 import * as moment from 'moment';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { AuthService } from 'projects/auth/src/public_api';
+import { MessageService } from '../../http/message/message.service';
 
 @Component({
   selector: 'app-list-messages',
   templateUrl: './list-messages.component.html',
   styleUrls: ['./list-messages.component.css']
 })
-export class ListMessagesComponent implements OnInit {
+export class ListMessagesComponent implements OnInit, OnDestroy {
   @Input() messageType;
   @Input() checked;
   subscription: Subscription = new Subscription();
@@ -23,13 +25,17 @@ export class ListMessagesComponent implements OnInit {
   sToDate: string = "";
   search: string = "";
   verified: string = "";
-  txnType = "deposit";
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private userService: UserService) { }
+  @Output() msg_Id: EventEmitter<number> = new EventEmitter();
+  constructor( private messageService: MessageService, private authService: AuthService) { }
   messages;
+
   ngOnInit() {
     this.getChamaUserMessages();
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
     switch (model) {
@@ -63,7 +69,7 @@ export class ListMessagesComponent implements OnInit {
         break;
       case "messageType":
         this.search = "";
-        this.verified = query;
+        this.messageType = query;
         break;
       default:
         break;
@@ -79,9 +85,7 @@ export class ListMessagesComponent implements OnInit {
       sFromDate: this.sFromDate,
       sToDate: this.sToDate,
       verified: this.verified,
-      txnType: this.txnType,
       messageType: this.messageType,
-      download: this.download,
     });
     this.paginator.pageIndex = 0;
   }
@@ -117,7 +121,6 @@ export class ListMessagesComponent implements OnInit {
       sFromDate,
       sToDate,
       verified,
-      txnType: this.txnType,
       messageType: this.messageType,
       page: pageIndex + 1,
       size: pageSize
@@ -132,11 +135,43 @@ export class ListMessagesComponent implements OnInit {
     return formattedDate;
   }
   getChamaUserMessages() {
-    this.subscription.add(this.userService
-      .searchChamaUserMessages(this.searchTerm$)
+    this.subscription.add(this.messageService
+      .searchChamaUserMessages(this.messageType, this.searchTerm$)
       .subscribe(response => {
-        this.messages = response.data;
+        console.log(response)
+        this.messages = response.data.data;
       }))
+  }
+  getUserMessageStatus(user_messages) {
+    for (let user_message of user_messages) {
+      if (user_message.id == this.authService.getUserId()) {
+        switch (user_message.pivot.status) {
+          
+          case 0:
+            return 'email';
+            break;
+          case 1:
+            return 'check_circle_outline';
+            break;
+          default:
+            return 'error'
+        }
+      }
+    }
+    return 'error';
+  }
+  changeMessageStatus(messageId, status, messageType) {
+    this.msg_Id.emit(messageId);
+    if (messageType == 'inbox') {
+      const message = {
+        status,
+        message_id: messageId,
+        user_id: this.authService.getUserId()
+      }
+      this.messageService.changeMessageStatus(message).subscribe(res => {
+        this.getChamaUserMessages();
+      }, error => { });
+    }
   }
 
 }

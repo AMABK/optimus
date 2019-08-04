@@ -11,9 +11,13 @@ import { MatRippleModule } from '@angular/material/core';
 import { ListMessagesComponent } from './list-messages/list-messages.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
+import { ThreadMessagesComponent } from './thread-messages/thread-messages.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
-  declarations: [UserComponent, SettingComponent, NotificationComponent,ProfileComponent, ListMessagesComponent],
+  declarations: [UserComponent, SettingComponent, NotificationComponent,ProfileComponent, ListMessagesComponent, ThreadMessagesComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -21,7 +25,10 @@ import { MatChipsModule } from '@angular/material/chips';
     MatTabsModule,
     MatRippleModule,
     MatAutocompleteModule,
-    MatChipsModule
+    MatChipsModule,
+    MatExpansionModule,
+    MatTableModule,
+    MatPaginatorModule
   ]
 })
 export class UserModule { }

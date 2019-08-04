@@ -83,4 +83,7 @@ export class ChangeDepositStatusComponent implements OnInit {
   ngOnInit() {
 
   }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
+  }
 }

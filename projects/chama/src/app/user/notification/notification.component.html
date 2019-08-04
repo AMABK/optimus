@@ -2,29 +2,29 @@
     <mat-card style="margin-left: 5%;margin-right: 5%">
         <h3>User >> Notifications {{subTitle}}</h3>
         <mat-card-content>
-            <div>
-                <span *ngIf="newMessage">
-                    <mat-icon (click)="composeMessage()" style="cursor:pointer">keyboard_backspace</mat-icon>
+                <span *ngIf="newMessage||mailThread" style="padding-top: 3px">
+                    <mat-icon (click)="backToNotifications()" style="cursor:pointer">keyboard_backspace</mat-icon>
                 </span>
-                <span *ngIf="!newMessage">
+                <span *ngIf="!newMessage && !mailThread">
                     <mat-checkbox (click)="checkAll()" [checked]="selectAllStatus"></mat-checkbox> Select All
                 </span>
                 <button mat-button cdkFocusInitial *ngIf="!newMessage" class="button-primary border-radius"
                     (click)="composeMessage()">
                     <mat-icon>add</mat-icon>Compose New Message
                 </button>
-            </div>
-            <mat-tab-group *ngIf="!newMessage" #tabGroup (selectedTabChange)="tabChanged($event)">
+            <mat-tab-group *ngIf="!newMessage && !mailThread" #tabGroup (selectedTabChange)="tabChanged($event)">
                 <mat-tab label="Inbox">
-                    <app-list-messages [messageType]="inbox" [checked]="checked"></app-list-messages>
+                    <app-list-messages (msg_Id)="messageIdHandler($event)" [messageType]="inbox" [checked]="checked"></app-list-messages>
                 </mat-tab>
                 <mat-tab label="Outbox">
-                    <app-list-messages [messageType]="outbox" [checked]="checked"></app-list-messages>
+                    <app-list-messages (msg_Id)="messageIdHandler($event)" [messageType]="outbox" [checked]="checked"></app-list-messages>
                 </mat-tab>
             </mat-tab-group>
             <div *ngIf="newMessage">
                 <h3>Enter new message</h3>
                 <form (ngSubmit)="onSendNewMessage()">
+                    <input [hidden]="true" matInput [formControl]="chama_id">
+                    <input [hidden]="true" matInput value="thread_id" [formControl]="thread_id">
                     <mat-form-field class="example-chip-list">
                         <mat-chip-list #chipList aria-label="user selection">
                             <mat-chip *ngFor="let user of users" [selectable]="selectable" [removable]="removable"
@@ -55,6 +55,9 @@
                     </mat-form-field>
                     <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Send Message</button>
                 </form>
+            </div>
+            <div *ngIf="mailThread">
+                <app-thread-messages [messageId]="messageId"></app-thread-messages>
             </div>
         </mat-card-content>
     </mat-card>
