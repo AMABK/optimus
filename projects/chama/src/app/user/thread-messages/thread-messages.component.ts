@@ -4,6 +4,7 @@ import { MessageService } from '../../http/message/message.service';
 import { FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
+import { FormErrorService } from 'projects/form-error/src/public_api';
 
 @Component({
   selector: 'app-thread-messages',
@@ -21,6 +22,8 @@ export class ThreadMessagesComponent implements OnInit, OnDestroy {
   constructor(private messageService: MessageService,private notificationService:NotificationService, private authService: AuthService) { }
   message = new FormControl("", [Validators.required]);
   thread_id = new FormControl("", [Validators.required]);
+  matcher = new FormErrorService();
+
   ngOnInit() {
     console.log('run')
     this.currentUserId = this.authService.getUserId();

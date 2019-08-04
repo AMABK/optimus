@@ -116,10 +116,10 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // logout($event) {
-  //   this.authService.logout();
-  //   this.router.navigate(['login']);
-  // }
+  logout($event) {
+    this.authService.logout();
+    this.router.navigate(['login']);
+  }
 
   prepareRouterState(router: RouterOutlet) {
     return router.activatedRouteData['animation'] || 'initial';
