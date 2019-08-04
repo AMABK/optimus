@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { SidenavComponent } from './shared/sidenav/sidenav.component';
+import { GetStartedComponent } from './get-started/get-started.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { SidenavComponent } from './shared/sidenav/sidenav.component';
     LoginComponent,
     HeaderComponent,
     SidebarComponent,
-    SidenavComponent
+    SidenavComponent,
+    GetStartedComponent,
   ],
   imports: [
     BrowserModule,

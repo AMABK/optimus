@@ -1,0 +1,44 @@
+<h1 mat-dialog-title *ngIf="data.key.id != null">{{data.key.name}} Group Contribution Type</h1>
+<div mat-dialog-content *ngIf="data.key.id != null">
+  <form (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input matInput placeholder="Name" [formControl]="name" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!name.hasError('minLength')">
+        Name is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput placeholder="Description" [formControl]="description"
+        cdkTextareaAutosize [errorStateMatcher]="matcher">
+      </textarea>
+      <mat-error *ngIf="!description.hasError('minLength')">
+        Description is <strong>required</strong>(Minimum 2 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Transaction Type</mat-label>
+      <select matInput matNativeControl [formControl]="txn_type" [errorStateMatcher]="matcher">
+        <option value="deposit">Deposit</option>
+        <option value="payable">Payable</option>
+        <option value="withdrawal">Withdrawal</option>
+      </select>
+      <mat-error *ngIf="!txn_type.hasError('minLength')">
+        Transaction Type is <strong>required</strong>(Minimum 2 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Status</mat-label>
+      <select matInput matNativeControl [formControl]="status" [errorStateMatcher]="matcher">
+        <option value="0">Active</option>
+        <option value="1">In Active</option>
+      </select>
+      <mat-error *ngIf="!status.hasError('minLength')">
+        Status is <strong>required</strong>(Minimum 2 characters)
+      </mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button type="submit" mat-button cdkFocusInitial class="button-primary"> Add Group Contribution Type</button>
+      <button mat-button (click)="closeAddGroupContributionTypesDialog()" class="button-default">Cancel</button>
+    </div>
+  </form>
+</div>

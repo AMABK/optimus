@@ -1,0 +1,14 @@
+<mat-list>
+  <mat-list-item *ngFor="let message of messages;let i = index" (click)="changeMessageStatus(message.id,1,messageType)">
+    <mat-checkbox (click)="$event.stopPropagation()" [checked]="checked"></mat-checkbox>
+    <mat-icon [ngStyle]="{'color':'green'}" style="padding-left: 5px;">{{messageType=='inbox'?getUserMessageStatus(message.user_messages):'forward'}}
+    </mat-icon>
+    <div *ngIf="message.message_type=='user'" style="width:25%; padding-left: 10px;">{{messageType=='inbox'? message.user?.first_name:(message.user_messages.length>2)?message.user_messages[0]?.first_name+', '+message.user_messages[1]?.first_name:(message.user_messages.length==1)?message.user_messages[0]?.first_name:message.user_messages[0]?.first_name+', '+message.user_messages[1]?.first_name}}{{' ('+message.user_messages.length+')'}} <br> <i>{{message.created_at|date : ' MMM dd, yy. HH:mm' }}</i></div>
+    <div *ngIf="message.message_type=='system'" style="width:25%; padding-left: 10px;">System
+    </div>
+    <div style="min-width:75%">{{message.message.substring(0,100)}}...</div>
+  </mat-list-item>
+  <mat-paginator [length]="paginationData?.total" [pageSize]="paginationData?.per_page"
+    [pageSizeOptions]="[10, 20, 50, 100]" (page)="paginate((pageEvent = $event))">
+  </mat-paginator>
+</mat-list>

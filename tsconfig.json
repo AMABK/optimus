@@ -5,12 +5,12 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es5",
+    "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -66,6 +66,46 @@
       ],
       "dynamic-tree/*": [
         "dist/dynamic-tree/*"
+      ],
+      "form-error": [
+        "dist/form-error"
+      ],
+      "form-error/*": [
+        "dist/form-error/*"
+      ],
+      "token-interceptor": [
+        "dist/token-interceptor"
+      ],
+      "token-interceptor/*": [
+        "dist/token-interceptor/*"
+      ],
+      "loader": [
+        "dist/loader",
+        "dist/loader",
+        "dist/loader"
+      ],
+      "loader/*": [
+        "dist/loader/*",
+        "dist/loader/*",
+        "dist/loader/*"
+      ],
+      "loader-interceptor": [
+        "dist/loader-interceptor"
+      ],
+      "loader-interceptor/*": [
+        "dist/loader-interceptor/*"
+      ],
+      "export-pdf": [
+        "dist/export-pdf"
+      ],
+      "export-pdf/*": [
+        "dist/export-pdf/*"
+      ],
+      "export-xlsx": [
+        "dist/export-xlsx"
+      ],
+      "export-xlsx/*": [
+        "dist/export-xlsx/*"
       ]
     }
   }

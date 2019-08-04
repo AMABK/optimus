@@ -1,13 +1,52 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './auth/login/login.component';
-// import { LoginComponent } from '@workshop/ui-login';
 
 const routes: Routes = [
-  { path: 'home', loadChildren: './home/home.module#HomeModule' },
-  // { path: 'customers', loadChildren: './customers/customers.module#CustomersModule' },
-  // { path: 'projects', loadChildren: './projects/projects.module#ProjectsModule' },
-  { path: 'login', component: LoginComponent },
+  {
+    path: '',
+    loadChildren: () => import('./auth/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./auth/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'transactions',
+    loadChildren: () =>
+      import('./transactions/transactions.module').then(
+        m => m.TransactionsModule
+      )
+  },
+  {
+    path: 'insights',
+    loadChildren: () =>
+      import('./insights/insights.module').then(m => m.InsightsModule)
+  },
+  {
+    path: 'disputes',
+    loadChildren: () =>
+      import('./disputes/disputes.module').then(m => m.DisputesModule)
+  },
+  {
+    path: 'admin/users',
+    loadChildren: () =>
+      import('./admin/users/users.module').then(m => m.UsersModule)
+  },
+  {
+    path: 'admin/groups',
+    loadChildren: () =>
+      import('./admin/groups/groups.module').then(m => m.GroupsModule)
+  },
+  {
+    path: 'user',
+    loadChildren: () =>
+      import('./user/user.module').then(m => m.UserModule)
+  },
+  // { path: "login", component: LoginComponent },
   { path: '**', redirectTo: '/home', pathMatch: 'full' }
 ];
 

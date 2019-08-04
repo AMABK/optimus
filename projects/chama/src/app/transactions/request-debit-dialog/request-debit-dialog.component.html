@@ -1,0 +1,68 @@
+<ng-container *ngIf="chamaData==null; then noDebitRequest; else debitRequest">
+</ng-container>
+<ng-template #debitRequest>
+  <div *ngIf="chamaData?.name!=''">
+    <h1 mat-dialog-title>Request {{data.requestType?.charAt(0).toUpperCase() + data.requestType?.slice(1)}} From
+      [{{chamaData?.name}}]</h1>
+    <div mat-dialog-content>
+      <form (ngSubmit)="onSubmit()">
+        <input type="hidden" [formControl]="requestType" value="{{data.requestType}}">
+        <mat-form-field>
+          <input type="number" matInput placeholder="Amount" [formControl]="amount" [errorStateMatcher]="matcher">
+          <mat-error *ngIf="!amount.hasError('minLength')||!amount.hasError('number')">
+            Minimum amount <strong>required</strong> is 10
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Get Loan From" [formControl]="debitFrom" [errorStateMatcher]="matcher">
+            <mat-option value="0">All Below</mat-option>
+            <mat-option value="1">Savings</mat-option>
+          </mat-select>
+          <mat-error *ngIf="!debitFrom.hasError('minLength')">
+            Please <strong>select</strong> one item
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <textarea matInput placeholder="Justification/Description" [formControl]="reason" cdkTextareaAutosize
+            [errorStateMatcher]="matcher">
+        </textarea>
+          <mat-error *ngIf="!reason.hasError('minLength')">
+            Justification/Description is <strong>required</strong>(Minimum 3 characters)
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="pickerD" (click)="pickerD.open()" placeholder="Choose disbursement date"
+            [formControl]="disbursementDate" [errorStateMatcher]="matcher" readonly>
+          <mat-datepicker-toggle matSuffix [for]="pickerD">
+          </mat-datepicker-toggle>
+          <mat-datepicker #pickerD></mat-datepicker>
+          <mat-error *ngIf="!disbursementDate.hasError('minLength')">
+            Disbursement date(DD/MM/YYYY) is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="pickerP" (click)="pickerP.open()" placeholder="Choose payment date"
+            [formControl]="paymentDate" [errorStateMatcher]="matcher" readonly>
+          <mat-datepicker-toggle matSuffix [for]="pickerP">
+          </mat-datepicker-toggle>
+          <mat-datepicker #pickerP></mat-datepicker>
+          <mat-error *ngIf="!paymentDate.hasError('minLength')">
+            Payment date(DD/MM/YYYY) is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <div mat-dialog-actions>
+          <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Make Request</button>
+          <button mat-button (click)="closeRequestLoan()" class="button-default">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+<ng-template #noDebitRequest>
+  <div>
+    Your loan request can not be processed because you have not selected a default saving group/chama
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeRequestLoan()" class="button-default">Close</button>
+  </div>
+</ng-template>

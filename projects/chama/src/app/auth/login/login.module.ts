@@ -1,33 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { Route, RouterModule } from '@angular/router';
-import { MaterialModule } from 'projects/material/src/public_api';
+import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
-import { SocialLoginComponent } from '../../shared/social-login/social-login.component';
-import { SpinnerModule } from '../../spinner/spinner.module';
-
-
-export const uiLoginRoutes: Route[] = [];
+import { LoginRoutingModule } from './login-routing.module';
+import { MaterialModule } from 'projects/material/src/public_api';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    LoginComponent,
-    SocialLoginComponent
-  ],
+  declarations: [LoginComponent],
   imports: [
     CommonModule,
-    FormsModule,
-    RouterModule,
+    LoginRoutingModule,
     MaterialModule,
-    SpinnerModule
-  ],
-  entryComponents: [
-    LoginComponent
-  ],
-  exports: [
-    LoginComponent,
-    SocialLoginComponent
+    FormsModule
   ]
 })
-export class LoginModule {}
+export class LoginModule { }

@@ -1,0 +1,190 @@
+<div fxLayout="row" fxLayout.xs="column">
+  <mat-card fxFlex="1 2 72">
+    <h3>Transactions >> Payable</h3>
+    <button mat-button style="border: 1px solid #428bca;" (click)="openRequestDebitDialog('withdrawal')">
+      <mat-icon class="success-icon">add</mat-icon>Request A Withdrawal
+    </button>
+    <button mat-button style="border: 1px solid #428bca;" (click)="openRequestDebitDialog('loan')">
+      <mat-icon class="success-icon">add</mat-icon>Request A Loan
+    </button>
+    <button mat-button (click)="handleSearch($event, 'download')" style="border: 1px solid #428bca;">
+      <mat-icon class="success-icon">get_app</mat-icon>Export
+    </button>
+    <div class="search-panel">
+      <div class="input-container">
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'search')" [(ngModel)]="search"
+          placeholder="General search" />
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'pFromDate')"
+          placeholder="From Date of Payment" [(ngModel)]="pFromDate" format="YYYY/MM/DD"
+          (click)="fromDatePayment.open()" [matDatepicker]="fromDatePayment" />
+        <mat-datepicker #fromDatePayment></mat-datepicker>
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'pToDate')" placeholder="To Date of Payment"
+          [(ngModel)]="pToDate" format="YYYY/MM/DD" (click)="toDatePayment.open()" page="paginate((pageEvent = $event))"
+          [matDatepicker]="toDatePayment" />
+        <mat-datepicker #toDatePayment></mat-datepicker>
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'sFromDate')"
+          placeholder="From Date of Submission" [(ngModel)]="sFromDate" format="YYYY/MM/DD"
+          (click)="fromDateSubmission.open()" [matDatepicker]="fromDateSubmission" />
+        <mat-datepicker #fromDateSubmission></mat-datepicker>
+        <input class="input-field" (ngModelChange)="handleSearch($event, 'sToDate')" placeholder="To Date of Submission"
+          [(ngModel)]="sToDate" format="YYYY/MM/DD" (click)="toDateSubmission.open()"
+          [matDatepicker]="toDateSubmission" />
+        <mat-datepicker #toDateSubmission></mat-datepicker>
+        <select class="input-field select" (ngModelChange)="handleSearch($event, 'debitType')" [(ngModel)]="debitType">
+          <option value="">Debit Type</option>
+          <option value="">Fines</option>
+          <option value="">Loans</option>
+        </select>
+        <select class="input-field select" (ngModelChange)="handleSearch($event, 'paymentStatus')"
+          [(ngModel)]="paymentStatus">
+          <option *ngFor="let paymentStatus of paymentStatuses" [(value)]="paymentStatus.value">
+            {{ paymentStatus.display }}
+          </option>
+        </select>
+        <select class="input-field select" (ngModelChange)="handleSearch($event, 'verified')" [(ngModel)]="verified">
+          <option *ngFor="let status of statuses" [(value)]="status.value">{{
+                    status.display
+                  }}</option>
+        </select>
+        <select class="input-field select" (ngModelChange)="handleSearch($event,'asAdmin')" [(ngModel)]="asAdmin">
+          <option value="no">Non Group Admin</option>
+          <option value="yes">Group Admin</option>
+        </select>
+        <button (click)="clearSearch('activate')" class="small-button">
+          Clear Search
+        </button>
+      </div>
+    </div>
+    <table mat-table [dataSource]="depositDataSource" matSort class="mat-elevation-z8">
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          {{ paginationData.current_page * paginationData.per_page + 1 + i }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+      
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name.</th>
+        <td mat-cell *matCellDef="let element">
+          {{element.user.first_name}} {{element.user.last_name}}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="contribution_type.type_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.contribution_type.type_name }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>Sub Total</td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+        <td mat-cell *matCellDef="let element">
+          {{ numberWithCommas(element.amount) }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>
+          (Unpaid){{ numberWithCommas(getTotalAmount()) }}|
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="paid">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid.</th>
+        <td mat-cell *matCellDef="let element">
+          {{
+              (element.debit_credits===null) ? numberWithCommas(element.debit_credits[0].amount) : 0
+          }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>
+          (Paid){{ numberWithCommas(getTotalAmount()) }}
+        </td>
+      </ng-container>
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="payment_mode.bank">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Bank.</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.payment_mode?.bank || "-" }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="payment_date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Date Of Payment.
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.payment_date | date }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Date Of Submission.
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.created_at | date }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="verified">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Verified.</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.verified.toUpperCase() }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    </table>
+
+    <mat-paginator [length]="paginationData?.total" [pageSize]="paginationData?.per_page"
+      [pageSizeOptions]="[10, 20, 50, 100]" (page)="paginate((pageEvent = $event))">
+    </mat-paginator>
+  </mat-card>
+  <div fxFlex="1 2 28" fxLayout.xs="row" fxLayout="row">
+    <mat-card style="width: 100%">
+      <mat-list>
+        <mat-list-item><b>ITEM</b></mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>Maximum</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>Minimum</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>Average </mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>Total</mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </mat-card>
+    <mat-card style="width: 100%">
+      <mat-list>
+        <mat-list-item> <b>(KES)</b></mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>
+          <b>{{ numberWithCommas(aggregates.max) }}</b></mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item><b>{{ numberWithCommas(aggregates.min) }}</b></mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item><b>{{ numberWithCommas(aggregates.avg) }}</b></mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item><b>{{ numberWithCommas(aggregates.total) }}</b></mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </mat-card>
+  </div>
+</div>

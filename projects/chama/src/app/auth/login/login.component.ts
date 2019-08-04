@@ -1,11 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, AfterViewInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
-import { MatIconRegistry } from '@angular/material';
-import { DomSanitizer } from '@angular/platform-browser';
 
 import { NotificationService } from 'projects/notification/src/public_api';
 import { environment } from 'projects/chama/src/environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { Auth } from '../../models/auth/auth';
 
 
 @Component({
@@ -14,7 +14,8 @@ import { environment } from 'projects/chama/src/environments/environment';
   styleUrls: ['./login.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
+  routeTo: string;
   filters = [
     'ig-xpro2',
     'ig-willow',
@@ -40,36 +41,75 @@ export class LoginComponent implements OnInit {
   chosenFilter = this.filters[Math.floor(Math.random() * this.filters.length)];
   userLogin = { email: '', password: '' };
   loading = false;
+  private currentUserSubject: BehaviorSubject<Auth>;
+  public currentUser: Auth;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer,
-    private notificationService: NotificationService
-  ) {  }
-
+    private notificationService: NotificationService,
+  ) {
+     this.route.queryParams.subscribe(params => {
+       if (params["loginType"] === "social") {
+         if (params["status"] === "error") {
+           this.notificationService.emit(params["message"]);
+         } else {
+           this.authService.socialLogin(JSON.parse(params["authData"]))
+             .subscribe(authData => {
+               if (authData && authData.access_token) { 
+                 this.router.navigate(['/home']);
+               }
+             });
+         }
+       }
+     });
+  }
+  ngOnDestroy() {
+  }
   ngOnInit() {
-    if (this.authService.getToken() !== '') {
+    //console.log(this.route.snapshot.parent.url[0].path)
+    this.routeTo = this.route.snapshot.queryParams.returnUrl || 'people';
+    if (this.authService.currentUserValue) {
       this.router.navigate(['/home']);
     }
-  }
 
-  login(email: string, password: string) {
-    this.loading = true;
-    const url = environment.apiUrl + '/api/auth/login';
-    this.authService.login(url, email, password).subscribe(result => {
-      // Store the token
-      // tslint:disable-next-line:no-string-literal
-      this.authService.setToken(result['access_token']);
-      // Redirect to home
-      this.router.navigate(['home']);
-      this.loading = false;
-      // Display success message
-      this.notificationService.emit(
-        'Welcome to Chama App',
-        'success'
-      );
+    if (this.currentUserSubject) {
+     this.router.navigate(['/home']);
+    }
+  }
+    ngAfterViewInit() {
+    this.authService.currentUserSubject.subscribe(user => {
+      this.router.navigate([this.routeTo]);
+     // this.loading = false;
     });
+  }
+  facebookLogin() {
+    window.location.href = environment.apiUrl +"/login/fb";
+  }
+  twitterLogin() {
+    window.location.href = environment.apiUrl + "/login/tw";
+  }
+  linkedinLogin() {
+    window.location.href = environment.apiUrl + "/login/li";
+  }
+  googleLogin() {
+    window.location.href = environment.apiUrl + "/login/go";
+  }
+  public get currentUserValue(): Auth {
+    return this.currentUserSubject.value;
+  }
+  login(email: string, password: string) {
+    this.authService.getClientSecret(environment.apiUrl , environment.clientId, environment.hostUrl).subscribe(result => {
+      const clientId = result.client_id;
+      const clientSecret = result.client_secret;
+      this.authService.login(environment.apiUrl + '/api/oauth/token', email, password, clientId, clientSecret)
+        .subscribe(authData => {
+          if (authData && authData.access_token) { 
+            this.router.navigate(['/home']);
+          }
+        });
+    });
+
   }
 }

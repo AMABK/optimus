@@ -6,6 +6,12 @@
           <h2>Login</h2>
         </mat-card-title>
       </mat-card-header>
+       <mat-card-actions layout="row" layout-align="center center">
+      <button (click)="facebookLogin()" mat-raised-button color="primary">Facebook</button>
+      <button (click)="twitterLogin()" mat-raised-button color="primary">Twitter</button>
+      <button (click)="googleLogin()" mat-raised-button color="primary">Google</button>
+      <button (click)="linkedinLogin()" mat-raised-button color="primary">LinkedIn</button>
+      </mat-card-actions >
       <form (submit)="login(userLogin.email, userLogin.password)">
         <mat-card-content>
           <mat-form-field>
@@ -20,13 +26,11 @@
           <button type="submit" class="regButton" mat-raised-button color="primary">Register</button>
         </mat-card-actions>
         <mat-card-actions>
-          <a href="/auth/forgot-pass">Forgot password ?</a>
+          <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active">Forgot password ?</a>
+          <a class="nav-link" [routerLink]="['/']" routerLinkActive="active">Home</a>
         </mat-card-actions>
       </form>
     </mat-card>
-    <app-social-login></app-social-login>
   </div>
 </div>
     
-    <div class="background" [ngClass]="chosenFilter"></div>
-    <app-spinner *ngIf="loading"></app-spinner>

@@ -1,0 +1,37 @@
+.input {
+  width: 100%;
+  margin: 0px 10px;
+}
+
+.input,
+.input-land {
+  height: 38px;
+  background-color: transparent;
+  border: 1px solid #b9b7b7;
+  box-sizing: border-box;
+  border-radius: 20px;
+  color: #606060;
+  padding-left: 40px;
+  outline: none;
+  font-size: 18px;
+}
+
+.input:focus,
+.input-land {
+  outline: none;
+}
+
+::-webkit-input-placeholder {
+  width: 90px;
+  height: 21px;
+  left: 447px;
+  top: 233px;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 21px;
+  font-size: 14px;
+
+  color: #606060;
+}

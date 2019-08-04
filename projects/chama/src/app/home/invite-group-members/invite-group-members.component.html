@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Invite New Group Member</h1>
+<div mat-dialog-content>
+  <form (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input matInput placeholder="Official Name" [formControl]="name">
+      <mat-error *ngIf="!name.hasError('minLength')">
+        Name is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Phone Number" [formControl]="phoneNumber" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!phoneNumber.hasError('minLength')">
+        Phone is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Email" [formControl]="email"
+        [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!email.hasError('minLength')">
+        Email is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button type="submit" mat-button cdkFocusInitial class="button-primary"> Add Group Details</button>
+      <button mat-button (click)="closeInviteGroupMembersDialog()" class="button-default">Cancel</button>
+    </div>
+  </form>
+</div>

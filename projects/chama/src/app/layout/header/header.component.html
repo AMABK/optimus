@@ -1,46 +1,52 @@
 <mat-toolbar color="primary" class="mat-elevation-z4 header">
   <span>
-    <button *ngIf="isLoggedIn" (click)="sidenav.toggle()" mat-mini-fab>
+    <button *ngIf="currentUser"(click)="sidenav.toggle()" opened mat-mini-fab>
       <mat-icon>menu</mat-icon>
     </button>
     <span class="logo">
-      <img class=logo src="assets/images/logo.png" alt="Logo">
+      <img class=logo src="assets/images/lg.png" alt="Logo">
     </span>
     <span class="title">
-      {{title}}
+       {{title}}
     </span>
   </span>
   <span class="spacer"></span>
-  <span *ngIf="isLoggedIn">
+  <button mat-icon-button [matMenuTriggerFor]="notification">
+    <mat-icon matBadge="0" matBadgeColor="accent">notifications_on</mat-icon>
+  </button>
+  <mat-menu #notification="matMenu">
+    <button mat-menu-item>
+      <mat-icon>notifications_on</mat-icon>
+      <span>Notifications</span>
+    </button>
+  </mat-menu>
+  <span class="spacer"></span>
+  <span *ngIf="userData">
     <img   src="./../../../assets/images/user.png" alt="profile pic" class="profile-pic"/>
-  <span class="username">
-    Arnold Mate
+  <span class="username" >
+    {{userData.user['first_name']}} {{userData.user['last_name']}}
     </span>
   <button mat-icon-button [matMenuTriggerFor]="user">
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #user="matMenu">
-    <button mat-menu-item> 
+    <a [routerLink]="['/user/notifications']" mat-menu-item> 
       <mat-icon>notifications_on</mat-icon>
       <span>Notifications</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon>dialpad</mat-icon>
-      <span>Redial</span>
-    </button>
-    <button mat-menu-item disabled>
+    </a>
+    <a [routerLink]="['/user/profile']"mat-menu-item>
       <mat-icon>person</mat-icon>
       <span>Profile</span>
-    </button>
-    <button mat-menu-item>
+    </a>
+    <a [routerLink]="['/user/settings']" mat-menu-item>
       <mat-icon>settings</mat-icon>
       <span>Settings</span>
-    </button>
-    <button mat-menu-item (click)="logout.emit($event)">
+    </a>
+    <button mat-menu-item (click)="logout()">
       <mat-icon >exit_to_app</mat-icon>
       <span>Logout</span>
     </button>
   </mat-menu>
 
 </span>
-</mat-toolbar>
+</mat-toolbar><mat-progress-bar mode="indeterminate"></mat-progress-bar>
