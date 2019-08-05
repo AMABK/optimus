@@ -128,18 +128,18 @@ export class HomeComponent implements OnInit {
     this.depositService.getAllContributionTypes().subscribe(res => {
       this.txnTypes$ = res;
     })
-    this.depositService.search(this.searchTerm$).subscribe(response => {
-      this.paginationData = {
-        current_page: response.data.current_page - 1,
-        total: response.data.total,
-        per_page: response.data.per_page
-      };
-      this.deposits = new MatTableDataSource(response.data.data);
-      this.depositData = this.deposits;
-      if (this.depositData.data) {
-        this.depositData.sort = this.sort;
-      }
-    });
+    // this.depositService.search(this.searchTerm$).subscribe(response => {
+    //   this.paginationData = {
+    //     current_page: response.data.current_page - 1,
+    //     total: response.data.total,
+    //     per_page: response.data.per_page
+    //   };
+    //   this.deposits = new MatTableDataSource(response.data.data);
+    //   this.depositData = this.deposits;
+    //   if (this.depositData.data) {
+    //     this.depositData.sort = this.sort;
+    //   }
+    // });
     //this.getDefaultChamaDetails();
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
