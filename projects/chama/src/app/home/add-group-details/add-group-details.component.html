@@ -1,0 +1,59 @@
+<h1 mat-dialog-title *ngIf="data.key.id != null">
+  Edit <b>{{data.key.name}}</b> Group Details
+</h1>
+<h1 mat-dialog-title *ngIf="data.key.id == null">
+  Add Group Details
+</h1>
+<div mat-dialog-content>
+  <form (ngSubmit)="onSubmit()">
+    <mat-form-field style="display: none;">
+      <input matInput [value]="data.key?.id" [formControl]="id">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Group Name" [value]="data.key?.name" [formControl]="name">
+      <mat-error *ngIf="!name.hasError('minLength')">
+        Name is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Group Office Address" [value]="data.key?.address" [formControl]="address"
+        [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!address.hasError('minLength')">
+        Address is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Group Office Phone Number" [value]="data.key?.phone_number"
+        [formControl]="phoneNumber" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!phoneNumber.hasError('minLength')">
+        Phone is <strong>required</strong>(Expected format +254712XYZ123)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Group Office Email" [value]="data.key?.email" [formControl]="email"
+        [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!email.hasError('minLength')">
+        Email is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Group Office Physical Location" [value]="data.key?.location" [formControl]="location"
+        [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!location.hasError('minLength')">
+        Office location is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput cdkTextareaAutosize placeholder="Group Description" [value]="data.key?.description"
+        [formControl]="desc" [errorStateMatcher]="matcher"></textarea>
+      <mat-error *ngIf="!desc.hasError('minLength')">
+        Description is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button *ngIf="data.key.id != null" type="submit" mat-button cdkFocusInitial class="button-primary"> Update Group Details</button>
+      <button *ngIf="data.key.id == null" type="submit" mat-button cdkFocusInitial class="button-primary"> Add Group Details</button>
+      <button mat-button [mat-dialog-close] cdkFocusInitial class="button-default">Cancel</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,45 @@
+<mat-accordion>
+  <form (ngSubmit)="onSendReplyMessage()">
+    <mat-expansion-panel *ngFor="let message of messageThread$; let i = index">
+      <input [hidden]="true" matInput value="{{message.thread_id}}" [formControl]="thread_id">
+      <mat-expansion-panel-header>
+        <mat-panel-title *ngIf="currentUserId==message.user_id; else otherUser">
+          <label class="arrow-name">You</label>
+          <mat-icon>arrow_forward</mat-icon><span class="arrow-name"> |
+            {{ message.created_at|date : ' MMM dd, yy. HH:mm'}}</span>
+        </mat-panel-title>
+        <mat-panel-description>
+          <span>{{message.message.substring(0,60)}}</span>
+        </mat-panel-description>
+        <mat-panel-title *ngIf="currentUserId!=message.user_id">
+          <mat-icon>arrow_back</mat-icon>
+          <span class="arrow-name">{{message.user.first_name}} </span> <span class="arrow-name"> -{{ message.created_at|date : ' MMM dd, yy. HH:mm' }}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        {{message.message}}
+      </ng-template>
+    </mat-expansion-panel>
+    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Reply message
+        </mat-panel-title>
+        <mat-panel-description>
+          <mat-icon>add</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <mat-form-field class="example-full-width">
+        <textarea [(formControl)]="message" [errorStateMatcher]="matcher" matInput matTextareaAutosize
+          matAutosizeMinRows="5" matAutosizeMaxRows="20" placeholder="Enter message here ..."></textarea>
+        <mat-error>
+          Message is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">
+        <mat-icon>subdirectory_arrow_right</mat-icon>Reply
+      </button>
+    </mat-expansion-panel>
+  </form>
+</mat-accordion>

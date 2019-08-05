@@ -2,6 +2,6 @@
  * Public API Surface of notification
  */
 
-export * from './lib/notification.service';
-export * from './lib/notification.component';
-export * from './lib/notification.module';
+export {NotificationService} from './lib/notification.service';
+export {NotificationComponent} from './lib/notification.component';
+export {NotificationModule} from './lib/notification.module';

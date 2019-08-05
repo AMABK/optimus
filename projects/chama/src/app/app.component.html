@@ -1,20 +1,66 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<app-spinner *ngIf="this.loaderService.isLoading.getValue()"></app-spinner>
+<app-header
+  [userData]="currentUser"
+  [title]="title"
+  [sidenav]="sidenav"
+  (logout)="logout($event)"
+>
+</app-header>
 
+<mat-sidenav-container>
+  <mat-sidenav [opened]="currentUser" #sidenav mode="side" class="app-sidenav">
+    <nav>
+      <button
+        mat-button
+        [matMenuTriggerFor]="menu"
+        fxFlexFill
+        class="button-dropdown"
+      >
+        <span style="float:left;"><b>Optimus E-Solutions</b></span>
+        <mat-icon style="float:right;padding-top:6px">expand_more</mat-icon>
+      </button>
+      <!-- <mat-accordion *ngFor="let menu of menus">
+        <mat-expansion-panel >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>{{menu.main.icon}}</mat-icon> {{menu.main.label}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <a *ngFor="let sub of menu.sub"
+            mat-button
+            class="nav-link"
+            [routerLink]=""
+            routerLinkActive="active"
+          >
+            <mat-icon>{{sub.icon}}</mat-icon>
+            {{sub.label}}
+          </a>
+        </mat-expansion-panel>
+      </mat-accordion> -->
+
+      <mat-menu #menu="matMenu" style="border-style: solid;border-width: 1px;">
+        <button mat-menu-item style="min-inline-size: 200px;">
+          Optimus E-Solutions
+        </button>
+        <button mat-menu-item>Item 2</button>
+      </mat-menu>
+      <ng-container  *ngFor="let link of links">
+      <a
+      *ngIf="((link.designation==authService.getUserData()?.user.designation)||(link.designation=='user'))"
+        mat-button
+        class="nav-link"
+        [routerLink]="link.path"
+        routerLinkActive="active"
+      >
+        <mat-icon>{{ link.icon }}</mat-icon>
+        {{ link.label }}
+      </a>
+      </ng-container>
+    </nav>
+  </mat-sidenav>
+
+  <div class="app-content">
+    <router-outlet #routerOutlet="outlet"></router-outlet>
+  </div>
+</mat-sidenav-container>
+<app-footer></app-footer>

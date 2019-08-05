@@ -1,0 +1,26 @@
+.right {
+	margin-top: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+}
+
+.right-card {
+	border-top-left-radius: 0%;
+	border-bottom-left-radius: 0%;
+}
+
+
+.regButton {
+	float: right;
+}
+
+.center-align {
+	align-content: center;
+}
+
+.social-button {
+	width: 120px;
+	background-color: #ededed;
+	color: #545656;
+}

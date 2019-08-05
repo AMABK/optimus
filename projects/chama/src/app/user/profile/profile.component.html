@@ -1,0 +1,83 @@
+  <mat-card style="margin-left: 30%;margin-right: 30%">
+    <h3>User >> Profile</h3>
+    <form (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <input matInput placeholder="First Name" [formControl]="firstName" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!firstName.hasError('minLength')">
+          First name is <strong>required</strong>(Minimum 4 characters)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Middle Name" [formControl]="middleName" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!middleName.hasError('minLength')">
+          Middle name is <strong>required</strong>(Minimum 4 characters)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Last Name" [formControl]="lastName" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!lastName.hasError('minLength')">
+          Last name is <strong>required</strong>(Minimum 4 characters)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Email" [formControl]="email" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!email.hasError('minLength')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Email" [formControl]="phoneNumber" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!phoneNumber.hasError('minLength')">
+          Phone Number is <strong>required</strong>(Minimum 4 characters)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput placeholder="Address" [formControl]="address" cdkTextareaAutosize
+          [errorStateMatcher]="matcher">
+              </textarea>
+        <mat-error *ngIf="!address.hasError('minLength')">
+          Address is <strong>required</strong>(Minimum 4 characters)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Gender</mat-label>
+        <mat-select matInput [formControl]="gender">
+          <mat-option selected value="male">
+            Male
+          </mat-option>
+          <mat-option value="female">
+            Female
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div mat-dialog-actions>
+        <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Update User Details</button>
+      </div>
+      </form>
+  </mat-card>
+  <hr>
+  <mat-card style="margin-left: 20%;margin-right: 20%">
+    <form (ngSubmit)="onSubmitChangePassword()">
+      <mat-form-field>
+        <input matInput placeholder="Current Password" [formControl]="currentPassword" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!currentPassword.hasError('minLength')">
+          Current password is <strong>required</strong>(Minimum 6 characters)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="New Password" [formControl]="newPassword" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!newPassword.hasError('minLength')">
+          New password is <strong>required</strong>(Minimum 6 characters)
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Confirm New Password" [formControl]="confirmNewPassword" [errorStateMatcher]="matcher">
+        <mat-error *ngIf="!confirmNewPassword.hasError('minLength')">
+          Confirm new password is <strong>required</strong>(Minimum 6 characters)
+        </mat-error>
+      </mat-form-field>
+      <div mat-dialog-actions>
+        <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Change Password</button>
+      </div>
+    </form>
+  </mat-card>

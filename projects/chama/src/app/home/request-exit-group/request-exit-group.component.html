@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>Request Exit From The Group</h1>
+<div mat-dialog-content>
+  <mat-card class="warning-border warning-background center"><mat-icon class="warning-icon">warning</mat-icon><br>Please ensure you have paid all <b>loans</b> and <b>fines</b> before requesting exit from group </mat-card>
+  <form (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <input matInput placeholder="Group Name" [formControl]="name">
+      <mat-error *ngIf="!name.hasError('minLength')">
+        Name is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Group Office Address" [formControl]="address" [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!address.hasError('minLength')">
+        Address is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Group Office Physical Location" [formControl]="location"
+        [errorStateMatcher]="matcher">
+      <mat-error *ngIf="!location.hasError('minLength')">
+        Office location is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <textarea matInput cdkTextareaAutosize placeholder="Group Description" [formControl]="desc"
+        [errorStateMatcher]="matcher"></textarea>
+      <mat-error *ngIf="!desc.hasError('minLength')">
+        Description is <strong>required</strong>(Minimum 4 characters)
+      </mat-error>
+    </mat-form-field>
+    <div mat-dialog-actions>
+      <button type="submit" mat-button cdkFocusInitial class="button-danger border-radius"> Request Exit</button>
+      <button mat-button (click)="closeRequestExitGroupDialog()" class="button-default">Cancel</button>
+    </div>
+  </form>
+</div>
