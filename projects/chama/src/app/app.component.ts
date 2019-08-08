@@ -84,6 +84,7 @@ export class AppComponent implements OnInit {
     },
     { path: '/disputes', icon: 'flare', label: 'Disputes', designation: 'user' },
     { path: '/insights', icon: 'pie_chart', label: 'Insights', designation: 'user' },
+    { path: '/group', icon: 'group', label: 'Group', designation: 'user' },
     { path: '/admin', icon: '', label: 'Administration', designation: 'admin' },
     { path: '/admin/users', icon: 'person', label: 'Manage Users', designation: 'admin' },
     { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups', designation: 'admin' },
@@ -120,7 +121,9 @@ export class AppComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['login']);
   }
-
+  spinner() {
+    this.loaderService.isLoading.getValue()
+}
   prepareRouterState(router: RouterOutlet) {
     return router.activatedRouteData['animation'] || 'initial';
   }

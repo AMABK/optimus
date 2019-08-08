@@ -1,0 +1,13 @@
+<form [formGroup]="form" (ngSubmit)="updateRoles()">
+  <label formArrayName="roles" *ngFor="let role of form.controls.roles.controls; let i = index">
+    <mat-checkbox type="checkbox"  [formControlName]="i">
+    {{roles[i].name}}
+    </mat-checkbox>
+  </label>
+  <div *ngIf="!form.valid">At least one role must be selected</div>
+  <br>
+  <div mat-dialog-actions>
+    <button type="submit" [disabled]="!form.valid" mat-button cdkFocusInitial class="button-primary border-radius">Update User Permissions</button>
+    <button type="button" mat-button (click)="onNoClick()" class="button-default">Close</button>
+  </div>
+</form>

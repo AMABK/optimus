@@ -87,6 +87,42 @@ export class UserService {
         }) => {
           // tslint:disable-next-line:max-line-length
           const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&cFromDate=${cFromDate}&cToDate=${cToDate}&verified=${verified}&gender=${gender}&download=${download}`;
+          return this.getChamaUser(queryParams);
+        }
+      )
+    );
+  }
+  searchChamaUsers(userChamaStatus=0, searchQueries?) {
+    return searchQueries.pipe(
+      startWith({
+        q: "",
+        page: 1,
+        size: 10,
+        cFromDate: "",
+        cToDate: "",
+        status: "",
+        userChamaStatus,
+        gender: '',
+        download:''
+      }),
+      debounceTime(500),
+      distinctUntilChanged(),
+      // tslint:disable-next-line:max-line-length
+      switchMap(
+        ({
+          q = '',
+          page = 1,
+          size: resultPerPage = 10,
+          cFromDate = '',
+          cToDate = '',
+          status = '',
+          userChamaStatus,
+          gender = '',
+          download=''
+          
+        }) => {
+          // tslint:disable-next-line:max-line-length
+          const queryParams = `?page=${page}&size=${resultPerPage}&q=${q}&cFromDate=${cFromDate}&cToDate=${cToDate}&status=${status}&gender=${gender}&download=${download}&userChamaStatus=${userChamaStatus}`;
           return this.getChamaUsers(queryParams);
         }
       )
@@ -94,7 +130,7 @@ export class UserService {
   }
   
 
-  updateLoanRequest(loan) {
+  updateLoanRequestrrrr(loan) {
     return this.http.post(`${this.apiUrl}/api/chama/update-loan-request`, loan);
   }
   getUsers(queryParams: string) {
@@ -103,9 +139,26 @@ export class UserService {
     );
   }
 
+  getChamaUser(queryParams: string) {
+    return this.http.get(
+      `${this.apiUrl}/api/chama/get-chama-user${queryParams}`
+    );
+  }
   getChamaUsers(queryParams: string) {
     return this.http.get(
       `${this.apiUrl}/api/chama/get-chama-users${queryParams}`
     );
+  }
+
+  getChamaUserPermissions(user) {
+    return this.http.get<any>(
+      `${this.apiUrl}/api/user/${user.user_id}/chama/${user.chama_id}/get-permissions`
+    )
+  }
+  updateChamaUserPermissions(role) {
+    return this.http.post(`${this.apiUrl}/api/user/update-permissions`, role);
+  }
+  changeChamaUserStatus(userChama) {
+    return this.http.post(`${this.apiUrl}/api/user/change-chama-user-status`, userChama);
   }
 }

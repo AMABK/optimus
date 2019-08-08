@@ -21,6 +21,7 @@ import { TokenInterceptorService } from 'projects/token-interceptor/src/public_a
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { InputFieldComponent } from './shared/input-field/input-field.component';
+import { GroupComponent } from './group/group.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { InputFieldComponent } from './shared/input-field/input-field.component'
     PasswordResetComponent,
     SidenavComponent,
     SpinnerComponent,
-    InputFieldComponent,
+    InputFieldComponent
   ],
   imports: [
     AppRoutingModule,

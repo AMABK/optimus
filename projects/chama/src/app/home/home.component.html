@@ -294,7 +294,7 @@
                                 (click)="openAddGroupDetails('update')">
                                 <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
                             </button>
-                            <button mat-button class="edit-group-button" (click)="openAddGroupDetails('create')">
+                            <button mat-button [disabled]="!userHasRole('create-group')" class="edit-group-button" (click)="openAddGroupDetails('create')">
                                 <mat-icon>group</mat-icon> ADD NEW GROUP HERE
                             </button>
                         </div>
@@ -302,7 +302,7 @@
                     <mat-step [stepControl]="secondFormGroup" optional>
                         <ng-template matStepLabel>GROUP MEMBERS<br>Add Group Members</ng-template>
                         <div class="center">
-                            <button mat-button [disabled]="user.chama_id == null" class="edit-group-button"
+                            <button mat-button [disabled]="(user.chama_id == null)||(!userHasRole('invite-user'))" class="edit-group-button"
                                 (click)="openInviteGroupMembersDialog()">
                                 <mat-icon>group_add</mat-icon> ADD GROUP MEMBERS
                             </button>
@@ -311,7 +311,7 @@
                     <mat-step [stepControl]="secondFormGroup">
                         <ng-template matStepLabel>CONTRIBUTIONS<br>Set Up Group Contributions</ng-template>
                         <div class="center">
-                            <button mat-button [disabled]="user.chama_id == null" class="edit-group-button"
+                            <button mat-button [disabled]="(user.chama_id == null)||(!userHasRole('create-contribution-type'))" class="edit-group-button"
                                 (click)="openAddGroupContributionTypes()">
                                 <mat-icon>ac_unit</mat-icon> SET UP GROUP CONTRIBUTIONS
                             </button>
