@@ -58,6 +58,11 @@ export class MessageService {
       `${this.apiUrl}/api/message/chama-user-message${queryParams}`
     );
   }
+  getChamaUserMessageCount() {
+    return this.http.get(
+      `${this.apiUrl}/api/message/chama-user-message-count?messageType=inbox`
+    );
+  }
   changeMessageStatus(message) {
     return this.http.post(`${this.apiUrl}/api/message/change-message-status`, message);
   }

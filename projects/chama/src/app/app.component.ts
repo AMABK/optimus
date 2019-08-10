@@ -4,6 +4,8 @@ import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { Auth } from './models/auth/auth';
 import { LoaderService } from 'projects/loader/src/public_api';
+import { RequestJoinGroupComponent } from './shared/request-join-group/request-join-group.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -104,19 +106,35 @@ export class AppComponent implements OnInit {
     public loaderService: LoaderService,
     private ns: NotificationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.authService.currentUser.subscribe(x => (this.currentUser = x));
   }
 
   ngOnInit() {
+    if (this.authService.getUserData().user.chama_id == null) {
+      this.openDialog();
+    }
     if (this.loaderService.isLoading.getValue()) {
       // console.log(this.loaderService.isLoading.getValue());
     } else {
       //console.log(this.loaderService.isLoading.getValue());
     }
   }
+  openDialog(): void {
+    const dialogRef = this.dialog.open(RequestJoinGroupComponent, {
+      width: '400px',
+      data: {
 
+      },
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
   logout($event) {
     this.authService.logout();
     this.router.navigate(['login']);

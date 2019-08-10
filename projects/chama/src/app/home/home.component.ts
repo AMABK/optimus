@@ -3,7 +3,6 @@ import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { AddGroupDetailsComponent } from './add-group-details/add-group-details.component';
 import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { RequestExitGroupComponent } from './request-exit-group/request-exit-group.component';
@@ -20,6 +19,7 @@ import { AddGroupContributionComponent } from './add-group-contribution/add-grou
 import { Chama } from '../models/chama/chama';
 import { DepositService } from '../http/deposit/deposit.service';
 import * as moment from 'moment';
+import { ActivatedRoute, Router } from '@angular/router';
 export interface PeriodicElement1 {
   position: number;
   weight: number;
@@ -107,7 +107,9 @@ export class HomeComponent implements OnInit {
     private chamaService: ChamaService,
     private depositService: DepositService,
     private authService: AuthService,
-    private loaderIService: LoaderInterceptorService
+    private loaderIService: LoaderInterceptorService,
+    private activatedRoute: ActivatedRoute,
+    private router:Router
   ) {
     // this.getDefaultChamaDetails();
   }
@@ -127,20 +129,12 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.depositService.getAllContributionTypes().subscribe(res => {
       this.txnTypes$ = res;
-    })
-    // this.depositService.search(this.searchTerm$).subscribe(response => {
-    //   this.paginationData = {
-    //     current_page: response.data.current_page - 1,
-    //     total: response.data.total,
-    //     per_page: response.data.per_page
-    //   };
-    //   this.deposits = new MatTableDataSource(response.data.data);
-    //   this.depositData = this.deposits;
-    //   if (this.depositData.data) {
-    //     this.depositData.sort = this.sort;
-    //   }
-    // });
-    //this.getDefaultChamaDetails();
+    });
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params.addGroup == 'success') {
+        this.openAddGroupDetails()
+      }
+    });
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
     });
@@ -341,6 +335,7 @@ export class HomeComponent implements OnInit {
       this.defaultGroup = this.chamaService
         .updateDefaultChama(chamaId)
         .subscribe(result => {
+          this.router.navigate(['home']);
           this.authService.updateDefaultChama(chamaId);
           this.getDefaultChamaDetails();
         });
@@ -375,8 +370,9 @@ export class HomeComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result === "success") {
-          this.chamas$ = this.getChamas(this.authService.getUserId());
-          this.getDefaultChamaDetails();
+         // this.chamas$ = this.getChamas(this.authService.getUserId());
+          //this.getDefaultChamaDetails();
+          this.router.navigate(['home']);
           // set message to be emitted by loader interceptor after http requests end
           this.loaderIService.storeNotificationMessage(
             "Chama successfully updated!",

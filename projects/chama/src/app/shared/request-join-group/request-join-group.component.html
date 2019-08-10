@@ -1,0 +1,14 @@
+<h2>Search for an existing group</h2>
+<form (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <input type="text" matInput placeholder="Search group" [formControl]="group" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="group.hasError('minLength')">
+      Input is <strong>required</strong>
+    </mat-error>
+  </mat-form-field>
+  
+  <div mat-dialog-actions>
+    <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Update</button>
+    <button type="button" mat-button (click)="closeRequestJoinGroup()" class="button-default">Add A New Group</button>
+  </div>
+</form>

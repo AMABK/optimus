@@ -161,4 +161,7 @@ export class UserService {
   changeChamaUserStatus(userChama) {
     return this.http.post(`${this.apiUrl}/api/user/change-chama-user-status`, userChama);
   }
+  acceptGroupInviteRequest(request) {
+    return this.http.post<any>(`${this.apiUrl}/api/user/accept-group-invite-request`, request);
+  }
 }

@@ -22,6 +22,11 @@ import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public
 import { SpinnerComponent } from './spinner/spinner.component';
 import { InputFieldComponent } from './shared/input-field/input-field.component';
 import { GroupComponent } from './group/group.component';
+import { RequestJoinGroupComponent } from './shared/request-join-group/request-join-group.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSelectSearchComponent } from './shared/mat-select-search/mat-select-search.component';
+import { MatSelectSearchModule } from './shared/mat-select-search/mat-select-search.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +35,8 @@ import { GroupComponent } from './group/group.component';
     PasswordResetComponent,
     SidenavComponent,
     SpinnerComponent,
-    InputFieldComponent
+    InputFieldComponent,
+    RequestJoinGroupComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -44,7 +50,9 @@ import { GroupComponent } from './group/group.component';
     SidenavModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDialogModule,
+    MatSelectSearchModule
   ],
   providers: [
     AuthGuard,
@@ -64,7 +72,7 @@ import { GroupComponent } from './group/group.component';
       multi: true
     }
   ],
-  entryComponents:[],
+  entryComponents: [RequestJoinGroupComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
