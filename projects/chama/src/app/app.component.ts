@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { Auth } from './models/auth/auth';
@@ -110,6 +110,13 @@ export class AppComponent implements OnInit {
     private dialog: MatDialog
   ) {
     this.authService.currentUser.subscribe(x => (this.currentUser = x));
+    // subscribe to router events and send page views to Google Analytics
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        //ga('set', 'page', event.urlAfterRedirects);
+        //ga('send', 'pageview');
+      }
+    });
   }
 
   ngOnInit() {
