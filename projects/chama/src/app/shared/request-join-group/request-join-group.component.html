@@ -1,14 +1,15 @@
-<h2>Search for an existing group</h2>
+<mat-icon style="cursor:pointer;float:right;" (click)="dialogRef.close()">cancel</mat-icon>
+<h3>Do you have an invite code? Enter it here to join a group</h3>
 <form (ngSubmit)="onSubmit()">
   <mat-form-field>
-    <input type="text" matInput placeholder="Search group" [formControl]="group" [errorStateMatcher]="matcher">
-    <mat-error *ngIf="group.hasError('minLength')">
-      Input is <strong>required</strong>
+    <input type="text" matInput placeholder="Enter invite code here" [formControl]="code" [errorStateMatcher]="matcher">
+    <mat-error *ngIf="code.hasError('minLength')">
+      Invite code is <strong>required</strong>
     </mat-error>
   </mat-form-field>
   
   <div mat-dialog-actions>
-    <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Update</button>
+    <button type="submit" mat-button cdkFocusInitial class="button-primary border-radius">Send Invite Code</button>
     <button type="button" mat-button (click)="closeRequestJoinGroup()" class="button-default">Add A New Group</button>
   </div>
 </form>

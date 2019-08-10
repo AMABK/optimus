@@ -143,52 +143,13 @@
                     </button>
                 </ng-template>
             </mat-grid-tile>
-            <mat-grid-tile fxFlex="50" *ngIf="chama | async as chamaData" class="mat-grid-tile-top-right">
-                <table mat-table [dataSource]="chamaData.contributions" class="mat-elevation-z8"
-                    *ngIf="!chamaData.contributions; else noChamaData" style="margin-top: -260px;">
-
-                    <!--- Note that these columns can be defined in any order.
-                        The actual rendered columns are set as a property on the row definition" -->
-
-                    <!-- Position Column -->
-                    <ng-container matColumnDef="position">
-                        <th mat-header-cell *matHeaderCellDef> No. </th>
-                        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                    </ng-container>
-
-                    <!-- Amount Column -->
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Name </th>
-                        <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
-                    </ng-container>
-
-                    <!-- Weight Column -->
-                    <ng-container matColumnDef="created_by">
-                        <th mat-header-cell *matHeaderCellDef> Created By </th>
-                        <td mat-cell *matCellDef="let element"> {{element.contribution_type_name}} </td>
-                    </ng-container>
-
-                    <!-- Payment date Column -->
-                    <ng-container matColumnDef="txn_type">
-                        <th mat-header-cell *matHeaderCellDef> Transcation Type </th>
-                        <td mat-cell *matCellDef="let element"> {{element.payment_date}} </td>
-                    </ng-container>
-
-                    <!-- Status date Column -->
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef> Status </th>
-                        <td mat-cell *matCellDef="let element"> {{element.verified}} </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="txnTypeColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: txnTypeColumns;"></tr>
-                </table>
-
-                <ng-template #noChamaData>
-                    <button mat-button style="border: 1px solid #428bca;">
-                        <mat-icon>warning</mat-icon> NO CONTRIBUTIONS YET
+            <mat-grid-tile fxFlex="50" class="mat-grid-tile-top-right">
+                    <button (click)="openDialog()" mat-button style="border: 1px solid #428bca;">
+                        <mat-icon>compare_arrows</mat-icon> JOIN GROUP BY INVITE CODE
                     </button>
-                </ng-template>
+                    <button (click)="openInviteGroupMembersDialog()" mat-button style="border: 1px solid #428bca;">
+                        <mat-icon>email</mat-icon> INVITE MEMBER BY EMAIL
+                    </button>
             </mat-grid-tile>
             <mat-grid-tile fxFlex="50" class="mat-grid-tile-bottom-left mat-grid-tile-home"
                 *ngIf="chama | async as chamaData">
@@ -222,8 +183,11 @@
                 </ng-template>
             </mat-grid-tile>
             <mat-grid-tile fxFlex="50" class="mat-grid-tile-bottom-right">
-                <button mat-button style="border: 1px solid #428bca;">
-                    <mat-icon>warning</mat-icon> NO LOANS AND FINES
+                <button (click)="generateGroupInviteCode()" mat-button style="border: 1px solid #428bca; margin-top: -30%">
+                    <mat-icon>cached</mat-icon> GENERATE A NEW GROUP INVITE CODE
+                </button>
+                <button (click)="viewGroupInviteCode()" mat-button style="border: 1px solid #428bca; margin-top: -30%">
+                    <mat-icon>visibility</mat-icon> VIEW GROUP INVITE CODE
                 </button>
             </mat-grid-tile>
         </mat-grid-list>

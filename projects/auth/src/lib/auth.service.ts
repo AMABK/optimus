@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private loaderIService:LoaderInterceptorService
+    private loaderIService: LoaderInterceptorService
   ) {
     const userData = JSON.parse(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<Auth>(userData);
@@ -61,7 +61,7 @@ export class AuthService {
       this.currentUserSubject.next(authData);
     }
     //this.currentUserSubject = new BehaviorSubject<Auth>(authData);
-   // this.currentUser = new BehaviorSubject<Auth>(authData).asObservable();
+    // this.currentUser = new BehaviorSubject<Auth>(authData).asObservable();
     return new BehaviorSubject<Auth>(authData).asObservable();//authData;
   }
   requestImplicitGrantToken(url) {

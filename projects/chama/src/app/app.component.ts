@@ -120,28 +120,14 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.authService.getUserData().user.chama_id == null) {
-      this.openDialog();
-    }
+    
     if (this.loaderService.isLoading.getValue()) {
       // console.log(this.loaderService.isLoading.getValue());
     } else {
       //console.log(this.loaderService.isLoading.getValue());
     }
   }
-  openDialog(): void {
-    const dialogRef = this.dialog.open(RequestJoinGroupComponent, {
-      width: '400px',
-      data: {
 
-      },
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
   logout($event) {
     this.authService.logout();
     this.router.navigate(['login']);
