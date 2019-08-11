@@ -20,7 +20,7 @@
       <select class="input-field select" (ngModelChange)="handleSearch($event,'gender')" [(ngModel)]="gender">
         <option *ngFor="let sex of sexes" [(value)]='sex.value'>{{sex.display}}</option>
       </select>
-      <select class="input-field select" (ngModelChange)="handleSearch($event,'verified')" [(ngModel)]="verified">
+      <select class="input-field select" (ngModelChange)="handleSearch($event,'status')" [(ngModel)]="status">
         <option *ngFor="let status of statuses" [(value)]='status.value'>{{status.display}}</option>
       </select>
       <button (click)="clearSearch('activate')" class="small-button"> Clear Search</button>

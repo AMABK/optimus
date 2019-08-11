@@ -32,19 +32,25 @@ export class ListUsersComponent implements OnInit {
   ];
   searchTerm$ = new Subject<any>();
   paginationData: any;
-  pFromDate = '';
-  pToDate = '';
+  cFromDate = '';
+  cToDate = '';
   sFromDate = '';
   sToDate = '';
   search = '';
   status = '';
   userDataSource;
   download = '';
+  gender = -"";
   txn_type = 'deposit';
   statuses = [
     { value: '', display: 'Verified Status' },
     { value: 'yes', display: 'Yes' },
     { value: 'no', display: 'No' }
+  ];
+  sexes = [
+    { value: '', display: 'Select Gender' },
+    { value: 'male', display: 'Male' },
+    { value: 'female', display: 'Female' }
   ];
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -98,16 +104,16 @@ export class ListUsersComponent implements OnInit {
         this.clearSearch();
         this.search = query;
         break;
-      case 'pFromDate':
+      case 'cFromDate':
         this.search = '';
-        this.pFromDate = query;
+        this.cFromDate = query;
         break;
       case 'download':
         this.download = 'download';
         break;
-      case 'pToDate':
+      case 'cToDate':
         this.search = '';
-        this.pToDate = query;
+        this.cToDate = query;
         break;
       case 'sFromDate':
         this.search = '';
@@ -124,15 +130,15 @@ export class ListUsersComponent implements OnInit {
       default:
         break;
     }
-    this.pFromDate = query === '' ? '' : this.formatDateInput(this.pFromDate);
-    this.pToDate = query === '' ? '' : this.formatDateInput(this.pToDate);
+    this.cFromDate = query === '' ? '' : this.formatDateInput(this.cFromDate);
+    this.cToDate = query === '' ? '' : this.formatDateInput(this.cToDate);
     this.sFromDate = query === '' ? '' : this.formatDateInput(this.sFromDate);
     this.sToDate = query === '' ? '' : this.formatDateInput(this.sToDate);
     this.searchTerm$.next({
       download: this.download,
       q: this.search,
-      pFromDate: this.pFromDate,
-      pToDate: this.pToDate,
+      pFromDate: this.cFromDate,
+      pToDate: this.cToDate,
       sFromDate: this.sFromDate,
       sToDate: this.sToDate,
       status: this.status,
@@ -141,8 +147,8 @@ export class ListUsersComponent implements OnInit {
     this.paginator.pageIndex = 0;
   }
   clearSearch(activate = null) {
-    this.pFromDate = '';
-    this.pToDate = '';
+    this.cFromDate = '';
+    this.cToDate = '';
     this.sFromDate = '';
     this.sToDate = '';
     this.status = '';
@@ -157,9 +163,9 @@ export class ListUsersComponent implements OnInit {
     const pageSize = this.pageEvent.pageSize;
     const query = this.search;
     const pFromDate =
-      this.pFromDate === '' ? '' : this.formatDateInput(this.pFromDate);
+      this.cFromDate === '' ? '' : this.formatDateInput(this.cFromDate);
     const pToDate =
-      this.pToDate === '' ? '' : this.formatDateInput(this.pToDate);
+      this.cToDate === '' ? '' : this.formatDateInput(this.cToDate);
     const sFromDate =
       this.sFromDate === '' ? '' : this.formatDateInput(this.sFromDate);
     const sToDate =
