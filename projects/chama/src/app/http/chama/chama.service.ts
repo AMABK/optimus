@@ -117,7 +117,7 @@ export class ChamaService {
       `${environment.apiUrl}/api/user/join-group-invite-by-code`, invite);
   }
   generateGroupInviteCode(chama) {
-    return this.http.post(
+    return this.http.post<any>(
       `${environment.apiUrl}/api/user/generate-group-invite-code`, chama);
   }
 }
