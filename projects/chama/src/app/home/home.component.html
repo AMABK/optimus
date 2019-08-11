@@ -144,10 +144,10 @@
                 </ng-template>
             </mat-grid-tile>
             <mat-grid-tile fxFlex="50" class="mat-grid-tile-top-right">
-                    <button (click)="openDialog()" mat-button style="border: 1px solid #428bca;">
+                    <button (click)="openRequestJoinGroupDialog()" mat-button style="border: 1px solid #428bca;">
                         <mat-icon>compare_arrows</mat-icon> JOIN GROUP BY INVITE CODE
                     </button>
-                    <button (click)="openInviteGroupMembersDialog()" mat-button style="border: 1px solid #428bca;">
+                    <button *ngIf="userHasRole('invite-user')" (click)="openInviteGroupMembersDialog()" mat-button style="border: 1px solid #428bca;">
                         <mat-icon>email</mat-icon> INVITE MEMBER BY EMAIL
                     </button>
             </mat-grid-tile>
@@ -177,16 +177,16 @@
                     </mat-tab-group>
                 </mat-card>
                 <ng-template #noChamaData>
-                    <button mat-button style="border: 1px solid #428bca;" (click)="openAddPaymentDetails()">
+                    <button *ngIf="userHasRole('add-paymennt-details')" mat-button style="border: 1px solid #428bca;" (click)="openAddPaymentDetails()">
                         <mat-icon>warning</mat-icon> NO GROUP PAYMENT/BANK DETAILS
                     </button>
                 </ng-template>
             </mat-grid-tile>
-            <mat-grid-tile fxFlex="50" class="mat-grid-tile-bottom-right">
+            <mat-grid-tile *ngIf="userHasRole('create-invite-code')" fxFlex="50" class="mat-grid-tile-bottom-right">
                 <button (click)="generateGroupInviteCode()" mat-button style="border: 1px solid #428bca; margin-top: -30%">
                     <mat-icon>cached</mat-icon> GENERATE A NEW GROUP INVITE CODE
                 </button>
-                <button (click)="viewGroupInviteCode()" mat-button style="border: 1px solid #428bca; margin-top: -30%">
+                <button *ngIf="userHasRole('view-invite-code')" (click)="viewGroupInviteCode()" mat-button style="border: 1px solid #428bca; margin-top: -30%">
                     <mat-icon>visibility</mat-icon> VIEW GROUP INVITE CODE
                 </button>
             </mat-grid-tile>

@@ -29,7 +29,7 @@ export class RequestJoinGroupComponent implements OnInit {
         code:this.code.value
       }
       this.chamaService.joinGroupByInviteCode(invite).subscribe(res => {
-        this.notificationService.emit('Successfully joined group','success')
+        this.notificationService.emit('Successfully joined group', 'success')
         this.dialogRef.close('success');
       }, error => {
           let msg;

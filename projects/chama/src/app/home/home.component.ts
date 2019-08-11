@@ -22,6 +22,7 @@ import * as moment from 'moment';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RequestJoinGroupComponent } from '../shared/request-join-group/request-join-group.component';
 import { NotificationService } from 'projects/notification/src/public_api';
+import { UserService } from '../http/user/user.service';
 export interface PeriodicElement1 {
   position: number;
   weight: number;
@@ -36,7 +37,7 @@ export interface PeriodicElement1 {
   styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-  inviteCode:string;
+  inviteCode: string;
   searchTerm$ = new Subject<any>();
   subscriptions: Subscription[] = [];
   @Output() queryEvt = new EventEmitter<any>();
@@ -111,9 +112,9 @@ export class HomeComponent implements OnInit {
     private depositService: DepositService,
     private authService: AuthService,
     private loaderIService: LoaderInterceptorService,
-    private activatedRoute: ActivatedRoute,
+    private userService: UserService,
     private router: Router,
-    private notificationService:NotificationService
+    private notificationService: NotificationService
   ) {
     // this.getDefaultChamaDetails();
   }
@@ -130,7 +131,7 @@ export class HomeComponent implements OnInit {
   public chartHovered(e: any): void {
     // console.log(e);
   }
-  openDialog(): void {
+  openRequestJoinGroupDialog(): void {
     const dialogRef = this.dialog.open(RequestJoinGroupComponent, {
       width: '400px',
       data: {
@@ -140,14 +141,20 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      if (result == 'success') {
+        this.getDefaultChamaDetails();
+      }
     });
   }
   ngOnInit() {
     this.updateInviteCode();
-
-    if (this.authService.getUserData().user.chama_id == null) {
-      this.openDialog();
+    this.getDefaultUserChamaPermissions()
+    if (this.authService.getUserData().user.default_chama == null) {
+      this.openRequestJoinGroupDialog();
+    } else {
+      if (this.authService.getUserData().user.default_chama.invite_code == null) {
+        this.openRequestJoinGroupDialog();
+      }
     }
 
     this.depositService.getAllContributionTypes().subscribe(res => {
@@ -320,35 +327,57 @@ export class HomeComponent implements OnInit {
   getDefaultChamaDetails() {
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
-      const authData = this.authService.getUserData();
-      //authData.user.chama_id = result.chama_id;
-      if (authData.user.chama_id === null) {
+      let authData = this.authService.getUserData();
+      if (authData.user.chama_id == null) {
         if (result.chama_id != null) {
-          authData.user.default_chama = {
-            id: result.chama_id,
-            name: result.default_chama.name
-          };
+          authData.user.default_chama = result.default_chama;
+          authData.user.chama_id = result.chama_id;
         } else {
           authData.user.default_chama = {};
+          authData.user.chama_id = null;
         }
       } else {
         if (result.chama_id == null) {
+          authData.user.chama_id = null;
           authData.user.default_chama = {};
         } else {
-          authData.user.default_chama.name = result.default_chama.name;
+          authData.user.default_chama = result.default_chama;
+          authData.user.chama_id = result.chama_id;
         }
       }
+      if (authData.user.chama_id != null) {
+        const user = {
+          chama_id: authData.user.chama_id,
+          user_id: authData.user.id
+        }
+        this.userService.getChamaUserPermissions(user).subscribe(response => {
+          this.authService.storeResult(authData);
+        })
+      } else {
+        this.authService.storeResult(authData);
+      }
       this.authService.storeResult(authData);
-
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama = this.chamaSubject.asObservable();
     });
   }
+  getDefaultUserChamaPermissions() {
+    let authData = this.authService.getUserData();
+
+    let user = {
+      user_id: authData.user.id,
+      chama_id:authData.user.chama_id
+    }
+    this.userService.getChamaUserPermissionsList(user).subscribe(res => {
+      authData.user.roles = res.data;
+      this.authService.storeResult(authData);
+    })
+  }
+
   updateDefaultChama(chamaId) {
     const currentChamaId = this.authService.getUserData().user.chama_id;
     // allow change only if the chama id has changed
-    //console.log(chamaId+'|'+currentChamaId)
     if (currentChamaId !== chamaId) {
       this.defaultGroup = this.chamaService
         .updateDefaultChama(chamaId)
@@ -543,15 +572,15 @@ export class HomeComponent implements OnInit {
           authData.user.invite_code = res.data;
           this.authService.storeResult(authData);
           this.updateInviteCode();
-          this.notificationService.emit('Group Invite Code successfully updated','success')
+          this.notificationService.emit('Group Invite Code successfully updated', 'success')
         }, error => {
-            this.notificationService.emit(error.message.message)
+          this.notificationService.emit(error.message.message)
         });
       } else {
         this.notificationService.emit('Please set default group first')
       }
     } else {
-      this.notificationService.emit('Request cancelled successfully','warning')
+      this.notificationService.emit('Request cancelled successfully', 'warning')
     }
   }
   clearGroupInviteCode() {
@@ -566,12 +595,18 @@ export class HomeComponent implements OnInit {
     }
   }
   updateInviteCode() {
-    this.inviteCode = this.authService.getUserData().user.invite_code;
-    if ((this.inviteCode == null) || (this.inviteCode == '')) {
-      this.inviteCode= 'No Invite Code Set'
+    //console.log(this.authService.getUserData())
+    if (this.authService.getUserData().user.default_chama == null) {
+      this.inviteCode = null;
+    } else {
+      this.inviteCode = this.authService.getUserData().user.default_chama.invite_code;
     }
   }
   viewGroupInviteCode() {
-    alert('Group Invite Code:'+this.inviteCode)
+    let code = this.inviteCode;
+    if (this.inviteCode == null) {
+      code = 'Invite code has not been set';
+    }
+    alert('Group Invite Code:' + code)
   }
 }

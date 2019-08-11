@@ -262,4 +262,7 @@ export class TransactionsComponent implements OnInit {
       }
     });
   }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
+  }
 }

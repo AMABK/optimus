@@ -1,14 +1,14 @@
 <div fxLayout="row" fxLayout.xs="column">
   <mat-card fxFlex="1 2 72">
     <h3>Transactions >> Deposits</h3>
-    <button mat-button style="border: 1px solid #428bca;" [disabled]="userHasRole('create-deposit')"
+    <button mat-button style="border: 1px solid #428bca;" [disabled]="!userHasRole('create-deposit')"
       (click)="openAddGroupContributionDialog()">
       <mat-icon class="success-icon">add</mat-icon>Add Contribution/Deposit
     </button>
     <button mat-button [disabled]="true" style="border: 1px solid #428bca;">
       <mat-icon class="success-icon">add</mat-icon>Pay Loan/Fine
     </button>
-    <button mat-button (click)="openRequestDebitDialog('loan')" style="border: 1px solid #428bca;">
+    <button mat-button [disabled]="!userHasRole('create-loan')" (click)="openRequestDebitDialog('loan')" style="border: 1px solid #428bca;">
       <mat-icon class="success-icon">add</mat-icon>Request A Loan
     </button>
     <button mat-button (click)="handleSearch($event,'download')" style="border: 1px solid #428bca;">

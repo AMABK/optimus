@@ -155,6 +155,11 @@ export class UserService {
       `${this.apiUrl}/api/user/${user.user_id}/chama/${user.chama_id}/get-permissions`
     )
   }
+  getChamaUserPermissionsList(user) {
+    return this.http.get<any>(
+      `${this.apiUrl}/api/user/${user.user_id}/chama/${user.chama_id}/get-permissions-list`
+    )
+  }
   updateChamaUserPermissions(role) {
     return this.http.post(`${this.apiUrl}/api/user/update-permissions`, role);
   }
