@@ -8,6 +8,14 @@ import { NotificationComponent } from './notification/notification.component';
 
 const routes: Routes = [
   {
+    path: 'invite/:code',
+    component: UserComponent,
+  },
+  {
+    path: 'activate-account/:activationCode/email/:email',
+    component: UserComponent,
+  },
+  {
     path: '',
     component: UserComponent,
     canActivate: [AuthGuard],

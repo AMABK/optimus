@@ -17,7 +17,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private loaderIService:LoaderInterceptorService
+    private loaderIService: LoaderInterceptorService
   ) {
     const userData = JSON.parse(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<Auth>(userData);
@@ -61,7 +61,7 @@ export class AuthService {
       this.currentUserSubject.next(authData);
     }
     //this.currentUserSubject = new BehaviorSubject<Auth>(authData);
-   // this.currentUser = new BehaviorSubject<Auth>(authData).asObservable();
+    // this.currentUser = new BehaviorSubject<Auth>(authData).asObservable();
     return new BehaviorSubject<Auth>(authData).asObservable();//authData;
   }
   requestImplicitGrantToken(url) {
@@ -69,7 +69,9 @@ export class AuthService {
       `${url}/api/oauth/authorize?client_id=4&redirect_uri=/callback&response_type=token&scope`
     );
   }
-
+  register(user) {
+    return this.http.post(`${user.apiUrl}/api/oauth/register`, user);
+  }
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('authData');
@@ -103,5 +105,17 @@ export class AuthService {
   userHasRole(permission) {
     const authData = this.getUserData();
     return authData.user.roles.includes(permission);
+  }
+  activateAccount(account) {
+    return this.http.post(`${account.apiUrl}/api/oauth/activate-account`, account);
+  }
+  reset(user) {
+    return this.http.post(`${user.apiUrl}/api/oauth/password-reset/create`, user);
+  }
+  resetCodeFind(user) {
+    return this.http.get<any>(`${user.apiUrl}/api/oauth/password-reset/find/${user.token}`);
+  }
+  resetPassword(user) {
+    return this.http.post(`${user.apiUrl}/api/oauth/password-reset/reset`, user);
   }
 }

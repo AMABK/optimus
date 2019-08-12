@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnInit
 import { Router, ActivatedRoute, NavigationEnd, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { Auth } from '../../models/auth/auth';
+import { MessageService } from '../../http/message/message.service';
 
 @Component({
   selector: "app-header",
@@ -18,10 +19,14 @@ export class HeaderComponent implements OnInit {
   @Input() userData;
   currentUser: Auth;
   currentRoute: any;
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService) {
+  messageCount;
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService,private messageService:MessageService) {
 
   }
   ngOnInit() {
+    // this.messageService.getChamaUserMessageCount().subscribe(res => {
+    //   //this.messageCount = res.data;
+    // })
     //this.defaultChamaName = JSON.parse(localStorage.getItem('authData')).user.default_chama.name;
   }
   ngAfterViewInit() {

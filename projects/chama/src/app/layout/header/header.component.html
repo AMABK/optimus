@@ -11,8 +11,8 @@
     </span>
   </span>
   <span class="spacer"></span>
-  <button mat-icon-button [matMenuTriggerFor]="notification">
-    <mat-icon matBadge="0" matBadgeColor="accent">notifications_on</mat-icon>
+  <button *ngIf="userData" mat-icon-button [matMenuTriggerFor]="notification">
+    <mat-icon matBadgeColor="accent">notifications_on</mat-icon>
   </button>
   <mat-menu #notification="matMenu">
     <button mat-menu-item>

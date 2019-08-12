@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { Auth } from './models/auth/auth';
 import { LoaderService } from 'projects/loader/src/public_api';
+import { RequestJoinGroupComponent } from './shared/request-join-group/request-join-group.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-root',
@@ -84,6 +86,7 @@ export class AppComponent implements OnInit {
     },
     { path: '/disputes', icon: 'flare', label: 'Disputes', designation: 'user' },
     { path: '/insights', icon: 'pie_chart', label: 'Insights', designation: 'user' },
+    { path: '/group', icon: 'group', label: 'Group', designation: 'user' },
     { path: '/admin', icon: '', label: 'Administration', designation: 'admin' },
     { path: '/admin/users', icon: 'person', label: 'Manage Users', designation: 'admin' },
     { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups', designation: 'admin' },
@@ -103,12 +106,21 @@ export class AppComponent implements OnInit {
     public loaderService: LoaderService,
     private ns: NotificationService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {
     this.authService.currentUser.subscribe(x => (this.currentUser = x));
+    // subscribe to router events and send page views to Google Analytics
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        //ga('set', 'page', event.urlAfterRedirects);
+        //ga('send', 'pageview');
+      }
+    });
   }
 
   ngOnInit() {
+    
     if (this.loaderService.isLoading.getValue()) {
       // console.log(this.loaderService.isLoading.getValue());
     } else {
@@ -120,7 +132,9 @@ export class AppComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['login']);
   }
-
+  spinner() {
+    this.loaderService.isLoading.getValue()
+}
   prepareRouterState(router: RouterOutlet) {
     return router.activatedRouteData['animation'] || 'initial';
   }
