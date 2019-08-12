@@ -56,11 +56,6 @@
           <button type="submit" class="regButton" mat-raised-button
             color="primary">Register</button>
         </mat-card-actions>
-        <mat-card-actions>
-          <a class="nav-link" style="cursor: pointer;text-decoration-line: underline;"
-            (click)="showReset()">Forgot
-            password ?</a>
-        </mat-card-actions>
       </form>
 
       <form (submit)="reset()" *ngIf="showResetForm">
