@@ -66,7 +66,7 @@
       <form (submit)="reset()" *ngIf="showResetForm">
         <mat-card-content>
           <mat-form-field>
-            <input matInput placeholder="Email" [(ngModel)]="userLogin.email" type="text" name="email">
+            <input matInput placeholder="Email" [(ngModel)]="userReset.email" type="text" name="email">
           </mat-form-field>
         </mat-card-content>
         <mat-card-actions>
@@ -74,18 +74,17 @@
           <button type="submit"  class="regButton" mat-raised-button
             color="primary">Reset Password</button>
         </mat-card-actions>
-        <mat-card-actions>
-          <a class="nav-link" style="cursor: pointer;text-decoration-line: underline;"
-            (click)="showReset()">Forgot
-            password ?</a>
-        </mat-card-actions>
       </form>
 
-      <form (submit)="resetCode()" *ngIf="showResetCodeForm">
+      <form (submit)="resetPassword()" *ngIf="showResetPasswordForm">
         <mat-card-content>
-          <mat-form-field>
-            <input matInput placeholder="code" [(ngModel)]="userLogin.code" type="text" name="code">
-          </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Password" [(ngModel)]="userResetPassword.password" type="password" name="password">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput placeholder="Confirm Password" [(ngModel)]="userResetPassword.confirmPassword" type="password"
+                name="confirmPassword">
+            </mat-form-field>
         </mat-card-content>
         <mat-card-actions>
           <button type="button" (click)="showLogin()" mat-raised-button color="primary">Login</button>

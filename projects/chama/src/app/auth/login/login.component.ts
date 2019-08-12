@@ -42,21 +42,24 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   userLogin = { email: '', password: '' };
   userRegister = { email: '', password: '', confirmPassword: '', firstName: '', lastName: '' };
   userReset = { email: '' };
+  userResetCodeFind= { token: '' };
+  userResetPassword = { email: '', token: '', password: '', confirmPassword: '' };
   loading = false;
   private currentUserSubject: BehaviorSubject<Auth>;
   public currentUser: Auth;
   showLoginForm = true;
   showResetForm = false;
   showRegisterForm = false;
-  showResetCodeForm = false;
-  formTitle = 'Login | Register'
+  showResetPasswordForm = false;
+  formTitle = 'Login | Register';
+  apiUrl: string = environment.apiUrl;
   constructor(
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private notificationService: NotificationService,
   ) {
-    this.route.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe(params => {
       if (params["loginType"] === "social") {
         if (params["status"] === "error") {
           this.notificationService.emit(params["message"]);
@@ -74,8 +77,27 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy() {
   }
   ngOnInit() {
+    this.activatedRoute.paramMap.subscribe(urlParams => {
+      this.userResetCodeFind.token = urlParams.get("token");
+      if (this.userResetCodeFind.token.length > 10) {
+        const user = {
+          apiUrl: this.apiUrl,
+          token: this.userResetCodeFind.token
+        }
+        this.authService.resetCodeFind(user)
+          .subscribe(res => {
+            this.notificationService.emit('Enter new password','success');
+            this.userResetPassword.email = res.email;
+            this.userResetPassword.token = res.token;
+            this.showResetPassword();
+          }, error => {
+            this.notificationService.emit('Error occured while resetting password.');
+            this.showReset()
+          });
+      }
+    })
     //console.log(this.route.snapshot.parent.url[0].path)
-    this.routeTo = this.route.snapshot.queryParams.returnUrl || 'people';
+    this.routeTo = this.activatedRoute.snapshot.queryParams.returnUrl || 'people';
     if (this.authService.currentUserValue) {
       this.router.navigate(['/home']);
     }
@@ -139,58 +161,66 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
   reset() {
-    this.authService.getClientSecret(environment.apiUrl, environment.clientId, environment.hostUrl).subscribe(result => {
-      const clientId = result.client_id;
-      const clientSecret = result.client_secret;
-      this.authService.login(environment.apiUrl + '/api/oauth/token', this.userRegister.email, this.userRegister.password, clientId, clientSecret)
-        .subscribe(res => {
-          this.showResetCode()
-        }, error => {
-          this.showReset()
-        });
-    });
+    const user = {
+      apiUrl: this.apiUrl,
+      email: this.userReset.email
+    }
+    this.authService.reset(user)
+      .subscribe(res => {
+        this.notificationService.emit('Password reset link sent to your email', 'success');
+        this.showReset()
+      }, error => {
+        if (error.status == 403) {
+          this.notificationService.emit(error.message.message);
+        } else {
+          this.notificationService.emit('Invalid link')
+        }
+        this.showReset()
+      });
   }
-  resetCode() {
-    this.authService.getClientSecret(environment.apiUrl, environment.clientId, environment.hostUrl).subscribe(result => {
-      const clientId = result.client_id;
-      const clientSecret = result.client_secret;
-      this.authService.login(environment.apiUrl + '/api/oauth/token', this.userRegister.email, this.userRegister.password, clientId, clientSecret)
-        .subscribe(authData => {
-          if (authData && authData.access_token) {
-            this.router.navigate(['/home']);
-          }
-        }, error => {
-          this.showResetCode()
-        });
-    });
+  resetPassword() {
+    const user = {
+      apiUrl:this.apiUrl,
+      email: this.userResetPassword.email,
+      token: this.userResetPassword.token,
+      password: this.userResetPassword.password,
+      password_confirmation: this.userResetPassword.confirmPassword
+    }
+    this.authService.resetPassword(user)
+      .subscribe(res => {
+        this.notificationService.emit('Password reset successfully','success');
+        this.router.navigate(['login']);
+      }, error => {
+        this.notificationService.emit('Error occured while resetting password.');
+          this.showResetPassword()
+      });
   }
-
   showRegister() {
     this.formTitle = 'Login | Register';
     this.showLoginForm = false;
     this.showResetForm = false;
     this.showRegisterForm = true;
-    this.showResetCodeForm = false;
+    this.showResetPasswordForm = false;
   }
   showReset() {
     this.formTitle = 'Reset Password'
     this.showLoginForm = false;
     this.showResetForm = true;
     this.showRegisterForm = false;
-    this.showResetCodeForm = false;
+    this.showResetPasswordForm = false;
   }
   showLogin() {
     this.formTitle = 'Login | Register';
     this.showLoginForm = true;
     this.showResetForm = false;
     this.showRegisterForm = false;
-    this.showResetCodeForm = false;
+    this.showResetPasswordForm = false;
   }
-  showResetCode() {
+  showResetPassword() {
     this.formTitle = 'Reset Password';
     this.showLoginForm = false;
     this.showResetForm = false;
     this.showRegisterForm = false;
-    this.showResetCodeForm = true;
+    this.showResetPasswordForm = true;
   }
 }

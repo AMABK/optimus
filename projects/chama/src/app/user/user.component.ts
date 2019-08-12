@@ -11,21 +11,18 @@ import { AuthService } from 'projects/auth/src/public_api';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  code = '';
-  activationCode = '';
-  email = '';
-  activationEmail = '';
-  constructor(private authService:AuthService, private router: Router, private activatedRoute: ActivatedRoute, private userService: UserService, private notificationService: NotificationService) { }
+  code = null;
+  activationCode = null;
+  email = null;
+  activationEmail = null;
+  constructor(private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute, private userService: UserService, private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(urlParams => {
       this.code = urlParams.get("code")
       this.activatedRoute.queryParams.subscribe(queryParams => {
         this.email = queryParams['email'];
-        const request = {
-          email: this.email,
-          code: this.code
-        }
+
         this.activationCode = urlParams.get("activationCode");
         this.activationEmail = urlParams.get("email");
         if (this.activationCode != '') {
@@ -34,28 +31,35 @@ export class UserComponent implements OnInit {
             activation_code: this.activationCode,
             email: this.activationEmail
           }
-          this.authService.activateAccount(account).subscribe(res=>{
-            this.notificationService.emit('Account activated!','success')
-            this.router.navigate(['login']);
-          }, error => {
-              this.notificationService.emit('Account activation failed, invalid url')
-          })
+          this.activateAccount(account);
         }
 
-        if ((this.code != '')&& (this.code != null)) {
-          this.userService.acceptGroupInviteRequest(request).subscribe(res => {
-            this.notificationService.emit(res.message, 'success');
-          }, error => {
-            this.notificationService.emit('Invalid request could not be processed');
-          });
+        if (this.code != null) {
+          const request = {
+            email: this.email,
+            code: this.code
+          }
+          this.acceptGroupInviteRequest(request);
         }
-
       });
     });
     this.router.navigate(['home']);
   }
-  acceptGroupInviteRequest() {
-
+  acceptGroupInviteRequest(request) {
+    this.userService.acceptGroupInviteRequest(request).subscribe(res => {
+      this.notificationService.emit(res.message, 'success');
+    }, error => {
+      this.notificationService.emit('Invalid request could not be processed');
+    });
+    this.router.navigate(['home']);
   }
-
+  activateAccount(account) {
+    this.authService.activateAccount(account).subscribe(res => {
+      this.notificationService.emit('Account activated!', 'success')
+      this.authService.logout();
+      this.router.navigate(['login']);
+    }, error => {
+      this.notificationService.emit('Account activation failed, invalid url')
+    })
+  }
 }
