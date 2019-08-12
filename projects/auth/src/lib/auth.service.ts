@@ -113,7 +113,7 @@ export class AuthService {
     return this.http.post(`${user.apiUrl}/api/oauth/password-reset/create`, user);
   }
   resetCodeFind(user) {
-    return this.http.get(`${user.apiUrl}/api/oauth/password-reset/find/${user.token}`);
+    return this.http.get<any>(`${user.apiUrl}/api/oauth/password-reset/find/${user.token}`);
   }
   resetPassword(user) {
     return this.http.post(`${user.apiUrl}/api/oauth/password-reset/reset`, user);
