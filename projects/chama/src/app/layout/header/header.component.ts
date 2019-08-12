@@ -24,9 +24,9 @@ export class HeaderComponent implements OnInit {
 
   }
   ngOnInit() {
-    this.messageService.getChamaUserMessageCount().subscribe(res => {
-      //this.messageCount = res.data;
-    })
+    // this.messageService.getChamaUserMessageCount().subscribe(res => {
+    //   //this.messageCount = res.data;
+    // })
     //this.defaultChamaName = JSON.parse(localStorage.getItem('authData')).user.default_chama.name;
   }
   ngAfterViewInit() {

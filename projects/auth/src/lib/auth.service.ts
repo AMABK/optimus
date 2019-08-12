@@ -69,7 +69,9 @@ export class AuthService {
       `${url}/api/oauth/authorize?client_id=4&redirect_uri=/callback&response_type=token&scope`
     );
   }
-
+  register(user) {
+    return this.http.post(`${user.apiUrl}/api/oauth/register`, user);
+  }
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('authData');
@@ -103,5 +105,8 @@ export class AuthService {
   userHasRole(permission) {
     const authData = this.getUserData();
     return authData.user.roles.includes(permission);
+  }
+  activateAccount(account) {
+    return this.http.post(`${account.apiUrl}/api/oauth/activate-account`, account);
   }
 }

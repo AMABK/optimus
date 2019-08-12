@@ -12,6 +12,10 @@ const routes: Routes = [
     component: UserComponent,
   },
   {
+    path: 'activate-account/:activationCode/email/:email',
+    component: UserComponent,
+  },
+  {
     path: '',
     component: UserComponent,
     canActivate: [AuthGuard],

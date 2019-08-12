@@ -8,6 +8,7 @@ import {
   switchMap
 } from "rxjs/operators";
 import { HttpClient } from '@angular/common/http';
+import { User } from '../../models/user/user';
 
 @Injectable({
   providedIn: 'root'
@@ -169,4 +170,14 @@ export class UserService {
   acceptGroupInviteRequest(request) {
     return this.http.post<any>(`${this.apiUrl}/api/user/accept-group-invite-request`, request);
   }
+  updateUserProfile(user) {
+    return this.http.post<User[]>(`${this.apiUrl}/api/user/update-user-profile`, user);
+  }
+  changePassword(user) {
+    return this.http.post<User[]>(`${this.apiUrl}/api/user/change-password`, user);
+  }
+  getUser(userId) {
+    return this.http.get(`${this.apiUrl}/api/user/${userId}/get-user`);
+  }
+
 }
