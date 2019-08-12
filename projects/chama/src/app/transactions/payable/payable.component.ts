@@ -8,6 +8,7 @@ import { DepositService } from '../../http/deposit/deposit.service';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
 import { ExportPdf } from 'projects/export-pdf/src/public-api';
+import { AuthService } from 'projects/auth/src/public_api';
 
 @Component({
   selector: 'app-payable',
@@ -60,6 +61,7 @@ export class PayableComponent implements OnInit {
   pageEvent: PageEvent;
   private subscription: Subscription = new Subscription();
   constructor(
+    private authService: AuthService,
     private depositService: DepositService,
     public dialog: MatDialog,
     private exportPdf: ExportPdf
@@ -287,5 +289,8 @@ export class PayableComponent implements OnInit {
     }
     const head = ['No.', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
     this.exportPdf.createPDF(data, head, 'landscape');
+  }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
   }
 }

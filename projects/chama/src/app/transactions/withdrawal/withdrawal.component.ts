@@ -9,6 +9,7 @@ import { ExportPdf } from 'projects/export-pdf/src/public-api';
 import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { AuthService } from 'projects/auth/src/public_api';
 
 @Component({
   selector: "app-withdrawal",
@@ -58,7 +59,7 @@ export class WithdrawalComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private router: Router, private dialog: MatDialog, private depositService: DepositService,private exportPdf: ExportPdf) {}
+  constructor(private authService: AuthService, private router: Router, private dialog: MatDialog, private depositService: DepositService,private exportPdf: ExportPdf) {}
   ngOnInit() {
     this.depositService
       .search(this.searchTerm$, "withdrawal")
@@ -279,5 +280,8 @@ export class WithdrawalComponent implements OnInit {
     }
     const head = ['No.', 'Bank','Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
     this.exportPdf.createPDF(data, head, 'landscape');
+  }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
   }
 }

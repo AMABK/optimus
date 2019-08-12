@@ -32,6 +32,11 @@ const routes: Routes = [
       import('./disputes/disputes.module').then(m => m.DisputesModule)
   },
   {
+    path: 'group',
+    loadChildren: () =>
+      import('./group/group.module').then(m => m.GroupModule)
+  },
+  {
     path: 'admin/users',
     loadChildren: () =>
       import('./admin/users/users.module').then(m => m.UsersModule)

@@ -187,7 +187,11 @@ export class NotificationComponent implements OnInit {
   backToNotifications() {
     this.subTitle = "";
     this.newMessage = false;
-    this.mailThread=false;
+    this.mailThread = false;
+    if (this.checked == true) {
+      this.selectAllStatus = false;
+    }
+    this.checked = false;
   }
   recallSentMessage() {
     this.sentMessages = !this.sentMessages;

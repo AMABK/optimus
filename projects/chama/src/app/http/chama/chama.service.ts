@@ -112,4 +112,12 @@ export class ChamaService {
   delete(chama: Chama) {
     return this.http.delete(this.getUrlForId(chama.id));
   }
+  joinGroupByInviteCode(invite){
+    return this.http.post(
+      `${environment.apiUrl}/api/user/join-group-invite-by-code`, invite);
+  }
+  generateGroupInviteCode(chama) {
+    return this.http.post<any>(
+      `${environment.apiUrl}/api/user/generate-group-invite-code`, chama);
+  }
 }

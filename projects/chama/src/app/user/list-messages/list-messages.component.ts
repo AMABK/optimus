@@ -145,8 +145,8 @@ export class ListMessagesComponent implements OnInit, OnDestroy {
   getUserMessageStatus(user_messages) {
     for (let user_message of user_messages) {
       if (user_message.id == this.authService.getUserId()) {
+        console.log(user_message)
         switch (user_message.pivot.status) {
-          
           case 0:
             return 'email';
             break;

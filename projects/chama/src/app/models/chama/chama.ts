@@ -8,6 +8,7 @@ export class Chama {
     description: string;
     createdBy: number;
     status: number;
+    invite_code?: number;
     createdAt?: string;
     updatedAt?: string;
 }

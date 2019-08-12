@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class LoaderService {
   public isLoading = new BehaviorSubject(false);
   setLoading(arg0: boolean) {
-    this.isLoading.next(false);
+    this.isLoading.next(arg0);
   }
   constructor() { }
   ngOnDestroy(): void {
