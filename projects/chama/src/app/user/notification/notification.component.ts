@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable, Subscription, Subject } from 'rxjs';
@@ -18,7 +18,7 @@ import { MessageService } from '../../http/message/message.service';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent implements OnInit,OnDestroy {
   subscription: Subscription = new Subscription();
   checked = false;
   inbox = 'inbox';
@@ -55,6 +55,9 @@ export class NotificationComponent implements OnInit {
   chama_id = new FormControl(this.authService.getUserData().user.chama_id, [Validators.required]);
   matcher = new FormErrorService();
   ngOnInit() {
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
     switch (model) {

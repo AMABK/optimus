@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
@@ -6,14 +6,15 @@ import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChangeDebitStatusComponent } from '../change-debit-status/change-debit-status.component';
 import { DepositService } from '../../http/deposit/deposit.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-change-deposit-status',
   templateUrl: './change-deposit-status.component.html',
   styleUrls: ['./change-deposit-status.component.css']
 })
-export class ChangeDepositStatusComponent implements OnInit {
-
+export class ChangeDepositStatusComponent implements OnInit,OnDestroy {
+  private subscription: Subscription = new Subscription();
   reason = new FormControl("", [Validators.required, Validators.minLength(4)]);
   status = new FormControl("", [Validators.required]);
   deposit_id = new FormControl(this.data.element.id, [Validators.required]);
@@ -66,7 +67,7 @@ export class ChangeDepositStatusComponent implements OnInit {
       owner_id: this.authService.getUserData().user.id,
       deposit_id: depositId
     }
-    this.depositService.deleteDeposit(depositData).subscribe(
+    this.subscription.add(this.depositService.deleteDeposit(depositData).subscribe(
       result => {
         // set message to be emitted by loader interceptor after http requests end
         this.loaderIService.storeNotificationMessage(
@@ -78,10 +79,13 @@ export class ChangeDepositStatusComponent implements OnInit {
       error => {
         //this.loaderIService.storeNotificationMessage("Request failed, please try again!", 'danger');
       }
-    );
+    ));
   }
   ngOnInit() {
 
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   userHasRole(role) {
     return this.authService.userHasRole(role)

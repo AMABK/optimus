@@ -1,17 +1,19 @@
-import { OnInit, Inject, Component } from '@angular/core';
+import { OnInit, Inject, Component, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { DebitService } from '../../http/debit/debit.service';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: "app-request-debit-dialog",
   templateUrl: "./request-debit-dialog.component.html",
   styleUrls: ["./request-debit-dialog.component.css"]
 })
-export class RequestDebitDialogComponent implements OnInit {
+export class RequestDebitDialogComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   chamaData: any;
   debitRequest: any;
   constructor(
@@ -38,9 +40,12 @@ export class RequestDebitDialogComponent implements OnInit {
     this.chamaData = {
       name:''
     }
-    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+    this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
-    });
+    }));
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   onSubmit() {
     if (
@@ -72,7 +77,7 @@ export class RequestDebitDialogComponent implements OnInit {
     }
   }
   createLoanRequest(loan) {
-    this.debitService.createDebitRequest(loan).subscribe(
+    this.subscription.add(this.debitService.createDebitRequest(loan).subscribe(
       response => {
         this.notificationService.emit(
           "Debit request successful",
@@ -81,15 +86,15 @@ export class RequestDebitDialogComponent implements OnInit {
         this.dialogRef.close("success");
       },
       error => {}
-    );
+    ));
   }
   updateLoanRequest(loan) {
-    this.debitService.updateDebitRequest(loan).subscribe(
+    this.subscription.add(this.debitService.updateDebitRequest(loan).subscribe(
       response => {
         this.dialogRef.close("success");
       },
       error => {}
-    );
+    ));
   }
   closeRequestLoan(): void {
     this.dialogRef.close();

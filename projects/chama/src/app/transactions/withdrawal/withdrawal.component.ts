@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { Subject } from 'rxjs';
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
+import { Subject, Subscription } from 'rxjs';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,7 +16,8 @@ import { AuthService } from 'projects/auth/src/public_api';
   templateUrl: "./withdrawal.component.html",
   styleUrls: ["./withdrawal.component.css"]
 })
-export class WithdrawalComponent implements OnInit {
+export class WithdrawalComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   searchTerm$ = new Subject<any>();
   paginationData: any;
   asAdmin = "no";
@@ -61,7 +62,7 @@ export class WithdrawalComponent implements OnInit {
   pageEvent: PageEvent;
   constructor(private authService: AuthService, private router: Router, private dialog: MatDialog, private depositService: DepositService,private exportPdf: ExportPdf) {}
   ngOnInit() {
-    this.depositService
+    this.subscription.add(this.depositService
       .search(this.searchTerm$, "withdrawal")
       .subscribe(response => {
         if (this.download != 'download') {
@@ -93,7 +94,10 @@ export class WithdrawalComponent implements OnInit {
           this.downloadPDF(response.data);
           this.download = '';
         }
-      });
+      }));
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
     switch (model) {

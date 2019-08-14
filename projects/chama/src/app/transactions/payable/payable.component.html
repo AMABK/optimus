@@ -46,7 +46,7 @@
                     status.display
                   }}</option>
         </select>
-        <select class="input-field select" (ngModelChange)="handleSearch($event,'asAdmin')" [(ngModel)]="asAdmin">
+        <select [disabled]="!userHasRole('group-admin')" class="input-field select" (ngModelChange)="handleSearch($event,'asAdmin')" [(ngModel)]="asAdmin">
           <option value="no">Non Group Admin</option>
           <option value="yes">Group Admin</option>
         </select>

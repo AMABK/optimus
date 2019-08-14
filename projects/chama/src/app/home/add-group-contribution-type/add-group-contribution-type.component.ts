@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { ChamaService } from '../../http/chama/chama.service';
 import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
@@ -7,13 +7,15 @@ import { InviteGroupMembersComponent } from '../invite-group-members/invite-grou
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-group-contribution-type',
   templateUrl: './add-group-contribution-type.component.html',
   styleUrls: ['./add-group-contribution-type.component.css']
 })
-export class AddGroupContributionTypeComponent implements OnInit {
+export class AddGroupContributionTypeComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   constructor(
     private chamaService: ChamaService,
     private authService: AuthService,
@@ -32,6 +34,9 @@ export class AddGroupContributionTypeComponent implements OnInit {
   matcher = new FormErrorService();
 
   ngOnInit() { }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   registerChama(form) {
   }
 
@@ -49,12 +54,12 @@ export class AddGroupContributionTypeComponent implements OnInit {
     }
   }
   createContributionType(currentContributionType) {
-    this.chamaService.createContributionType(currentContributionType).subscribe(
+    this.subscription.add(this.chamaService.createContributionType(currentContributionType).subscribe(
       response => {
         this.dialogRef.close('success');
       },
       error => { }
-    );
+    ));
   }
   closeAddGroupContributionTypesDialog(): void {
     this.dialogRef.close();

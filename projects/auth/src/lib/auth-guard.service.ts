@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Router, CanActivate, RouterStateSnapshot, UrlTree, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
-  constructor(public authService: AuthService, public router: Router) { }
+  constructor(public authService: AuthService, public router: Router, private dialogRef: MatDialog) { }
 
   // canActivate(
   //   next: ActivatedRouteSnapshot,
@@ -32,6 +33,7 @@ export class AuthGuardService implements CanActivate {
     }
     // not logged in so redirect to login page with the return url
     //this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    this.dialogRef.closeAll();
     return false;
   } 
 }

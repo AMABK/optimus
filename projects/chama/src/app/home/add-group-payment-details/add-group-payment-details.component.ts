@@ -1,5 +1,5 @@
-import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, Output, EventEmitter, Inject, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Chama } from '../../models/chama/chama';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
@@ -28,7 +28,8 @@ const emptyChama: Chama = {
   templateUrl: "./add-group-payment-details.component.html",
   styleUrls: ["./add-group-payment-details.component.css"]
 })
-export class AddGroupPaymentDetailsComponent implements OnInit {
+export class AddGroupPaymentDetailsComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   list = [
     { value: "0", viewValue: "Active " },
     { value: "1", viewValue: "In Active" }
@@ -107,6 +108,9 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
     });
     //alert(JSON.stringify(this.data.key));
   }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   registerChama(form) {}
 
   onSubmit() {
@@ -140,20 +144,20 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
     }
   }
   createChamaPaymentMode(paymentMode) {
-    this.chamaService.createPaymentMode(paymentMode).subscribe(
+    this.subscription.add(this.chamaService.createPaymentMode(paymentMode).subscribe(
       response => {
         this.dialogRef.close("success");
       },
       error => {
         this.notificationService.emit("Payment mode creation failed!");
       }
-    );
+    ));
   }
   closeAddGroupPaymentDialog(): void {
     this.dialogRef.close();
   }
   updateChamaPaymentMode(chama) {
-    this.chamaService.updatePaymentMode(chama).subscribe(
+    this.subscription.add(this.chamaService.updatePaymentMode(chama).subscribe(
       response => {
         this.dialogRef.close("success");
         this.getChama();
@@ -161,7 +165,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit {
       error => {
         this.notificationService.emit("Chama payment creation failed!");
       }
-    );
+    ));
   }
 
   getChama() {

@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.component';
-import { Subject, BehaviorSubject, Observable } from 'rxjs';
+import { Subject, BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { User } from '../models/user/user';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -18,7 +18,8 @@ import { Router } from '@angular/router';
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.css']
 })
-export class TransactionsComponent implements OnInit {
+export class TransactionsComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   searchTerm$ = new Subject<any>();
   paginationData: any;
   pFromDate = '';
@@ -67,7 +68,7 @@ export class TransactionsComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.getDefaultChamaDetails();
-    this.depositService
+    this.subscription.add(this.depositService
       .search(this.searchTerm$, 'deposit')
       .subscribe(response => {
         this.paginationData = {
@@ -90,7 +91,10 @@ export class TransactionsComponent implements OnInit {
           }
         };
         this.depositDataSource.sort = this.sort;
-      });
+      }));
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
     switch (model) {
@@ -211,7 +215,7 @@ export class TransactionsComponent implements OnInit {
     });
   }
   getDefaultChamaDetails() {
-    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+    this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
       const authData = this.authService.getUserData();
       authData.user.chama_id = result.chama_id;
@@ -236,7 +240,7 @@ export class TransactionsComponent implements OnInit {
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama = this.chamaSubject.asObservable();
-    });
+    }));
   }
   openAddDepositDialog() {
     this.chama.subscribe(res => {

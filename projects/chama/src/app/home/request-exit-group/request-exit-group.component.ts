@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Chama } from '../../models/chama/chama';
 import { Validators, FormControl } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from 'projects/auth/src/public_api';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { ChamaService } from '../../http/chama/chama.service';
 import { environment } from 'projects/chama/src/environments/environment';
@@ -27,7 +27,8 @@ const emptyChama: Chama = {
   templateUrl: "./request-exit-group.component.html",
   styleUrls: ["./request-exit-group.component.css"]
 })
-export class RequestExitGroupComponent implements OnInit {
+export class RequestExitGroupComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   chama$: Observable<Chama>;
   currentChama: Chama;
   activeButton: boolean = true;
@@ -51,7 +52,10 @@ export class RequestExitGroupComponent implements OnInit {
 
   matcher = new FormErrorService();
 
-  ngOnInit() {}
+  ngOnInit() { }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   registerChama(form) {
     //console.log(form.value);
   }
@@ -86,22 +90,22 @@ export class RequestExitGroupComponent implements OnInit {
     }
   }
   createChama(chama) {
-    this.chamaService.create(chama).subscribe(
+    this.subscription.add(this.chamaService.create(chama).subscribe(
       response => {
         this.closeRequestExitGroupDialog();
         this.getChama();
         this.resetCurrentChama();
       },
       error => {}
-    );
+    ));
   }
 
   updateChama(chama) {
-    this.chamaService.update(chama).subscribe(response => {
+    this.subscription.add(this.chamaService.update(chama).subscribe(response => {
       this.getChama();
       this.resetCurrentChama();
       this.notificationService.emit("Chama details saved!");
-    });
+    }));
   }
   resetCurrentChama() {
     this.currentChama = emptyChama;
