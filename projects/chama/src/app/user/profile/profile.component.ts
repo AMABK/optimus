@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
 import { UserService } from '../../http/user/user.service';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { User } from '../../models/user/user';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   user: any = [];
   public currentUserSubject: BehaviorSubject<any> = new BehaviorSubject([]);;
   public currentUser: Observable<User>;
@@ -53,11 +54,12 @@ export class ProfileComponent implements OnInit {
 
   matcher = new FormErrorService();
   ngOnInit() {
-
-
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   onSubmitUpdateProfile() {
-    console.log(this.firstName.value)
+    //console.log(this.firstName.value)
     if (this.firstName.valid && this.middleName.valid && this.lastName && this.phoneNumber.valid && this.gender.valid && this.email.valid && this.address.valid) {
       const user = {
         first_name: this.firstName.value,
@@ -68,7 +70,7 @@ export class ProfileComponent implements OnInit {
         gender: this.gender.value,
         email: this.email.value,
       };
-      this.userService.updateUserProfile(user).subscribe(res => {
+      this.subscription.add(this.userService.updateUserProfile(user).subscribe(res => {
         let authData = this.authService.getUserData();
         authData.user.first_name = this.firstName.value;
         authData.user.last_name = this.lastName.value;
@@ -84,7 +86,7 @@ export class ProfileComponent implements OnInit {
         } else {
           this.notificationService.emit('Profile updated failed');
         }
-      })
+      }));
     }
   }
   onSubmitChangePassword() {

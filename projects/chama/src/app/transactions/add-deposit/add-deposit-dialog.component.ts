@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, Inject, NgZone } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild, Inject, NgZone, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Chama } from '../../models/chama/chama';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { NotificationService } from 'projects/notification/src/public_api';
@@ -18,7 +18,8 @@ import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public
   templateUrl: "./add-deposit-dialog.component.html",
   styleUrls: ["./add-deposit-dialog.component.css"]
 })
-export class AddDepositDialogComponent implements OnInit {
+export class AddDepositDialogComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   maxPaymentDate = new Date();
   chama$: Observable<Chama>;
   currentDeposit: any;
@@ -69,12 +70,15 @@ export class AddDepositDialogComponent implements OnInit {
     this.chamaData={
       name:''
     }
-    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+    this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
-    });
-    this.depositService.getContributionType('deposit',null).subscribe(result => {
+    }));
+    this.subscription.add(this.depositService.getContributionType('deposit',null).subscribe(result => {
       this.depositTypes = result;
-    });
+    }));
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   registerChama(form) {
     //console.log(form.value);
@@ -109,7 +113,7 @@ export class AddDepositDialogComponent implements OnInit {
     }
   }
   createDeposit(deposit) {
-    this.depositService.createDeposit(deposit).subscribe(
+    this.subscription.add(this.depositService.createDeposit(deposit).subscribe(
       response => {
         this.loaderIService.storeNotificationMessage(
           "Transaction successful",
@@ -118,7 +122,7 @@ export class AddDepositDialogComponent implements OnInit {
         this.dialogRef.close("success");
       },
       error => {}
-    );
+    ));
   }
 
   updateDeposit(chama) {

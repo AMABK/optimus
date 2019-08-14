@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -11,13 +11,14 @@ import { ExportPdf } from 'projects/export-pdf/src/public-api';
 import { DebitService } from '../../http/debit/debit.service';
 import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
 import { ChangeDebitStatusComponent } from '../change-debit-status/change-debit-status.component';
+import { AuthService } from 'projects/auth/src/public_api';
 
 @Component({
   selector: 'app-debit-request',
   templateUrl: './debit-request.component.html',
   styleUrls: ['./debit-request.component.css']
 })
-export class DebitRequestComponent implements OnInit {
+export class DebitRequestComponent implements OnInit,OnDestroy {
   subscription: Subscription = new Subscription();
   searchTerm$ = new Subject<any>();
   paginationData: any;
@@ -68,10 +69,14 @@ export class DebitRequestComponent implements OnInit {
   constructor(
     private debitService: DebitService,
     public dialog: MatDialog,
-    private exportPdf: ExportPdf
+    private exportPdf: ExportPdf,
+    private authService:AuthService
   ) { }
   ngOnInit() {
     this.getDebitRequests();
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   getDebitRequests() {
     this.subscription.add(this.debitService
@@ -292,5 +297,8 @@ export class DebitRequestComponent implements OnInit {
         this.handleSearch(this.asAdmin, 'asAdmin');
       }
     });
+  }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
   }
 }
