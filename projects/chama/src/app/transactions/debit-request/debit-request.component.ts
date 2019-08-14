@@ -11,6 +11,7 @@ import { ExportPdf } from 'projects/export-pdf/src/public-api';
 import { DebitService } from '../../http/debit/debit.service';
 import { RequestDebitDialogComponent } from '../request-debit-dialog/request-debit-dialog.component';
 import { ChangeDebitStatusComponent } from '../change-debit-status/change-debit-status.component';
+import { AuthService } from 'projects/auth/src/public_api';
 
 @Component({
   selector: 'app-debit-request',
@@ -68,7 +69,8 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
   constructor(
     private debitService: DebitService,
     public dialog: MatDialog,
-    private exportPdf: ExportPdf
+    private exportPdf: ExportPdf,
+    private authService:AuthService
   ) { }
   ngOnInit() {
     this.getDebitRequests();
@@ -295,5 +297,8 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
         this.handleSearch(this.asAdmin, 'asAdmin');
       }
     });
+  }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
   }
 }
