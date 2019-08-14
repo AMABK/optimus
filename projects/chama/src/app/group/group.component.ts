@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
@@ -6,19 +6,18 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.css']
 })
-export class GroupComponent implements OnInit {
+export class GroupComponent implements OnInit,OnDestroy {
+  parentState: boolean = false;
   status = 0;
   @Output() selectedTabChange: EventEmitter<MatTabChangeEvent>;
   constructor() { }
 
   ngOnInit() {
   }
+  ngOnDestroy() {
+    
+  }
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    if ('Group Suspended Members' == tabChangeEvent.tab.textLabel) {
-      this.status = 1;
-    } else {
-      this.status = 0;
-    }
-    console.log(this.status)
+    this.status=tabChangeEvent.index;
   }
 }

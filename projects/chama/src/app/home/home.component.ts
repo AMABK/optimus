@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
   };
   LineChart: any = [];
   private chamaSubject: BehaviorSubject<User>;
-  private chama$: Observable<User>;
+   chama$: Observable<User>;
   private pieChartLabels: string[] = [
     "Pending",
     "InProgress",
@@ -166,68 +166,68 @@ export class HomeComponent implements OnInit {
       secondCtrl: ["", Validators.required]
     });
     // Line chart:
-    this.LineChart = new Chart("lineChart", {
-      type: "line",
-      data: {
-        labels: [
-          "Jan",
-          "Feb",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec"
-        ],
-        datasets: [
-          {
-            label: "Total contributions(KES)",
-            data: [9, 7, 3, 5, 2, 10, 15, 16, 19, 3, 1, 9],
-            fill: false,
-            lineTension: 0.2,
-            borderColor: "red",
-            borderWidth: 1
-          },
-          {
-            label: "Total saving(KES)",
-            data: [0, 7, 3, 4, 2, 18, 5, 16, 1, 3, 1, 9],
-            fill: false,
-            lineTension: 0.2,
-            borderColor: "green",
-            borderWidth: 1
-          },
-          {
-            label: "Other Ccontributions(KES)",
-            data: [8, 6, 3, 9, 2, 10, 15, 16, 19, 9, 1, 0],
-            fill: false,
-            lineTension: 0.2,
-            borderColor: "blue",
-            borderWidth: 1
-          }
-        ]
-      },
-      options: {
-        responsive: false,
-        maintainAspectRatio: false,
-        title: {
-          text: "Line Chart",
-          display: true
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
-            }
-          ]
-        }
-      }
-    });
+    // this.LineChart = new Chart("lineChart", {
+    //   type: "line",
+    //   data: {
+    //     labels: [
+    //       "Jan",
+    //       "Feb",
+    //       "March",
+    //       "April",
+    //       "May",
+    //       "June",
+    //       "July",
+    //       "Aug",
+    //       "Sep",
+    //       "Oct",
+    //       "Nov",
+    //       "Dec"
+    //     ],
+    //     datasets: [
+    //       {
+    //         label: "Total contributions(KES)",
+    //         data: [9, 7, 3, 5, 2, 10, 15, 16, 19, 3, 1, 9],
+    //         fill: false,
+    //         lineTension: 0.2,
+    //         borderColor: "red",
+    //         borderWidth: 1
+    //       },
+    //       {
+    //         label: "Total saving(KES)",
+    //         data: [0, 7, 3, 4, 2, 18, 5, 16, 1, 3, 1, 9],
+    //         fill: false,
+    //         lineTension: 0.2,
+    //         borderColor: "green",
+    //         borderWidth: 1
+    //       },
+    //       {
+    //         label: "Other Ccontributions(KES)",
+    //         data: [8, 6, 3, 9, 2, 10, 15, 16, 19, 9, 1, 0],
+    //         fill: false,
+    //         lineTension: 0.2,
+    //         borderColor: "blue",
+    //         borderWidth: 1
+    //       }
+    //     ]
+    //   },
+    //   options: {
+    //     responsive: false,
+    //     maintainAspectRatio: false,
+    //     title: {
+    //       text: "Line Chart",
+    //       display: true
+    //     },
+    //     scales: {
+    //       yAxes: [
+    //         {
+    //           ticks: {
+    //             beginAtZero: true
+    //           }
+    //         }
+    //       ]
+    //     }
+    //   }
+    // });
   }
   formatDateInput(date) {
     if (date === "" || date == null) {

@@ -121,7 +121,7 @@ export class ChamaService {
       `${environment.apiUrl}/api/chama/generate-group-invite-code`, chama);
   }
   getGroupInviteCode(chamaId) {
-    return this.http.get(
+    return this.http.get<any>(
     `${environment.apiUrl}/api/chama/${chamaId}/get-group-invite-code`);
   }
 }

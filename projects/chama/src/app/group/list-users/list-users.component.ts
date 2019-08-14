@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -11,15 +11,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { PermissionsDialogComponent } from '../permissions-dialog/permissions-dialog.component';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-users',
   templateUrl: './list-users.component.html',
   styleUrls: ['./list-users.component.css']
 })
-export class ListUsersComponent implements OnInit {
-  subscription: Subscription = new Subscription();
+export class ListUsersComponent implements OnInit,OnChanges,OnDestroy {
+  private subscription: Subscription = new Subscription();
   @Input() userChamaStatus;
+  currentStatus;
   displayedColumns: string[] = [
     'position',
     'name',
@@ -55,11 +57,16 @@ export class ListUsersComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private userService: UserService, private dialog: MatDialog, private exportPdf: ExportPdf, private authService: AuthService, private notificationService: NotificationService) { }
+  constructor(private router: Router, private userService: UserService, private dialog: MatDialog, private exportPdf: ExportPdf, private authService: AuthService, private notificationService: NotificationService) { }
 
   ngOnInit() {
+  }
+  ngOnChanges() {
     this.getChamaUsers();
   }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+}
   getChamaUsers() {
     this.subscription.add(this.userService.searchChamaUsers(this.userChamaStatus, this.searchTerm$).subscribe(response => {
       if (this.download != 'download') {
@@ -235,6 +242,9 @@ export class ListUsersComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (result == 'success') {
+        
+      }
       console.log('dialogclosed');
     });
   }
