@@ -45,7 +45,6 @@ export class UserComponent implements OnInit, OnDestroy {
         }
       });
     }));
-    this.router.navigate(['login']);
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
