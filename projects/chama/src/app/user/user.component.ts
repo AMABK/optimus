@@ -16,6 +16,7 @@ export class UserComponent implements OnInit, OnDestroy {
   code = null;
   activationCode = null;
   email = null;
+  action = '';
   activationEmail = null;
   constructor(private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute, private userService: UserService, private notificationService: NotificationService) { }
 
@@ -47,7 +48,7 @@ export class UserComponent implements OnInit, OnDestroy {
     }));
   }
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    //this.subscription.unsubscribe();
   }
   acceptGroupInviteRequest(request) {
     this.subscription.add(this.userService.acceptGroupInviteRequest(request).subscribe(res => {
