@@ -19,7 +19,7 @@ import { AddGroupContributionComponent } from './add-group-contribution/add-grou
 import { Chama } from '../models/chama/chama';
 import { DepositService } from '../http/deposit/deposit.service';
 import * as moment from 'moment';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RequestJoinGroupComponent } from '../shared/request-join-group/request-join-group.component';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { UserService } from '../http/user/user.service';
@@ -37,6 +37,7 @@ export interface PeriodicElement1 {
   styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
+  subscription: Subscription = new Subscription();
   inviteCode: string;
   searchTerm$ = new Subject<any>();
   subscriptions: Subscription[] = [];
@@ -50,7 +51,6 @@ export class HomeComponent implements OnInit {
     "created_at",
     "verified"
   ];
-  //dataSource = ELEMENT_DATA;
   @ViewChild("lineChart", { static: true }) private chartRef;
   chart: any;
   deposits: any = [];
@@ -92,8 +92,8 @@ export class HomeComponent implements OnInit {
   };
   LineChart: any = [];
   private chamaSubject: BehaviorSubject<User>;
-  public chama: Observable<User>;
-  public pieChartLabels: string[] = [
+  private chama$: Observable<User>;
+  private pieChartLabels: string[] = [
     "Pending",
     "InProgress",
     "OnHold",
@@ -120,7 +120,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.getDefaultChamaDetails();
   }
   // events on slice click
   public chartClicked(e: any): void {
@@ -148,26 +147,24 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit() {
     this.updateInviteCode();
-    this.getDefaultUserChamaPermissions()
+    this.getDefaultChamaDetails();
     if (this.authService.getUserData().user.default_chama == null) {
       this.openRequestJoinGroupDialog();
     } else {
-      if (this.authService.getUserData().user.default_chama.invite_code == null) {
-        this.openRequestJoinGroupDialog();
-      }
+      // if (this.authService.getUserData().user.default_chama.invite_code == null) {
+      //   this.openRequestJoinGroupDialog();
+      // }
     }
 
-    this.depositService.getAllContributionTypes().subscribe(res => {
+    this.subscription.add(this.depositService.getAllContributionTypes().subscribe(res => {
       this.txnTypes$ = res;
-    });
+    }));
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ["", Validators.required]
     });
-    this.chamas$ = this.getChamas(this.authService.getUserId());
-
     // Line chart:
     this.LineChart = new Chart("lineChart", {
       type: "line",
@@ -325,7 +322,8 @@ export class HomeComponent implements OnInit {
     return this.chamaService.all(url);
   }
   getDefaultChamaDetails() {
-    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+    this.chamas$ = this.getChamas(this.authService.getUserId());
+    this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
       let authData = this.authService.getUserData();
       if (authData.user.chama_id == null) {
@@ -346,28 +344,28 @@ export class HomeComponent implements OnInit {
         }
       }
       if (authData.user.chama_id != null) {
-        const user = {
-          chama_id: authData.user.chama_id,
-          user_id: authData.user.id
-        }
-        this.userService.getChamaUserPermissions(user).subscribe(response => {
-          this.authService.storeResult(authData);
-        })
+        // const user = {
+        //   chama_id: authData.user.chama_id,
+        //   user_id: authData.user.id
+        // }
+        // this.userService.getChamaUserPermissions(user).subscribe(response => {
+        //   this.authService.storeResult(authData);
+        // })
       } else {
         this.authService.storeResult(authData);
       }
       this.authService.storeResult(authData);
+      this.getDefaultUserChamaPermissions();
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
-      this.chama = this.chamaSubject.asObservable();
-    });
+      this.chama$ = this.chamaSubject.asObservable();
+    }));
   }
   getDefaultUserChamaPermissions() {
     let authData = this.authService.getUserData();
-
     let user = {
       user_id: authData.user.id,
-      chama_id:authData.user.chama_id
+      chama_id: authData.user.chama_id
     }
     this.userService.getChamaUserPermissionsList(user).subscribe(res => {
       authData.user.roles = res.data;
@@ -389,10 +387,10 @@ export class HomeComponent implements OnInit {
     }
   }
   ngOnDestroy() {
-    //this.chamas$.unsubscribe();
+    this.subscription.unsubscribe();
   }
   openAddGroupDetails(status = 'create') {
-    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+    this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       let modalData = {};
       // alert(result)
       if ((result.default_chama == null) || (status == 'create')) {
@@ -417,8 +415,7 @@ export class HomeComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result === "success") {
-          // this.chamas$ = this.getChamas(this.authService.getUserId());
-          //this.getDefaultChamaDetails();
+          this.getDefaultChamaDetails();
           this.router.navigate(['home']);
           // set message to be emitted by loader interceptor after http requests end
           this.loaderIService.storeNotificationMessage(
@@ -427,7 +424,7 @@ export class HomeComponent implements OnInit {
           );
         }
       });
-    });
+    }));
   }
   openAddGroupContributionTypes() {
     const defaultChama = {
@@ -446,7 +443,6 @@ export class HomeComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === "success") {
-        this.chamas$ = this.getChamas(this.authService.getUserId());
         this.getDefaultChamaDetails();
         this.loaderIService.storeNotificationMessage(
           "Contribution type successfully added",
@@ -462,7 +458,7 @@ export class HomeComponent implements OnInit {
       width: "600px"
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      //console.log(`Dialog result: ${result}`);
     });
   }
   openInviteGroupMembersDialog() {
@@ -492,7 +488,6 @@ export class HomeComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.chamas$ = this.getChamas(this.authService.getUserId());
       this.getDefaultChamaDetails();
       if (result === "success") {
         // set message to be emitted by loader interceptor after http requests end
@@ -514,7 +509,6 @@ export class HomeComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      this.chamas$ = this.getChamas(this.authService.getUserId());
       this.getDefaultChamaDetails();
       // console.log(`Dialog result: ${result}`);
     });
@@ -527,7 +521,7 @@ export class HomeComponent implements OnInit {
       { id: 4, type_name: "CSR" }
     ];
     let dChama: any;
-    this.chama.subscribe(res => {
+    this.chama$.subscribe(res => {
       dChama = res;
     });
     const dialogRef = this.dialog.open(AddGroupContributionComponent, {
@@ -540,7 +534,6 @@ export class HomeComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === "success") {
-        this.chamas$ = this.getChamas(this.authService.getUserId());
         this.getDefaultChamaDetails();
         // set message to be emitted by loader interceptor after http requests end
         this.loaderIService.storeNotificationMessage(
@@ -567,7 +560,7 @@ export class HomeComponent implements OnInit {
         const invite = {
           chama_id: this.authService.getUserData().user.chama_id
         }
-        this.chamaService.generateGroupInviteCode(invite).subscribe(res => {
+        this.subscription.add(this.chamaService.generateGroupInviteCode(invite).subscribe(res => {
           let authData = this.authService.getUserData();
           authData.user.invite_code = res.data;
           this.authService.storeResult(authData);
@@ -575,7 +568,7 @@ export class HomeComponent implements OnInit {
           this.notificationService.emit('Group Invite Code successfully updated', 'success')
         }, error => {
           this.notificationService.emit(error.message.message)
-        });
+        }));
       } else {
         this.notificationService.emit('Please set default group first')
       }
@@ -603,10 +596,14 @@ export class HomeComponent implements OnInit {
     }
   }
   viewGroupInviteCode() {
-    let code = this.inviteCode;
-    if (this.inviteCode == null) {
-      code = 'Invite code has not been set';
+    const chamaId = this.authService.getUserData().user.chama_id;
+    if (chamaId != null) {
+      this.subscription.add(this.chamaService.getGroupInviteCode(chamaId).subscribe(res => {
+        this.inviteCode = res.data
+        alert('Group Invite Code: ' + this.inviteCode);
+      }));
+    } else {
+      alert('Group Invite Code: Not Set');
     }
-    alert('Group Invite Code:' + code)
   }
 }

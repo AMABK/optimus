@@ -244,12 +244,12 @@ export class ListUsersComponent implements OnInit {
       status,
       chama_id: this.authService.getUserData().user.chama_id
     }
-    this.userService.changeChamaUserStatus(userChama).subscribe(res => {
+    this.subscription.add(this.userService.changeChamaUserStatus(userChama).subscribe(res => {
       this.getChamaUsers();
       this.notificationService.emit('User status successfully update, ', 'success');
     }, error => {
       this.notificationService.emit('User status could not be successfully updated', 'danger');
-    })
+    }))
   }
   onTabChanged(event: MatTabChangeEvent) {
     if (event.index == 0) {

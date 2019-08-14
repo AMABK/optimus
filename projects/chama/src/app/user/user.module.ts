@@ -28,7 +28,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatChipsModule,
     MatExpansionModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatRippleModule
   ]
 })
 export class UserModule { }

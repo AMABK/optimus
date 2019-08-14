@@ -114,10 +114,14 @@ export class ChamaService {
   }
   joinGroupByInviteCode(invite){
     return this.http.post(
-      `${environment.apiUrl}/api/user/join-group-invite-by-code`, invite);
+      `${environment.apiUrl}/api/chama/join-group-invite-by-code`, invite);
   }
   generateGroupInviteCode(chama) {
     return this.http.post<any>(
-      `${environment.apiUrl}/api/user/generate-group-invite-code`, chama);
+      `${environment.apiUrl}/api/chama/generate-group-invite-code`, chama);
+  }
+  getGroupInviteCode(chamaId) {
+    return this.http.get(
+    `${environment.apiUrl}/api/chama/${chamaId}/get-group-invite-code`);
   }
 }

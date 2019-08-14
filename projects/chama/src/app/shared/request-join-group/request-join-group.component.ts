@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from 'projects/auth/src/public_api';
 import { FormControl, Validators } from '@angular/forms';
@@ -8,20 +8,23 @@ import { Router } from '@angular/router';
 import { ChamaService } from '../../http/chama/chama.service';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-request-join-group',
   templateUrl: './request-join-group.component.html',
   styleUrls: ['./request-join-group.component.css']
 })
-export class RequestJoinGroupComponent implements OnInit {
+export class RequestJoinGroupComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
 
   constructor(private notificationService: NotificationService, private loaderIService: LoaderInterceptorService, private dialog:MatDialog, private chamaService: ChamaService, private router: Router, private authService: AuthService, public dialogRef: MatDialogRef<RequestJoinGroupComponent>, public addGroup: MatDialogRef<AddGroupDetailsComponent>) { }
   matcher = new FormErrorService;
   code = new FormControl("", [Validators.required]);
   ngOnInit() {
-
-    
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   onSubmit() {
     if (this.code.valid) {
@@ -50,7 +53,7 @@ export class RequestJoinGroupComponent implements OnInit {
     this.openAddGroupDetails();
   }
   openAddGroupDetails(status = 'create') {
-    this.chamaService.getDefaultChamaDetails().subscribe(result => {
+    this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       let modalData = {};
       // alert(result)
       if ((result.default_chama == null) || (status == 'create')) {
@@ -85,7 +88,7 @@ export class RequestJoinGroupComponent implements OnInit {
           );
         }
       });
-    });
+    }));
   }
 
 }

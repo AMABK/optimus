@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Inject, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { ChamaService } from '../../http/chama/chama.service';
 import { Chama } from '../../models/chama/chama';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
@@ -27,7 +27,8 @@ const emptyChama: Chama = {
   templateUrl: './add-group-details.component.html',
   styleUrls: ['./add-group-details.component.css']
 })
-export class AddGroupDetailsComponent implements OnInit {
+export class AddGroupDetailsComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   responseStatus: string;
   chamas$: Observable<Chama>;
   currentChama: Chama;
@@ -67,6 +68,9 @@ export class AddGroupDetailsComponent implements OnInit {
   ngOnInit() {
     //alert(JSON.stringify(this.data.key));
   }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+}
   registerChama(form) {}
 
   onSubmit() {
@@ -107,19 +111,19 @@ export class AddGroupDetailsComponent implements OnInit {
     }
   }
   createChama(chama) {
-    this.chamaService.create(chama).subscribe(
+    this.subscription.add(this.chamaService.create(chama).subscribe(
       response => {
         this.dialogRef.close('success');
         //this.notificationService.emit('Chama successfully created!', 'success');
       },
       error => {}
-    );
+    ));
   }
 
   updateChama(chama) {
-    return this.chamaService.update(chama).subscribe(response => {
+    return this.subscription.add(this.chamaService.update(chama).subscribe(response => {
       this.dialogRef.close('success');
-    });
+    }));
   }
   resetCurrentChama() {
     this.currentChama = emptyChama;

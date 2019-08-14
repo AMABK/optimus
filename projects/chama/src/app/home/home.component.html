@@ -121,7 +121,7 @@
     --->
     <mat-tab label="Group Home Page" fxLayout="row">
         <mat-grid-list cols="2" rowHeight="2:1" fxLayout="row" fxLayout.xs="column">
-            <mat-grid-tile *ngIf="chama | async as chamaData" fxFlex="70">
+            <mat-grid-tile *ngIf="chama$ | async as chamaData" fxFlex="70">
                 <mat-card class="mat-table" *ngIf="chamaData.default_chama; else noChamaData">
                     <mat-list>
                         <mat-list-item><b>Name</b>: {{chamaData.default_chama.name}}</mat-list-item>
@@ -152,7 +152,7 @@
                     </button>
             </mat-grid-tile>
             <mat-grid-tile fxFlex="50" class="mat-grid-tile-bottom-left mat-grid-tile-home"
-                *ngIf="chama | async as chamaData">
+                *ngIf="chama$ | async as chamaData">
                 <mat-card *ngIf="chamaData.default_chama?.payment_modes.length; else noChamaData">
                     <mat-tab-group>
                         <mat-tab *ngFor="let payment of (chamaData.default_chama.payment_modes) | keyvalue"
@@ -266,7 +266,7 @@
                     <mat-step [stepControl]="secondFormGroup" optional>
                         <ng-template matStepLabel>GROUP MEMBERS<br>Add Group Members</ng-template>
                         <div class="center">
-                            <button mat-button [disabled]="(user.chama_id == null)||(!userHasRole('invite-user'))" class="edit-group-button"
+                            <button mat-button [disabled]="!((user.chama_id != null)&&(userHasRole('invite-user')))" class="edit-group-button"
                                 (click)="openInviteGroupMembersDialog()">
                                 <mat-icon>group_add</mat-icon> ADD GROUP MEMBERS
                             </button>
@@ -287,7 +287,7 @@
     </mat-tab>
 </mat-tab-group>
     <mat-card>
-    <div fxLayout="row">
+    <div fxLayout="row" *ngIf="false">
         <canvas id="lineChart" height="500" width="1050"></canvas>
     </div>
 </mat-card>

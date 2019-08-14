@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, NgZone, ViewChild, OnDestroy } from '@angular/core';
 import { environment } from 'projects/chama/src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -18,7 +18,8 @@ import { DepositService } from '../../http/deposit/deposit.service';
   templateUrl: './add-group-contribution.component.html',
   styleUrls: ['./add-group-contribution.component.css']
 })
-export class AddGroupContributionComponent implements OnInit {
+export class AddGroupContributionComponent implements OnInit,OnDestroy {
+  private subscription: Subscription = new Subscription();
   chama$: Observable<Chama>;
   currentDeposit: any;
   activeButton: boolean = true;
@@ -61,7 +62,10 @@ export class AddGroupContributionComponent implements OnInit {
 
   matcher = new FormErrorService();
 
-  ngOnInit() {}
+  ngOnInit() { }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   registerChama(form) {
     //console.log(form.value);
   }
@@ -95,12 +99,12 @@ export class AddGroupContributionComponent implements OnInit {
     }
   }
   createDeposit(deposit) {
-    this.depositService.createDeposit(deposit).subscribe(
+    this.subscription.add(this.depositService.createDeposit(deposit).subscribe(
       response => {
         this.dialogRef.close('success');
       },
       error => {}
-    );
+    ));
   }
 
   updateDeposit(chama) {

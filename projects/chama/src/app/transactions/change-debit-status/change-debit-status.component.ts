@@ -1,17 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { DebitService } from '../../http/debit/debit.service';
 import { AuthService } from 'projects/auth/src/public_api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-change-debit-status',
   templateUrl: './change-debit-status.component.html',
   styleUrls: ['./change-debit-status.component.css']
 })
-export class ChangeDebitStatusComponent implements OnInit {
+export class ChangeDebitStatusComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
   reason = new FormControl("", [Validators.required, Validators.minLength(4)]);
   status = new FormControl("", [Validators.required]);
   debit_id = new FormControl(this.data.element.id, [Validators.required]);
@@ -76,5 +78,8 @@ export class ChangeDebitStatusComponent implements OnInit {
   }
   ngOnInit() {
 
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
