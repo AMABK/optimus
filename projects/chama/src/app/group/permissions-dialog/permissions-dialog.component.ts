@@ -4,6 +4,7 @@ import { UserService } from '../../http/user/user.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormArray, FormBuilder, FormGroup, ValidatorFn } from '@angular/forms';
 import { NotificationService } from 'projects/notification/src/public_api';
+import { AuthService } from 'projects/auth/src/public_api';
 
 @Component({
   selector: 'app-permissions-dialog',
@@ -16,7 +17,7 @@ export class PermissionsDialogComponent implements OnInit, OnDestroy {
   form: FormGroup;
   constructor(
     public dialogRef: MatDialogRef<PermissionsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data, private userService: UserService, private formBuilder: FormBuilder, private notificationService: NotificationService) {
+    @Inject(MAT_DIALOG_DATA) public data, private authService:AuthService, private userService: UserService, private formBuilder: FormBuilder, private notificationService: NotificationService) {
     this.form = this.formBuilder.group({
       roles: new FormArray([], this.minSelectedCheckboxes(1))
     });
@@ -66,5 +67,8 @@ export class PermissionsDialogComponent implements OnInit, OnDestroy {
   }
   onNoClick(): void {
     this.dialogRef.close('success');
+  }
+  userHasRole(role) {
+    return this.authService.userHasRole(role);
   }
 }
