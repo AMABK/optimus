@@ -82,4 +82,7 @@ export class ChangeDebitStatusComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+  userHasRole(role) {
+    return this.authService.userHasRole(role)
+  }
 }
