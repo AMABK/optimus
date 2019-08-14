@@ -15,7 +15,9 @@ export class GroupComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService, private notificationService: NotificationService) { }
 
   ngOnInit() {
-    this.notificationService.emit('You have not been granted admin rights to access this page')
+    if (!this.userHasRole('group-admin')) {
+      this.notificationService.emit('You have not been granted admin rights to access this page');
+    }
   }
   ngOnDestroy() {
 
