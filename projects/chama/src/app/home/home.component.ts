@@ -600,11 +600,8 @@ export class HomeComponent implements OnInit {
   }
   updateInviteCode() {
     //console.log(this.authService.getUserData())
-    if (this.authService.getUserData().user.default_chama == null) {
-      this.inviteCode = null;
-    } else {
+    if (this.authService.getUserData()!=null)
       this.inviteCode = this.authService.getUserData().user.default_chama.invite_code;
-    }
   }
   viewGroupInviteCode() {
     const chamaId = this.authService.getUserData().user.chama_id;
