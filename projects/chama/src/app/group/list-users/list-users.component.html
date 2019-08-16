@@ -104,6 +104,9 @@
           <button *ngIf="userChamaStatus==0" mat-menu-item (click)="changeChamaUserStatus(user.id,1)">
             <mat-icon>exit_to_app</mat-icon>Suspend User From Group
           </button>
+          <button *ngIf="userChamaStatus==0" mat-menu-item (click)="openAddMemberDeposit(user.id,user.first_name+' '+user.last_name)">
+            <mat-icon>add</mat-icon>Add Member Deposit
+          </button>
         </mat-menu>
       </td>
     </ng-container>

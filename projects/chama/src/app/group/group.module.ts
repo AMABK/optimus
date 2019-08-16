@@ -14,6 +14,8 @@ import { PermissionsDialogComponent } from './permissions-dialog/permissions-dia
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ListUsersComponent } from './list-users/list-users.component';
+import { AddDepositDialogComponent } from '../shared/add-deposit/add-deposit-dialog.component';
+import { AddDepositDialogModule } from '../shared/add-deposit/add-deposit-dialog.module';
 
 @NgModule({
   declarations: [GroupComponent, UsersComponent, PermissionsDialogComponent, ListUsersComponent],
@@ -29,8 +31,9 @@ import { ListUsersComponent } from './list-users/list-users.component';
     MatPaginatorModule,
     MatSortModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    AddDepositDialogModule
   ],
-  entryComponents: [PermissionsDialogComponent]
+  entryComponents: [PermissionsDialogComponent, AddDepositDialogComponent]
 })
 export class GroupModule { }

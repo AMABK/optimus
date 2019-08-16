@@ -1,4 +1,5 @@
 export class Chama {
+  [x: string]: any;
     id?: any;
     name: string;
     address: string;

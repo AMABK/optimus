@@ -89,7 +89,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit, OnDestroy {
   id = new FormControl(this.data.key.id, []);
   chama_id = new FormControl(this.data.key.chama_id, []);
   bank = new FormControl(this.data.key.bank, [Validators.required]);
-  account = new FormControl(this.data.key.account, [Validators.required]);
+  account = new FormControl(this.data.key.account_no, [Validators.required]);
   status = new FormControl("", [Validators.required]);
   country = new FormControl(this.data.key.country, [
     Validators.required,
@@ -121,9 +121,8 @@ export class AddGroupPaymentDetailsComponent implements OnInit, OnDestroy {
       this.description.valid &&
       this.status.valid
     ) {
-      console.log('stasrt')
       this.paymentDetails = {
-        id: this.id.value,
+        id: this.data.key.id,
         bank: this.bank.value,
         account_no: this.account.value,
         chama_id: this.chama_id.value,

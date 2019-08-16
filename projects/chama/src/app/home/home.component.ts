@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit {
   };
   LineChart: any = [];
   private chamaSubject: BehaviorSubject<User>;
-   chama$: Observable<User>;
+  chama$: Observable<User>;
   private pieChartLabels: string[] = [
     "Pending",
     "InProgress",
@@ -116,6 +116,9 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private notificationService: NotificationService
   ) {
+    this.authService.currentUser.subscribe(x => {
+      this.ngOnInit();
+    });
     // this.getDefaultChamaDetails();
   }
 
@@ -322,10 +325,12 @@ export class HomeComponent implements OnInit {
     return this.chamaService.all(url);
   }
   getDefaultChamaDetails() {
+    let authData = this.authService.getUserData();
     this.chamas$ = this.getChamas(this.authService.getUserId());
-    this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
+
+    this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
-      let authData = this.authService.getUserData();
+
       if (authData.user.chama_id == null) {
         if (result.chama_id != null) {
           authData.user.default_chama = result.default_chama;
@@ -352,14 +357,19 @@ export class HomeComponent implements OnInit {
         //   this.authService.storeResult(authData);
         // })
       } else {
-        this.authService.storeResult(authData);
+        // this.authService.storeResult(authData);
       }
-      this.authService.storeResult(authData);
+      // this.chamas$.subscribe(res => {
+      //   authData.user.chamas = res.data;
+      //   console.log(authData);
+      //   this.authService.storeResult(authData);
+      // });
+
       this.getDefaultUserChamaPermissions();
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama$ = this.chamaSubject.asObservable();
-    }));
+    });
   }
   getDefaultUserChamaPermissions() {
     let authData = this.authService.getUserData();
@@ -373,7 +383,7 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  updateDefaultChama(chamaId) {
+  updateDefaultChama(chamaId,chamaName) {
     const currentChamaId = this.authService.getUserData().user.chama_id;
     // allow change only if the chama id has changed
     if (currentChamaId !== chamaId) {
@@ -383,6 +393,7 @@ export class HomeComponent implements OnInit {
           this.router.navigate(['home']);
           this.authService.updateDefaultChama(chamaId);
           this.getDefaultChamaDetails();
+          this.notificationService.emit('Default group / chama switched to ' + chamaName,'success')
         });
     }
   }
@@ -589,11 +600,8 @@ export class HomeComponent implements OnInit {
   }
   updateInviteCode() {
     //console.log(this.authService.getUserData())
-    if (this.authService.getUserData().user.default_chama == null) {
-      this.inviteCode = null;
-    } else {
+    if (this.authService.getUserData()!=null)
       this.inviteCode = this.authService.getUserData().user.default_chama.invite_code;
-    }
   }
   viewGroupInviteCode() {
     const chamaId = this.authService.getUserData().user.chama_id;
