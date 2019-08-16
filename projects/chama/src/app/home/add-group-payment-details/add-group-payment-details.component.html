@@ -17,7 +17,7 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="Account Number" [value]="data.key?.account" [formControl]="account">
+      <input matInput placeholder="Account Number" [value]="data.key?.account_no" [formControl]="account">
       <mat-error *ngIf="!account.hasError('minLength')">
         Account is <strong>required</strong>(Minimum 4 characters)
       </mat-error>

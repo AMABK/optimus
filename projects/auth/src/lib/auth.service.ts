@@ -22,6 +22,7 @@ export class AuthService {
     const userData = JSON.parse(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<Auth>(userData);
     this.currentUser = this.currentUserSubject.asObservable();
+    
   }
   public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
@@ -60,9 +61,7 @@ export class AuthService {
       this.storeResult(authData);
       this.currentUserSubject.next(authData);
     }
-    //this.currentUserSubject = new BehaviorSubject<Auth>(authData);
-    // this.currentUser = new BehaviorSubject<Auth>(authData).asObservable();
-    return new BehaviorSubject<Auth>(authData).asObservable();//authData;
+    return new BehaviorSubject<Auth>(authData).asObservable();
   }
   requestImplicitGrantToken(url) {
     return this.http.get(
@@ -93,10 +92,10 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('authData'));
   }
   updateDefaultChama(chamaId) {
-    this.loaderIService.storeNotificationMessage('Congrats, default chama updated', 'success');
     let authData = this.getUserData();
     authData.user.chama_id = chamaId;
     this.storeResult(authData);
+    this.currentUserSubject.next(authData);
   }
   public getCountryJSON(): Observable<any> {
     return this.http.get("/assets/country.json");
@@ -117,5 +116,9 @@ export class AuthService {
   }
   resetPassword(user) {
     return this.http.post(`${user.apiUrl}/api/oauth/password-reset/reset`, user);
+  }
+  updateCurrentUserSubject(authData) {
+    this.currentUserSubject.next(authData);
+
   }
 }

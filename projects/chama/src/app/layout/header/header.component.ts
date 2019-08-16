@@ -21,13 +21,14 @@ export class HeaderComponent implements OnInit {
   currentRoute: any;
   messageCount;
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private authService: AuthService,private messageService:MessageService) {
-
+    this.authService.currentUser.subscribe(user => (this.currentUser = user));
   }
   ngOnInit() {
-    // this.messageService.getChamaUserMessageCount().subscribe(res => {
-    //   //this.messageCount = res.data;
-    // })
-    //this.defaultChamaName = JSON.parse(localStorage.getItem('authData')).user.default_chama.name;
+    // if (this.currentUser) {
+    //   let chamas = this.authService.getUserData().user.chamas;
+
+    // }
+    
   }
   ngAfterViewInit() {
     

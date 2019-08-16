@@ -9,13 +9,14 @@ import {
 } from "rxjs/operators";
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../models/user/user';
+import { AuthService } from 'projects/auth/src/public_api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   apiUrl = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getDefaultChamaDeposits(queryParams: string) {
     return this.http.get(
@@ -179,5 +180,12 @@ export class UserService {
   getUser(userId) {
     return this.http.get(`${this.apiUrl}/api/user/${userId}/get-user`);
   }
-
+  // getCurrentUserChamaRoles(userId,chamaId) {
+  //   return this.http.get<any>(`${this.apiUrl}/api/user/${userId}/chamaId/${chamaId}access-roles`);
+  // }
+  // updateCurrentUserChamaRolesStorage(roles) {
+  //   let authData = this.authService.getUserData();
+  //   authData.user.roles = roles;
+  //   this.authService.storeResult(authData);
+  // }
 }

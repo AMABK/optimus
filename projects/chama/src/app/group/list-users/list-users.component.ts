@@ -12,13 +12,14 @@ import * as moment from 'moment';
 import { PermissionsDialogComponent } from '../permissions-dialog/permissions-dialog.component';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
+import { AddDepositDialogComponent } from '../../shared/add-deposit/add-deposit-dialog.component';
 
 @Component({
   selector: 'app-list-users',
   templateUrl: './list-users.component.html',
   styleUrls: ['./list-users.component.css']
 })
-export class ListUsersComponent implements OnInit,OnChanges,OnDestroy {
+export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
   private subscription: Subscription = new Subscription();
   @Input() userChamaStatus;
   currentStatus;
@@ -57,7 +58,11 @@ export class ListUsersComponent implements OnInit,OnChanges,OnDestroy {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private router: Router, private userService: UserService, private dialog: MatDialog, private exportPdf: ExportPdf, private authService: AuthService, private notificationService: NotificationService) { }
+  constructor(private router: Router, private userService: UserService, private dialog: MatDialog, private exportPdf: ExportPdf, private authService: AuthService, private notificationService: NotificationService) { 
+    this.authService.currentUser.subscribe(x => {
+      this.ngOnInit();
+    });
+  }
 
   ngOnInit() {
   }
@@ -66,7 +71,7 @@ export class ListUsersComponent implements OnInit,OnChanges,OnDestroy {
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
-}
+  }
   getChamaUsers() {
     this.subscription.add(this.userService.searchChamaUsers(this.userChamaStatus, this.searchTerm$).subscribe(response => {
       if (this.download != 'download') {
@@ -243,7 +248,7 @@ export class ListUsersComponent implements OnInit,OnChanges,OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result == 'success') {
-        
+
       }
       console.log('dialogclosed');
     });
@@ -263,10 +268,40 @@ export class ListUsersComponent implements OnInit,OnChanges,OnDestroy {
   }
   onTabChanged(event: MatTabChangeEvent) {
     if (event.index == 0) {
-     // this.pollComponent.refresh();//Or whatever name the method is called
+      // this.pollComponent.refresh();//Or whatever name the method is called
     }
     else {
-     // this.surveyComponent.refresh(); //Or whatever name the method is called
+      // this.surveyComponent.refresh(); //Or whatever name the method is called
     }
   }
+  openAddMemberDeposit(userId, userName) {
+    const defaultChama = {
+      name:
+        this.authService.getUserData().user.default_chama != null
+          ? this.authService.getUserData().user.default_chama.name
+          : null,
+      chamaId: this.authService.getUserData().user.chama_id,
+      depositBy: 'admin',
+      user: {
+        userId,
+        userName
+      }
+    };
+    const dialogRef = this.dialog.open(AddDepositDialogComponent, {
+      height: "auto",
+      width: "600px",
+      data: {
+        key: defaultChama
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === "success") {
+        // this.loaderIService.storeNotificationMessage(
+        //   "Contribution type successfully added",
+        //   "success"
+        // );
+      }
+    });
+  }
 }
+

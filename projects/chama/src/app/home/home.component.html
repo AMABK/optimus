@@ -159,8 +159,9 @@
                             label="Tab {{tabPosition(payment.key)}}">
                             <b>Bank</b>: {{payment.value.bank}}<br>
                             <b>Country</b>: {{payment.value.country}}<br>
+                            <b>Account</b>: {{payment.value.account_no}}<br>
                             <b>Payment Details</b>
-                            <p [innerHTML]="payment.value.description">
+                            <p [innerHtml]="payment.value.description">
                             </p>
                             <button mat-button
                                 (click)="openEditPaymentDetails(payment.value,chamaData.default_chama.name)"
@@ -177,7 +178,7 @@
                     </mat-tab-group>
                 </mat-card>
                 <ng-template #noChamaData>
-                    <button *ngIf="userHasRole('add-paymennt-details')" mat-button style="border: 1px solid #428bca;" (click)="openAddPaymentDetails()">
+                    <button *ngIf="userHasRole('add-paymennt-details')" mat-button style="border: 1px solid #428bca;" (click)="openAddPaymentDetails(authService.getUserData().user.chama_id)">
                         <mat-icon>warning</mat-icon> NO GROUP PAYMENT/BANK DETAILS
                     </button>
                 </ng-template>
@@ -207,15 +208,15 @@
                 <!-- Address Column -->
                 <ng-container matColumnDef="address">
                     <th mat-header-cell *matHeaderCellDef> Address </th>
-                    <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.address}}</td>
                 </ng-container>
 
                 <!-- Select default Column -->
                 <ng-container matColumnDef="default">
                     <th mat-header-cell *matHeaderCellDef> Default Group </th>
                     <td mat-cell *matCellDef="let element">
-                        <mat-radio-button (click)="updateDefaultChama(element.id)"
-                            [checked]="(element.user_default[0]?.chama_id !==null)">
+                        <mat-radio-button (click)="updateDefaultChama(element.id,element.name)"
+                            [checked]="(element.id==authService.getUserData().user.chama_id)">
                         </mat-radio-button>
                     </td>
                 </ng-container>

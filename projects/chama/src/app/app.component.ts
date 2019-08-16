@@ -6,6 +6,8 @@ import { Auth } from './models/auth/auth';
 import { LoaderService } from 'projects/loader/src/public_api';
 import { RequestJoinGroupComponent } from './shared/request-join-group/request-join-group.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ChamaService } from './http/chama/chama.service';
+import { UserService } from './http/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -101,15 +103,20 @@ export class AppComponent implements OnInit {
       label: 'Manage System Groups', designation: 'admin'
     }
   ];
-
+  defaultChama = 'No Selected Set';
+  chamas = [];
   constructor(
     public loaderService: LoaderService,
     private ns: NotificationService,
     private authService: AuthService,
     private router: Router,
-    private dialog: MatDialog
+    private chamaService: ChamaService,
+    private userService: UserService
   ) {
-    this.authService.currentUser.subscribe(x => (this.currentUser = x));
+    this.authService.currentUser.subscribe(x => {
+      this.currentUser = x
+      this.ngOnInit();
+    });
     // subscribe to router events and send page views to Google Analytics
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -120,21 +127,52 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     if (this.loaderService.isLoading.getValue()) {
       // console.log(this.loaderService.isLoading.getValue());
     } else {
       //console.log(this.loaderService.isLoading.getValue());
     }
+    if (this.currentUser) {
+      const defaultChamaId = this.authService.getUserData().user.chama_id;
+      this.chamas = this.currentUser['user']['chamas']
+      for (let i = 0; i < this.chamas.length; i++) {
+        if (this.chamas[i].id == defaultChamaId) {
+          this.defaultChama = this.chamas[i].name
+        }
+      }
+    } else {
+      this.chamas = [];
+    }
+    
   }
-
-  logout($event) {
+  updateDefaultGroup(chamaId) {
+    this.chamaService.updateDefaultChama(chamaId).subscribe(res => {
+      let authData = this.authService.getUserData();
+      const user = {
+        user_id: authData.user.id,
+        chama_id: chamaId
+      }
+      this.userService.getChamaUserPermissionsList(user).subscribe(result => {
+        authData.user.chama_id = chamaId;
+        authData.user.roles = result.data;
+        this.authService.storeResult(authData);
+        this.authService.updateCurrentUserSubject(authData);
+       //// console.log(this.defaultChama)
+        this.ns.emit('Default group/chama switched to ' + this.defaultChama,'success')
+      },error => {
+         // console.log('errkr')
+      });
+    })
+  }
+  logout() {
+    this.chamas = [];
     this.authService.logout();
     this.router.navigate(['login']);
   }
   spinner() {
     this.loaderService.isLoading.getValue()
-}
+  }
   prepareRouterState(router: RouterOutlet) {
     return router.activatedRouteData['animation'] || 'initial';
   }

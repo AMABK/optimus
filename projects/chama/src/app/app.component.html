@@ -3,7 +3,6 @@
   [userData]="currentUser"
   [title]="title"
   [sidenav]="sidenav"
-  (logout)="logout($event)"
 >
 </app-header>
 
@@ -16,7 +15,7 @@
         fxFlexFill
         class="button-dropdown"
       >
-        <span style="float:left;"><b>Optimus E-Solutions</b></span>
+        <span style="float:left;"><b>{{defaultChama.substring(0,20)}}</b></span>
         <mat-icon style="float:right;padding-top:6px">expand_more</mat-icon>
       </button>
       <!-- <mat-accordion *ngFor="let menu of menus">
@@ -36,13 +35,14 @@
             {{sub.label}}
           </a>
         </mat-expansion-panel>
-      </mat-accordion> -->
+      </mat-accordion> --> 
 
       <mat-menu #menu="matMenu" style="border-style: solid;border-width: 1px;">
-        <button mat-menu-item style="min-inline-size: 200px;">
+        <!-- <button mat-menu-item style="min-inline-size: 200px;">
           Optimus E-Solutions
-        </button>
-        <button mat-menu-item>Item 2</button>
+        </button> -->
+        <button mat-menu-item *ngFor="let chama of chamas" (click)="updateDefaultGroup(chama.id)" >{{chama.name.substring(0,24)}}</button>
+        <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Logout(Exit App)</button>
       </mat-menu>
       <ng-container  *ngFor="let link of links">
       <a
