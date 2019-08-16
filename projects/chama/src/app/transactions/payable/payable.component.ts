@@ -65,7 +65,11 @@ export class PayableComponent implements OnInit {
     private depositService: DepositService,
     public dialog: MatDialog,
     private exportPdf: ExportPdf
-  ) { }
+  ) { 
+    this.authService.currentUser.subscribe(x => {
+      this.ngOnInit();
+    });
+  }
   ngOnInit() {
     this.subscription.add(this.depositService
       .search(this.searchTerm$, 'payable')

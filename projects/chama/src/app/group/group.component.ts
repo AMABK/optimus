@@ -12,7 +12,11 @@ export class GroupComponent implements OnInit, OnDestroy {
   parentState: boolean = false;
   status = 0;
   @Output() selectedTabChange: EventEmitter<MatTabChangeEvent>;
-  constructor(private authService: AuthService, private notificationService: NotificationService) { }
+  constructor(private authService: AuthService, private notificationService: NotificationService) { 
+    this.authService.currentUser.subscribe(x => {
+      this.ngOnInit();
+    });
+  }
 
   ngOnInit() {
     if (!this.userHasRole('group-admin')) {

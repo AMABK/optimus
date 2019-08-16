@@ -65,7 +65,11 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private chamaService: ChamaService,
     private authService: AuthService
-  ) {}
+  ) {
+    this.authService.currentUser.subscribe(x => {
+      this.ngOnInit();
+    });
+  }
   ngOnInit() {
     this.getDefaultChamaDetails();
     this.subscription.add(this.depositService

@@ -5,6 +5,7 @@ import { Chama } from '../../models/chama/chama';
 import { AuthService } from 'projects/auth/src/public_api';
 import { share } from 'rxjs/operators';
 import { User } from '../../models/user/user';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: "root"
@@ -12,8 +13,16 @@ import { User } from '../../models/user/user';
 export class ChamaService {
   model = "chama";
   token: string;
-
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  groupsData = {
+    chamas: [],
+    default:[]
+  }
+  public groupsDataSubject: BehaviorSubject<any>;
+  public groups: Observable<any>;
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.groupsDataSubject = new BehaviorSubject<any>(this.groupsData);
+    this.groups = this.groupsDataSubject.asObservable();
+  }
 
   createAuthorizationHeader(headers: Headers) {
     this.token = this.authService.getUserId();
@@ -93,18 +102,15 @@ export class ChamaService {
     );
   }
   updateDefaultChama(chamaId) {
-    this.token = this.authService.getUserData()["access_token"];
-    let headers = new HttpHeaders({
-      Authorization: "Bearer " + this.token
-    });
+    // this.token = this.authService.getUserData()["access_token"];
+    // let headers = new HttpHeaders({
+    //   Authorization: "Bearer " + this.token
+    // });
 
     return this.http.post(
       `${environment.apiUrl}/api/chama/update-default`,
       {
         chamaId: chamaId
-      },
-      {
-        headers: headers
       }
     );
   }
@@ -112,7 +118,7 @@ export class ChamaService {
   delete(chama: Chama) {
     return this.http.delete(this.getUrlForId(chama.id));
   }
-  joinGroupByInviteCode(invite){
+  joinGroupByInviteCode(invite) {
     return this.http.post(
       `${environment.apiUrl}/api/chama/join-group-invite-by-code`, invite);
   }
@@ -122,6 +128,15 @@ export class ChamaService {
   }
   getGroupInviteCode(chamaId) {
     return this.http.get<any>(
-    `${environment.apiUrl}/api/chama/${chamaId}/get-group-invite-code`);
+      `${environment.apiUrl}/api/chama/${chamaId}/get-group-invite-code`);
+  }
+  setUserGroupList(groupsObject=[]) {
+    if (groupsObject.length > 0) {
+      this.groupsData.chamas = groupsObject;
+    }
+    let authData = this.authService.getUserData();
+    authData.user.chamas = this.groupsData;
+    this.authService.storeResult(authData);
+    this.groupsDataSubject.next(this.groupsData);
   }
 }
