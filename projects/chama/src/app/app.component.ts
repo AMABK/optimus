@@ -113,7 +113,10 @@ export class AppComponent implements OnInit {
     private chamaService: ChamaService,
     private userService: UserService
   ) {
-    this.authService.currentUser.subscribe(x => (this.currentUser = x));
+    this.authService.currentUser.subscribe(x => {
+      this.currentUser = x
+      this.ngOnInit();
+    });
     // subscribe to router events and send page views to Google Analytics
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -155,8 +158,8 @@ export class AppComponent implements OnInit {
         authData.user.roles = result.data;
         this.authService.storeResult(authData);
         this.authService.updateCurrentUserSubject(authData);
-       // console.log(this.defaultChama)
-        this.ngOnInit()
+       //// console.log(this.defaultChama)
+        this.ns.emit('Default group/chama switched to ' + this.defaultChama,'success')
       },error => {
          // console.log('errkr')
       });

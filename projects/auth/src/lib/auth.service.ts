@@ -92,10 +92,10 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('authData'));
   }
   updateDefaultChama(chamaId) {
-    this.loaderIService.storeNotificationMessage('Congrats, default chama updated', 'success');
     let authData = this.getUserData();
     authData.user.chama_id = chamaId;
     this.storeResult(authData);
+    this.currentUserSubject.next(authData);
   }
   public getCountryJSON(): Observable<any> {
     return this.http.get("/assets/country.json");
@@ -119,6 +119,6 @@ export class AuthService {
   }
   updateCurrentUserSubject(authData) {
     this.currentUserSubject.next(authData);
-    
+
   }
 }

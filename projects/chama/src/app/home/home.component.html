@@ -207,15 +207,15 @@
                 <!-- Address Column -->
                 <ng-container matColumnDef="address">
                     <th mat-header-cell *matHeaderCellDef> Address </th>
-                    <td mat-cell *matCellDef="let element"> {{element.address}} </td>
+                    <td mat-cell *matCellDef="let element"> {{element.address}}</td>
                 </ng-container>
 
                 <!-- Select default Column -->
                 <ng-container matColumnDef="default">
                     <th mat-header-cell *matHeaderCellDef> Default Group </th>
                     <td mat-cell *matCellDef="let element">
-                        <mat-radio-button (click)="updateDefaultChama(element.id)"
-                            [checked]="(element.user_default[0]?.chama_id !==null)">
+                        <mat-radio-button (click)="updateDefaultChama(element.id,element.name)"
+                            [checked]="(element.id==authService.getUserData().user.chama_id)">
                         </mat-radio-button>
                     </td>
                 </ng-container>

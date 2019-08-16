@@ -383,7 +383,7 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  updateDefaultChama(chamaId) {
+  updateDefaultChama(chamaId,chamaName) {
     const currentChamaId = this.authService.getUserData().user.chama_id;
     // allow change only if the chama id has changed
     if (currentChamaId !== chamaId) {
@@ -393,6 +393,7 @@ export class HomeComponent implements OnInit {
           this.router.navigate(['home']);
           this.authService.updateDefaultChama(chamaId);
           this.getDefaultChamaDetails();
+          this.notificationService.emit('Default group / chama switched to ' + chamaName,'success')
         });
     }
   }
