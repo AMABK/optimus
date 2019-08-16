@@ -165,7 +165,12 @@ export class AppComponent implements OnInit {
       });
     })
   }
-  logout() {
+  logout($event) {
+    this.chamas = [];
+    this.authService.logout();
+    this.router.navigate(['login']);
+  }
+  logoutApp() {
     this.chamas = [];
     this.authService.logout();
     this.router.navigate(['login']);
