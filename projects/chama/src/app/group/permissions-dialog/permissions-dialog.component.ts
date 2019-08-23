@@ -21,6 +21,9 @@ export class PermissionsDialogComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       roles: new FormArray([], this.minSelectedCheckboxes(1))
     });
+    this.authService.currentUser.subscribe(x => {
+      this.ngOnInit();
+    });
   }
   private addCheckboxes() {
     this.roles.map((o, i) => {
