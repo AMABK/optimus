@@ -60,7 +60,7 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
   pageEvent: PageEvent;
   constructor(private router: Router, private userService: UserService, private dialog: MatDialog, private exportPdf: ExportPdf, private authService: AuthService, private notificationService: NotificationService) { 
     this.authService.currentUser.subscribe(x => {
-      this.ngOnInit();
+      this.getChamaUsers();
     });
   }
 
