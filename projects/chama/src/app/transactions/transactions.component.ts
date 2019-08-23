@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { AddDepositDialogComponent } from './add-depositm/add-deposit-dialog.component';
 import { Subject, BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { User } from '../models/user/user';
 import { MatSort } from '@angular/material/sort';
@@ -12,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { RequestDebitDialogComponent } from './request-debit-dialog/request-debit-dialog.component';
 import { Router } from '@angular/router';
+import { AddDepositDialogComponent } from '../shared/add-deposit/add-deposit-dialog.component';
 
 @Component({
   selector: 'app-transactions',
@@ -247,26 +247,29 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     }));
   }
   openAddDepositDialog() {
-    this.chama.subscribe(res => {
-      this.dChama = res;
-    });
+    const authData = this.authService.getUserData();
+    const defaultChama = {
+      name:
+        authData.user.default_chama != null
+          ? authData.user.default_chama.name
+          : null,
+      chamaId: authData.user.chama_id,
+      depositBy: 'admin',
+      user: {
+        userId: authData.user.id,
+        userName: authData.user.first_name + ' ' + authData.user.last_name
+      }
+    };
     const dialogRef = this.dialog.open(AddDepositDialogComponent, {
-      height: 'auto',
-      width: '600px',
+      height: "auto",
+      width: "600px",
       data: {
-        depositTypes: this.depositTypes,
-        group: this.dChama.default_chama
+        key: defaultChama
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result === 'success') {
-        // this.chamas$ = this.getChamas(this.authService.getUserId());
-        // this.getDefaultChamaDetails();
-        // // set message to be emitted by loader interceptor after http requests end
-        // this.loaderIService.storeNotificationMessage(
-        //   "Chama successfully updated!",
-        //   "success"
-        // );
+      if (result === "success") {
+       // this.getDefaultChamaDetails;
       }
     });
   }
