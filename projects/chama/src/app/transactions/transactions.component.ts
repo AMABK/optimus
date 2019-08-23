@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.component';
+import { AddDepositDialogComponent } from './add-depositm/add-deposit-dialog.component';
 import { Subject, BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { User } from '../models/user/user';
 import { MatSort } from '@angular/material/sort';
