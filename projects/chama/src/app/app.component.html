@@ -3,6 +3,7 @@
   [userData]="currentUser"
   [title]="title"
   [sidenav]="sidenav"
+  (logout)="logout($event)"
 >
 </app-header>
 
@@ -43,6 +44,7 @@
         </button> -->
         <button mat-menu-item *ngFor="let chama of chamas" (click)="updateDefaultGroup(chama)" >{{chama.name.substring(0,24)}}</button>
         <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Logout(Exit App)</button>
+
       </mat-menu>
       <ng-container  *ngFor="let link of links">
       <a
