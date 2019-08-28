@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { AddDepositDialogComponent } from '../../shared/add-deposit/add-deposit-dialog.component';
 
 export interface PeriodicElement {
-  position: number
+  position: number;
   bank: string;
   type_name: string;
   amount: number;

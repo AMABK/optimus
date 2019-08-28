@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -15,7 +15,7 @@ import { AuthService } from 'projects/auth/src/public_api';
   templateUrl: './payable.component.html',
   styleUrls: ['./payable.component.css']
 })
-export class PayableComponent implements OnInit {
+export class PayableComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   protected searchTerm$ = new Subject<any>();
   paginationData: any;
@@ -75,6 +75,9 @@ export class PayableComponent implements OnInit {
   ngOnInit() {
     this.defaultDataLoad();
   }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
   defaultDataLoad() {
     this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.depositService
@@ -115,9 +118,7 @@ export class PayableComponent implements OnInit {
       }));
 
   }
-  ngOnDestory() {
-    this.subscription.unsubscribe();
-  }
+
   handleSearch(query: string, model: string) {
     this.authService.updateLoadingDataStatus(true);
     switch (model) {
