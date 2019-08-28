@@ -117,7 +117,6 @@ export class PayableComponent implements OnInit {
   }
   ngOnDestory() {
     this.subscription.unsubscribe();
-    this.searchTerm$.unsubscribe();
   }
   handleSearch(query: string, model: string) {
     this.authService.updateLoadingDataStatus(true)

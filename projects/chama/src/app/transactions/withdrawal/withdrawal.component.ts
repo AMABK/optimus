@@ -60,20 +60,28 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  constructor(private authService: AuthService, private router: Router, private dialog: MatDialog, private depositService: DepositService, private exportPdf: ExportPdf) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private dialog: MatDialog,
+    private depositService: DepositService,
+    private exportPdf: ExportPdf
+  ) {
     this.authService.currentUser.subscribe(x => {
-      this.defaultDataLoad();
+      if (x !== null) {
+        this.defaultDataLoad();
+      }
     });
   }
   ngOnInit() {
     this.defaultDataLoad();
   }
   defaultDataLoad() {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.depositService
       .search(this.searchTerm$, "withdrawal")
       .subscribe(response => {
-        if (this.download != 'download') {
+        if (this.download !== 'download') {
           this.aggregates.total = response.data.sum;
           this.aggregates.average = response.data.avg;
           this.aggregates.minimum = response.data.min;
@@ -264,7 +272,7 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
         this.router.navigate(['/transactions/debit-request']);
       }
     });
@@ -297,6 +305,6 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
     this.exportPdf.createPDF(data, head, 'landscape');
   }
   userHasRole(role) {
-    return this.authService.userHasRole(role)
+    return this.authService.userHasRole(role);
   }
 }
