@@ -20,15 +20,16 @@ import { AddDepositDialogComponent } from '../shared/add-deposit/add-deposit-dia
 })
 export class TransactionsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  searchTerm$ = new Subject<any>();
+  private searchTerm$ = new Subject<any>();
   paginationData: any;
   pFromDate = '';
-  pToDate: string = '';
-  sFromDate: string = '';
-  sToDate: string = '';
-  search: string = '';
-  verified: string = '';
+  pToDate = '';
+  sFromDate = '';
+  sToDate = '';
+  search = '';
+  verified = '';
   depositDataSource;
+  // tslint:disable-next-line: variable-name
   txn_type = 'deposit';
   displayedColumns: string[] = [
     'position',
@@ -102,7 +103,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -215,13 +216,13 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
         this.router.navigate(['/transactions/debit-request']);
       }
     });
   }
   getDefaultChamaDetails() {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
       const authData = this.authService.getUserData();
@@ -242,12 +243,12 @@ export class TransactionsComponent implements OnInit, OnDestroy {
           authData.user.default_chama.name = result.default_chama.name;
         }
       }
-      //this.authService.storeResult(authData);
+      // this.authService.storeResult(authData);
 
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama = this.chamaSubject.asObservable();
-      this.authService.updateLoadingDataStatus(false)
+      this.authService.updateLoadingDataStatus(false);
     }));
   }
   openAddDepositDialog() {
@@ -265,19 +266,19 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       }
     };
     const dialogRef = this.dialog.open(AddDepositDialogComponent, {
-      height: "auto",
-      width: "600px",
+      height: 'auto',
+      width: '600px',
       data: {
         key: defaultChama
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result === "success") {
+      if (result === 'success') {
         // this.getDefaultChamaDetails;
       }
     });
   }
   userHasRole(role) {
-    return this.authService.userHasRole(role)
+    return this.authService.userHasRole(role);
   }
 }

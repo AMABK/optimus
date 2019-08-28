@@ -15,7 +15,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 export class ProfileComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   user: any = [];
-  public currentUserSubject: BehaviorSubject<any> = new BehaviorSubject([]);;
+  public currentUserSubject: BehaviorSubject<any> = new BehaviorSubject([]); ;
   public currentUser: Observable<User>;
   constructor(private authService: AuthService, private userService: UserService, private notificationService: NotificationService) { }
   firstName = new FormControl(this.authService.getUserData().user.first_name, [
@@ -59,7 +59,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
   onSubmitUpdateProfile() {
-    //console.log(this.firstName.value)
+    // tslint:disable-next-line: max-line-length
     if (this.firstName.valid && this.middleName.valid && this.lastName && this.phoneNumber.valid && this.gender.valid && this.email.valid && this.address.valid) {
       const user = {
         first_name: this.firstName.value,
@@ -71,7 +71,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         email: this.email.value,
       };
       this.subscription.add(this.userService.updateUserProfile(user).subscribe(res => {
-        let authData = this.authService.getUserData();
+        const authData = this.authService.getUserData();
         authData.user.first_name = this.firstName.value;
         authData.user.last_name = this.lastName.value;
         authData.user.phone_number = this.phoneNumber.value;
@@ -106,7 +106,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         } else {
           this.notificationService.emit(error.message.message, 'danger');
         }
-      })
+      });
     }
   }
 

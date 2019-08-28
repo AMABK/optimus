@@ -18,7 +18,7 @@ import { MessageService } from '../../http/message/message.service';
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css']
 })
-export class NotificationComponent implements OnInit,OnDestroy {
+export class NotificationComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   checked = false;
   inbox = 'inbox';
@@ -27,7 +27,7 @@ export class NotificationComponent implements OnInit,OnDestroy {
   newMessage = false;
   sentMessages = false;
   mailThread = false;
-  subTitle = "";
+  subTitle = '';
   tabNo = 1;
   @Output() selectedTabChange: EventEmitter<MatTabChangeEvent>;
   visible = true;
@@ -39,19 +39,26 @@ export class NotificationComponent implements OnInit,OnDestroy {
   filteredusers: Observable<string[]>;
   users: string[] = [];
   allusers: string[] = [];
-  search = "";
+  search = '';
   @ViewChild('userInput', { static: false }) userInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete;
-  searchTerm$ = new Subject<any>();
+  private searchTerm$ = new Subject<any>();
   hasUsers = true;
   messageId;
-  constructor(private router: Router, private userService: UserService, private messageService: MessageService, private notificationService: NotificationService,private authService: AuthService) {
+  constructor(
+    private userService: UserService,
+    private messageService: MessageService,
+    private notificationService: NotificationService,
+    private authService: AuthService) {
     this.filteredusers = this.userCtrl.valueChanges.pipe(
+      // tslint:disable-next-line: deprecation
       startWith(null),
       map((user: string | null) => user ? this._filter(user) : this.allusers.slice()));
   }
-  thread_id = new FormControl("new", [Validators.required]);
-  message = new FormControl("", [Validators.required]);
+  // tslint:disable-next-line: variable-name
+  thread_id = new FormControl('new', [Validators.required]);
+  message = new FormControl('', [Validators.required]);
+  // tslint:disable-next-line: variable-name
   chama_id = new FormControl(this.authService.getUserData().user.chama_id, [Validators.required]);
   matcher = new FormErrorService();
   ngOnInit() {
@@ -61,8 +68,8 @@ export class NotificationComponent implements OnInit,OnDestroy {
   }
   handleSearch(query: string, model: string) {
     switch (model) {
-      case "search":
-        this.search = query
+      case 'search':
+        this.search = query;
         break;
     }
     this.searchTerm$.next({
@@ -74,21 +81,18 @@ export class NotificationComponent implements OnInit,OnDestroy {
       this.hasUsers = false;
     } else {
       this.hasUsers = true;
-      if (this.chama_id.value != 'number') {
-        // this.notificationService.emit('Please selected the default Chama or Saving Group before using this app ', 'warning');
-        // this.router.navigate['/home']
+      if (this.chama_id.value !== 'number') {
       }
       const message = {
         users: this.users,
         message: this.message.value ,
-        thread_id: this.thread_id.value 
-      }
+        thread_id: this.thread_id.value
+      };
       this.subscription.add(this.messageService.createMessage(message).subscribe(response => {
         this.newMessage = false;
         this.notificationService.emit('Message successfully sent', 'success');
       },
         error => {
-         // this.notificationService.emit('Message could not be sent. Ensure you have added correct email addresses before sending', 'warning',10000);
 
         })
       );
@@ -101,7 +105,7 @@ export class NotificationComponent implements OnInit,OnDestroy {
         this.allusers = response.data;
         this.allusers = this.allusers.filter((el) => !this.users.includes(el));
 
-      }))
+      }));
   }
 
   add(event: MatChipInputEvent): void {
@@ -131,7 +135,7 @@ export class NotificationComponent implements OnInit,OnDestroy {
     if (index >= 0) {
       this.users.splice(index, 1);
     }
-    
+
     if (this.users.length < 1) {
       this.hasUsers = false;
     } else {
@@ -140,10 +144,10 @@ export class NotificationComponent implements OnInit,OnDestroy {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    //validate input is email
-    var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/; 
-    //Only add if email does not already exist
-    let isEmail = event.option.viewValue.match(pattern)
+    // validate input is email
+    const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+    // Only add if email does not already exist
+    const isEmail = event.option.viewValue.match(pattern);
     if (!this.users.includes(event.option.viewValue)) {
       this.users.push(event.option.viewValue);
       this.userInput.nativeElement.value = '';
@@ -162,36 +166,36 @@ export class NotificationComponent implements OnInit,OnDestroy {
     return this.allusers.filter(user => user.toLowerCase().indexOf(filterValue) === 0);
   }
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
-    if (this.checked == true) {
+    if (this.checked === true) {
       this.selectAllStatus = false;
     }
-    //console.log(this.selectAllStatus)
+    // console.log(this.selectAllStatus)
     this.checked = false;
 
   }
   checkAll() {
     this.checked = !this.checked;
-    if (this.checked == true) {
+    if (this.checked === true) {
       this.selectAllStatus = null;
     }
   }
   composeMessage() {
     this.newMessage = !this.newMessage;
-    if (this.newMessage == true) {
+    if (this.newMessage === true) {
       this.mailThread = false;
-      this.subTitle = ">> New Message";
+      this.subTitle = '>> New Message';
     } else {
-      this.subTitle = "";
+      this.subTitle = '';
     }
-    if (this.newMessage == true) {
+    if (this.newMessage === true) {
       this.getChamaUsers();
     }
   }
   backToNotifications() {
-    this.subTitle = "";
+    this.subTitle = '';
     this.newMessage = false;
     this.mailThread = false;
-    if (this.checked == true) {
+    if (this.checked === true) {
       this.selectAllStatus = false;
     }
     this.checked = false;
@@ -201,10 +205,10 @@ export class NotificationComponent implements OnInit,OnDestroy {
   }
   messageIdHandler(messageId) {
     this.mailThread = true;
-    if (this.mailThread == true) {
-      this.subTitle = ">> Message Thread";
+    if (this.mailThread === true) {
+      this.subTitle = '>> Message Thread';
     } else {
-      this.subTitle = "";
+      this.subTitle = '';
     }
     this.messageId = messageId;
   }

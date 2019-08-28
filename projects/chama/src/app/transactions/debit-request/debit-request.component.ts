@@ -18,9 +18,9 @@ import { AuthService } from 'projects/auth/src/public_api';
   templateUrl: './debit-request.component.html',
   styleUrls: ['./debit-request.component.css']
 })
-export class DebitRequestComponent implements OnInit,OnDestroy {
+export class DebitRequestComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
-  searchTerm$ = new Subject<any>();
+  private searchTerm$ = new Subject<any>();
   paginationData: any;
   asAdmin = 'no';
   aFromDate = '';
@@ -29,7 +29,7 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
   sToDate = '';
   search = '';
   verified = '';
-  requestType = ''
+  requestType = '';
   loanRequestDataSource;
   displayedColumns: string[] = [
     'position',
@@ -70,8 +70,8 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
     private debitService: DebitService,
     public dialog: MatDialog,
     private exportPdf: ExportPdf,
-    private authService:AuthService
-  ) { 
+    private authService: AuthService
+  ) {
     this.authService.currentUser.subscribe(x => {
       this.getDebitRequests();
     });
@@ -83,7 +83,7 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
     this.subscription.unsubscribe();
   }
   getDebitRequests() {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.debitService
       .searchDebitRequests(this.searchTerm$)
       .subscribe(response => {
@@ -118,12 +118,12 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
           this.downloadPDF(response.data);
           this.download = '';
         }
-        this.authService.updateLoadingDataStatus(false)
+        this.authService.updateLoadingDataStatus(false);
       }));
 
   }
   handleSearch(query: string, model: string) {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -157,9 +157,9 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
         this.search = '';
         this.requestType = query;
         break;
-      case "asAdmin":
+      case 'asAdmin':
         this.asAdmin = query;
-        if (query == 'yes') {
+        if (query === 'yes') {
           this.displayedColumns = [
             'position',
             'name',
@@ -181,6 +181,7 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
             'verified'
           ];
         }
+      // tslint:disable-next-line: no-switch-case-fall-through
       default:
         break;
     }
@@ -214,7 +215,7 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
     }
   }
   paginate($event) {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
@@ -301,12 +302,12 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
         this.handleSearch(this.asAdmin, 'asAdmin');
       }
     });
   }
   userHasRole(role) {
-    return this.authService.userHasRole(role)
+    return this.authService.userHasRole(role);
   }
 }

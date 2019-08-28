@@ -29,6 +29,7 @@ export class PayableComponent implements OnInit, OnDestroy {
   debitType = '';
   paymentStatus = '';
   depositDataSource;
+  // tslint:disable-next-line: variable-name
   txn_type = 'payable';
   displayedColumns: string[] = [
     'position',
@@ -158,7 +159,7 @@ export class PayableComponent implements OnInit, OnDestroy {
         this.search = '';
         this.paymentStatus = query;
         break;
-      case "asAdmin":
+      case 'asAdmin':
         this.asAdmin = query;
         if (query === 'yes') {
           this.displayedColumns = [
