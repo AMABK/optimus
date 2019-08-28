@@ -351,23 +351,6 @@ export class HomeComponent implements OnInit, OnDestroy {
           authData.user.chama_id = result.chama_id;
         }
       }
-      if (authData.user.chama_id != null) {
-        // const user = {
-        //   chama_id: authData.user.chama_id,
-        //   user_id: authData.user.id
-        // }
-        // this.userService.getChamaUserPermissions(user).subscribe(response => {
-        //   this.authService.storeResult(authData);
-        // })
-      } else {
-        // this.authService.storeResult(authData);
-      }
-      // this.chamas$.subscribe(res => {
-      //   authData.user.chamas = res.data;
-      //   console.log(authData);
-      //   this.authService.storeResult(authData);
-      // });
-console.log('perm')
       this.getDefaultUserChamaPermissions();
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
