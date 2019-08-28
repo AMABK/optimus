@@ -126,7 +126,9 @@ export class AuthService {
     return this.http.post(`${user.apiUrl}/api/oauth/password-reset/reset`, user);
   }
   updateCurrentUserSubject(authData) {
+    if (JSON.stringify(authData) !== JSON.stringify(this.currentUserSubject.value)) {
       this.currentUserSubject.next(authData);
+    }
   }
   updateLoadingDataStatus(status) {
     this.loadingDataSubject.next(status);

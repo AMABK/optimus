@@ -105,7 +105,7 @@ export class ChamaService {
     return this.http.post(
       `${environment.apiUrl}/api/chama/update-default`,
       {
-        chamaId: chamaId
+        chamaId
       }
     );
   }

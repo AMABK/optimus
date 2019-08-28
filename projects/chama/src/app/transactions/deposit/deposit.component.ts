@@ -87,15 +87,14 @@ export class DepositComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
     this.subscription.unsubscribe();
   }
   ngOnInit() {
     this.defaultDataLoad();
   }
   defaultDataLoad() {
-    this.authService.updateLoadingDataStatus(true)
+    console.log('loop');
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.depositService.getContributionType('deposit', null).subscribe(result => {
       this.depositTypes = result;
     }));
@@ -104,7 +103,7 @@ export class DepositComponent implements OnInit, OnDestroy {
 
   }
   handleSearch(query: string, model: string) {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     switch (model) {
       case "search":
         // General search can only be done in exclusivity
@@ -256,7 +255,7 @@ export class DepositComponent implements OnInit, OnDestroy {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
         this.router.navigate(['/transactions/debit-request']);
       }
     });
@@ -289,11 +288,11 @@ export class DepositComponent implements OnInit, OnDestroy {
     }));
   }
   getDefaultChamaDeposits() {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.depositService
       .search(this.searchTerm$, "deposit")
       .subscribe(response => {
-        if (this.download != 'download') {
+        if (this.download !== 'download') {
           this.aggregates.total = response.data.sum;
           this.aggregates.avg = response.data.avg;
           this.aggregates.min = response.data.min;
