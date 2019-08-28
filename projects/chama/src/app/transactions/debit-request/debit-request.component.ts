@@ -71,7 +71,11 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
     public dialog: MatDialog,
     private exportPdf: ExportPdf,
     private authService:AuthService
-  ) { }
+  ) { 
+    this.authService.currentUser.subscribe(x => {
+      this.getDebitRequests();
+    });
+  }
   ngOnInit() {
     this.getDebitRequests();
   }
@@ -79,6 +83,7 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
     this.subscription.unsubscribe();
   }
   getDebitRequests() {
+    this.authService.updateLoadingDataStatus(true)
     this.subscription.add(this.debitService
       .searchDebitRequests(this.searchTerm$)
       .subscribe(response => {
@@ -113,10 +118,12 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
           this.downloadPDF(response.data);
           this.download = '';
         }
+        this.authService.updateLoadingDataStatus(false)
       }));
 
   }
   handleSearch(query: string, model: string) {
+    this.authService.updateLoadingDataStatus(true)
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -207,6 +214,7 @@ export class DebitRequestComponent implements OnInit,OnDestroy {
     }
   }
   paginate($event) {
+    this.authService.updateLoadingDataStatus(true)
     this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;

@@ -13,6 +13,8 @@ import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public
 export class AuthService {
   public currentUserSubject: BehaviorSubject<Auth>;
   public currentUser: Observable<Auth>;
+  public loadingDataSubject: BehaviorSubject<boolean>;
+  public loadingData: Observable<boolean>;
   token: string;
   constructor(
     private router: Router,
@@ -22,7 +24,9 @@ export class AuthService {
     const userData = JSON.parse(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<Auth>(userData);
     this.currentUser = this.currentUserSubject.asObservable();
-    
+    this.loadingDataSubject = new BehaviorSubject<boolean>(false);
+    this.loadingData = this.loadingDataSubject.asObservable();
+
   }
   public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
@@ -93,9 +97,13 @@ export class AuthService {
   }
   updateDefaultChama(chamaId) {
     let authData = this.getUserData();
-    authData.user.chama_id = chamaId;
-    this.storeResult(authData);
-    this.currentUserSubject.next(authData);
+    if (authData.user.chama_id != chamaId) {
+
+      authData.user.chama_id = chamaId
+      this.storeResult(authData);
+      this.currentUserSubject.next(authData);
+    }
+
   }
   public getCountryJSON(): Observable<any> {
     return this.http.get("/assets/country.json");
@@ -118,7 +126,9 @@ export class AuthService {
     return this.http.post(`${user.apiUrl}/api/oauth/password-reset/reset`, user);
   }
   updateCurrentUserSubject(authData) {
-    this.currentUserSubject.next(authData);
-
+      this.currentUserSubject.next(authData);
+  }
+  updateLoadingDataStatus(status) {
+    this.loadingDataSubject.next(status);
   }
 }

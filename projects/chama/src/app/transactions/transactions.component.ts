@@ -95,12 +95,14 @@ export class TransactionsComponent implements OnInit, OnDestroy {
           }
         };
         this.depositDataSource.sort = this.sort;
+       this.authService.updateLoadingDataStatus(false);
       }));
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
+    this.authService.updateLoadingDataStatus(true)
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -219,6 +221,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     });
   }
   getDefaultChamaDetails() {
+    this.authService.updateLoadingDataStatus(true)
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
       const authData = this.authService.getUserData();
@@ -244,6 +247,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama = this.chamaSubject.asObservable();
+      this.authService.updateLoadingDataStatus(false)
     }));
   }
   openAddDepositDialog() {

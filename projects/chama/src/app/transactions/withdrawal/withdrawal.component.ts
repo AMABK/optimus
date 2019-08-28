@@ -62,10 +62,14 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
   pageEvent: PageEvent;
   constructor(private authService: AuthService, private router: Router, private dialog: MatDialog, private depositService: DepositService, private exportPdf: ExportPdf) {
     this.authService.currentUser.subscribe(x => {
-      this.ngOnInit();
+      this.defaultDataLoad();
     });
   }
   ngOnInit() {
+    this.defaultDataLoad();
+  }
+  defaultDataLoad() {
+    this.authService.updateLoadingDataStatus(true)
     this.subscription.add(this.depositService
       .search(this.searchTerm$, "withdrawal")
       .subscribe(response => {
@@ -98,12 +102,14 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
           this.downloadPDF(response.data);
           this.download = '';
         }
+        this.authService.updateLoadingDataStatus(false)
       }));
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
+    this.authService.updateLoadingDataStatus(true)
     switch (model) {
       case "search":
         // General search can only be done in exclusivity
@@ -200,6 +206,7 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
     }
   }
   paginate($event) {
+    this.authService.updateLoadingDataStatus(true)
     this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;

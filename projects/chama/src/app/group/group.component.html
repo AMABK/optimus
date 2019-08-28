@@ -15,9 +15,72 @@
         <app-list-users [userChamaStatus]="status"></app-list-users>
       </div>
     </mat-tab>
-    <mat-tab label="Third"> Content 3 </mat-tab>
+    <mat-tab label="Deposit Types">
+      <table mat-table [dataSource]="txnTypeDataSource" matSort class="mat-elevation-z8">
+
+        <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef> No. </th>
+          <td mat-cell *matCellDef="let txnType;let i = index;">
+            {{1+i}}
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let txnType"> {{txnType.type_name}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="deposit_type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Transaction Type </th>
+          <td mat-cell *matCellDef="let txnType"> {{txnType.txn_type}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+          <td mat-cell *matCellDef="let txnType">
+            {{(txnType.status==0)?'Approved': 'Suspended'}}
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="created_at">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Create On </th>
+          <td mat-cell *matCellDef="let txnType"> {{txnType.created_at | date}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="updated_at">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Update On </th>
+          <td mat-cell *matCellDef="let txnType"> {{txnType.created_at | date}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="more">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let txnType">
+            <mat-icon [matMenuTriggerFor]="userChamas" data-id="contextMenu" style="cursor:pointer">more_vert</mat-icon>
+            <mat-menu #userChamas="matMenu">
+              <button mat-menu-item>
+                {{txnType.description}}
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedTypesColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedTypesColumns;"></tr>
+      </table>
+    </mat-tab>
   </mat-tab-group>
 </div>
 <ng-template #noAccess>
-  <div class="noAccess">Access Denied: You must be a group admin to access this page, please contact your group/chama administrators</div>
+  <div class="noAccess">Access Denied: You must be a group admin to access this page, please contact your group/chama
+    administrators</div>
 </ng-template>

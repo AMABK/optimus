@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         if (params["status"] === "error") {
           this.notificationService.emit(params["message"]);
         } else {
+          console.log(params["authData"])
           this.authService.socialLogin(JSON.parse(params["authData"]))
             .subscribe(authData => {
               if (authData && authData.access_token) {

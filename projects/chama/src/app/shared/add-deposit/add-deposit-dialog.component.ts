@@ -67,7 +67,7 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   matcher = new FormErrorService();
 
   ngOnInit() {
-
+    this.authService.updateLoadingDataStatus(true)
     this.chamaData={
       name:''
     }
@@ -76,6 +76,7 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
     }));
     this.subscription.add(this.depositService.getContributionType('deposit',null).subscribe(result => {
       this.depositTypes = result;
+      this.authService.updateLoadingDataStatus(false)
     }));
   }
   ngOnDestroy() {
@@ -103,7 +104,7 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
         createdBy: this.authService.getUserData().user.id,
         status: 0
       };
-
+      this.authService.updateLoadingDataStatus(true)
       this.saveDeposit(this.currentDeposit);
     }
   }
@@ -118,21 +119,28 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   createDeposit(deposit) {
     this.subscription.add(this.depositService.createDeposit(deposit).subscribe(
       response => {
+        this.authService.updateLoadingDataStatus(false)
         this.notificationService.emit(
           "Transaction successful",
           "success"
         );
         this.dialogRef.close("success");
       },
-      error => {}
+      error => {
+        this.authService.updateLoadingDataStatus(false);
+      }
     ));
   }
 
   updateDeposit(chama) {
-    // this.depositService.updateDeposit(chama).subscribe(response => {
-    //   this.resetCurrentChama();
-    //   this.notificationService.emit("Chama details saved!");
-    // });
+    this.depositService.updateDeposit(chama).subscribe(response => {
+      //this.resetCurrentChama();
+      this.authService.updateLoadingDataStatus(false)
+      this.notificationService.emit("Deposit details updated");
+    }, error => {
+        this.authService.updateLoadingDataStatus(false)
+        this.notificationService.emit("Request failed");
+    });
   }
   resetCurrentChama() {
     //this.currentChama = '';

@@ -49,4 +49,6 @@
   </mat-menu>
 
 </span>
-</mat-toolbar><mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</mat-toolbar>
+<mat-progress-bar *ngIf="loadingStatus" mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar *ngIf="!loadingStatus" mode="determinate" value="100"></mat-progress-bar>

@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
     'created_by',
     "status"
   ];
-  txnTypes$;
+  txnTypes;
   chamas$: Observable<Chama>;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -117,7 +117,9 @@ export class HomeComponent implements OnInit {
     private notificationService: NotificationService
   ) {
     this.authService.currentUser.subscribe(x => {
-      this.ngOnInit();
+      if (x != null) {
+        this.ngOnInit();
+      }
     });
     // this.getDefaultChamaDetails();
   }
@@ -159,9 +161,9 @@ export class HomeComponent implements OnInit {
       // }
     }
 
-    this.subscription.add(this.depositService.getAllContributionTypes().subscribe(res => {
-      this.txnTypes$ = res;
-    }));
+    this.depositService.getAllContributionTypes().subscribe(res => {
+      this.txnTypes = res;
+    });
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
     });
@@ -325,6 +327,7 @@ export class HomeComponent implements OnInit {
     return this.chamaService.all(url);
   }
   getDefaultChamaDetails() {
+    this.authService.updateLoadingDataStatus(true);
     let authData = this.authService.getUserData();
     this.chamas$ = this.getChamas(this.authService.getUserId());
 
@@ -364,11 +367,12 @@ export class HomeComponent implements OnInit {
       //   console.log(authData);
       //   this.authService.storeResult(authData);
       // });
-
+console.log('perm')
       this.getDefaultUserChamaPermissions();
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama$ = this.chamaSubject.asObservable();
+      this.authService.updateLoadingDataStatus(false)
     });
   }
   getDefaultUserChamaPermissions() {

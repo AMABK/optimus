@@ -102,11 +102,6 @@ export class ChamaService {
     );
   }
   updateDefaultChama(chamaId) {
-    // this.token = this.authService.getUserData()["access_token"];
-    // let headers = new HttpHeaders({
-    //   Authorization: "Bearer " + this.token
-    // });
-
     return this.http.post(
       `${environment.apiUrl}/api/chama/update-default`,
       {
@@ -129,6 +124,10 @@ export class ChamaService {
   getGroupInviteCode(chamaId) {
     return this.http.get<any>(
       `${environment.apiUrl}/api/chama/${chamaId}/get-group-invite-code`);
+  }
+  getChamaMemberInvites(chamaId) {
+    return this.http.get<any>(
+      `${environment.apiUrl}/api/chama/${chamaId}/get-chama-member-invites`);
   }
   setUserGroupList(groupsObject=[]) {
     if (groupsObject.length > 0) {

@@ -46,7 +46,6 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
   gender = -"";
   txn_type = 'deposit';
   statuses = [
-    { value: '', display: 'Verified Status' },
     { value: 'yes', display: 'Yes' },
     { value: 'no', display: 'No' }
   ];

@@ -30,7 +30,7 @@ export interface PeriodicElement {
   styleUrls: ["./deposit.component.css"]
 })
 export class DepositComponent implements OnInit {
-  subscription: Subscription = new Subscription()
+  private subscription: Subscription = new Subscription()
   searchTerm$ = new Subject<any>();
   paginationData: any;
   asAdmin = "no";
@@ -83,7 +83,7 @@ export class DepositComponent implements OnInit {
     private exportPdf: ExportPdf
   ) { 
     this.authService.currentUser.subscribe(x => {
-      this.ngOnInit();
+      this.defaultDataLoad();
     });
   }
   ngOnDestroy(): void {
@@ -93,6 +93,10 @@ export class DepositComponent implements OnInit {
     this.subscription.unsubscribe();
   }
   ngOnInit() {
+    this.defaultDataLoad();
+  }
+  defaultDataLoad() {
+    this.authService.updateLoadingDataStatus(true)
     this.subscription.add(this.depositService.getContributionType('deposit', null).subscribe(result => {
       this.depositTypes = result;
     }));
@@ -101,6 +105,7 @@ export class DepositComponent implements OnInit {
 
   }
   handleSearch(query: string, model: string) {
+    this.authService.updateLoadingDataStatus(true)
     switch (model) {
       case "search":
         // General search can only be done in exclusivity
@@ -192,6 +197,7 @@ export class DepositComponent implements OnInit {
     }
   }
   paginate($event) {
+    this.authService.updateLoadingDataStatus(true)
     this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
@@ -284,6 +290,7 @@ export class DepositComponent implements OnInit {
     }));
   }
   getDefaultChamaDeposits() {
+    this.authService.updateLoadingDataStatus(true)
     this.subscription.add(this.depositService
       .search(this.searchTerm$, "deposit")
       .subscribe(response => {
@@ -316,6 +323,7 @@ export class DepositComponent implements OnInit {
           this.downloadPDF(response.data);
           this.download = '';
         }
+        this.authService.updateLoadingDataStatus(false)
       }));
   }
   openAddGroupDepositDialog() {

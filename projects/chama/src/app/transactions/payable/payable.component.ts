@@ -16,6 +16,7 @@ import { AuthService } from 'projects/auth/src/public_api';
   styleUrls: ['./payable.component.css']
 })
 export class PayableComponent implements OnInit {
+  private subscription: Subscription = new Subscription();
   searchTerm$ = new Subject<any>();
   paginationData: any;
   asAdmin = 'no';
@@ -59,7 +60,6 @@ export class PayableComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  private subscription: Subscription = new Subscription();
   constructor(
     private authService: AuthService,
     private depositService: DepositService,
@@ -67,10 +67,16 @@ export class PayableComponent implements OnInit {
     private exportPdf: ExportPdf
   ) { 
     this.authService.currentUser.subscribe(x => {
-      this.ngOnInit();
+      if (x != null) {
+        this.defaultDataLoad();
+      }
     });
   }
   ngOnInit() {
+    this.defaultDataLoad();
+  }
+  defaultDataLoad() {
+    this.authService.updateLoadingDataStatus(true)
     this.subscription.add(this.depositService
       .search(this.searchTerm$, 'payable')
       .subscribe(response => {
@@ -103,13 +109,18 @@ export class PayableComponent implements OnInit {
           this.downloadPDF(response.data);
           this.download = '';
         }
+        this.authService.updateLoadingDataStatus(false)
+      }, error => {
+          this.authService.updateLoadingDataStatus(false)
       }));
 
   }
   ngOnDestory() {
     this.subscription.unsubscribe();
+    this.searchTerm$.unsubscribe();
   }
   handleSearch(query: string, model: string) {
+    this.authService.updateLoadingDataStatus(true)
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -208,6 +219,7 @@ export class PayableComponent implements OnInit {
     }
   }
   paginate($event) {
+    this.authService.updateLoadingDataStatus(true)
     this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
