@@ -17,7 +17,7 @@ import { AuthService } from 'projects/auth/src/public_api';
 })
 export class PayableComponent implements OnInit {
   private subscription: Subscription = new Subscription();
-  searchTerm$ = new Subject<any>();
+  protected searchTerm$ = new Subject<any>();
   paginationData: any;
   asAdmin = 'no';
   pFromDate = '';
@@ -56,7 +56,7 @@ export class PayableComponent implements OnInit {
     min: 0,
     max: 0
   };
-  download: string = '';
+  download = '';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
@@ -76,11 +76,11 @@ export class PayableComponent implements OnInit {
     this.defaultDataLoad();
   }
   defaultDataLoad() {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.depositService
       .search(this.searchTerm$, 'payable')
       .subscribe(response => {
-        if (this.download != 'download') {
+        if (this.download !== 'download') {
           this.aggregates.total = response.data.sum;
           this.aggregates.avg = response.data.avg;
           this.aggregates.min = response.data.min;
@@ -109,9 +109,9 @@ export class PayableComponent implements OnInit {
           this.downloadPDF(response.data);
           this.download = '';
         }
-        this.authService.updateLoadingDataStatus(false)
+        this.authService.updateLoadingDataStatus(false);
       }, error => {
-        this.authService.updateLoadingDataStatus(false)
+          this.authService.updateLoadingDataStatus(false);
       }));
 
   }
@@ -119,7 +119,7 @@ export class PayableComponent implements OnInit {
     this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -159,7 +159,7 @@ export class PayableComponent implements OnInit {
         break;
       case "asAdmin":
         this.asAdmin = query;
-        if (query == 'yes') {
+        if (query === 'yes') {
           this.displayedColumns = [
             'position',
             'name',
@@ -218,7 +218,7 @@ export class PayableComponent implements OnInit {
     }
   }
   paginate($event) {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
@@ -284,7 +284,7 @@ export class PayableComponent implements OnInit {
         //   "success"
         // );
       }
-    })
+    });
   }
   downloadPDF(pdfData) {
     const data = [];
@@ -305,6 +305,6 @@ export class PayableComponent implements OnInit {
     this.exportPdf.createPDF(data, head, 'landscape');
   }
   userHasRole(role) {
-    return this.authService.userHasRole(role)
+    return this.authService.userHasRole(role);
   }
 }

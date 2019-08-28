@@ -18,7 +18,7 @@ import { AuthService } from 'projects/auth/src/public_api';
 })
 export class WithdrawalComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  searchTerm$ = new Subject<any>();
+  protected searchTerm$ = new Subject<any>();
   paginationData: any;
   asAdmin = "no";
   pFromDate = "";
