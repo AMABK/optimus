@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
           const user = {
             apiUrl: this.apiUrl,
             token: this.userResetCodeFind.token
-          }
+          };
           this.authService.resetCodeFind(user)
             .subscribe(res => {
               this.notificationService.emit('Enter new password', 'success');
@@ -99,7 +99,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
-    //console.log(this.route.snapshot.parent.url[0].path)
     this.routeTo = this.activatedRoute.snapshot.queryParams.returnUrl || 'people';
     if (this.authService.currentUserValue) {
       this.router.navigate(['/home']);
@@ -140,13 +139,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
             this.router.navigate(['/home']);
           }
         }, error => {
-          this.showLogin()
+          this.showLogin();
         });
     });
 
   }
   register() {
-    console.log(this.userRegister.email)
     const user = {
       apiUrl: environment.apiUrl,
       email: this.userRegister.email,
@@ -154,31 +152,31 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       last_name: this.userRegister.lastName,
       password_confirmation: this.userRegister.confirmPassword,
       password: this.userRegister.password
-    }
+    };
     this.authService.register(user)
       .subscribe(res => {
         this.showLogin();
         this.notificationService.emit('Account created. Please check your email for confirmation message', 'success');
       }, error => {
-        this.showRegister()
+        this.showRegister();
       });
   }
   reset() {
     const user = {
       apiUrl: this.apiUrl,
       email: this.userReset.email
-    }
+    };
     this.authService.reset(user)
       .subscribe(res => {
         this.notificationService.emit('Password reset link sent to your email', 'success');
-        this.showReset()
+        this.showReset();
       }, error => {
-        if (error.status == 403) {
+        if (error.status === 403) {
           this.notificationService.emit(error.message.message);
         } else {
-          this.notificationService.emit('Invalid link')
+          this.notificationService.emit('Invalid link');
         }
-        this.showReset()
+        this.showReset();
       });
   }
   resetPassword() {
@@ -188,14 +186,14 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
       token: this.userResetPassword.token,
       password: this.userResetPassword.password,
       password_confirmation: this.userResetPassword.confirmPassword
-    }
+    };
     this.authService.resetPassword(user)
       .subscribe(res => {
         this.notificationService.emit('Password reset successfully', 'success');
         this.router.navigate(['login']);
       }, error => {
         this.notificationService.emit('Error occured while resetting password.');
-        this.showResetPassword()
+        this.showResetPassword();
       });
   }
   showRegister() {
@@ -206,7 +204,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this.showResetPasswordForm = false;
   }
   showReset() {
-    this.formTitle = 'Reset Password'
+    this.formTitle = 'Reset Password';
     this.showLoginForm = false;
     this.showResetForm = true;
     this.showRegisterForm = false;

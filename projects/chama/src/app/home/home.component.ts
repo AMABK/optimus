@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -36,7 +36,7 @@ export interface PeriodicElement1 {
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   inviteCode: string;
   searchTerm$ = new Subject<any>();
@@ -107,7 +107,7 @@ export class HomeComponent implements OnInit {
   };
   constructor(
     public dialog: MatDialog,
-    private _formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     private chamaService: ChamaService,
     private depositService: DepositService,
     private authService: AuthService,
@@ -164,10 +164,10 @@ export class HomeComponent implements OnInit {
     this.depositService.getAllContributionTypes().subscribe(res => {
       this.txnTypes = res;
     });
-    this.firstFormGroup = this._formBuilder.group({
+    this.firstFormGroup = this.formBuilder.group({
       firstCtrl: ["", Validators.required]
     });
-    this.secondFormGroup = this._formBuilder.group({
+    this.secondFormGroup = this.formBuilder.group({
       secondCtrl: ["", Validators.required]
     });
     // Line chart:
@@ -328,7 +328,7 @@ export class HomeComponent implements OnInit {
   }
   getDefaultChamaDetails() {
     this.authService.updateLoadingDataStatus(true);
-    let authData = this.authService.getUserData();
+    const authData = this.authService.getUserData();
     this.chamas$ = this.getChamas(this.authService.getUserId());
 
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
@@ -376,15 +376,15 @@ console.log('perm')
     });
   }
   getDefaultUserChamaPermissions() {
-    let authData = this.authService.getUserData();
-    let user = {
+    const authData = this.authService.getUserData();
+    const user = {
       user_id: authData.user.id,
       chama_id: authData.user.chama_id
-    }
+    };
     this.userService.getChamaUserPermissionsList(user).subscribe(res => {
       authData.user.roles = res.data;
       this.authService.storeResult(authData);
-    })
+    });
   }
 
   updateDefaultChama(chamaId,chamaName) {

@@ -113,8 +113,10 @@ export class AppComponent implements OnInit {
     private userService: UserService,
   ) {
     this.authService.currentUser.subscribe(x => {
-      this.currentUser = x
-      this.ngOnInit();
+      this.currentUser = x;
+      if (x !== null) {
+        this.ngOnInit();
+      }
     });
     // subscribe to router events and send page views to Google Analytics
     this.router.events.subscribe(event => {
@@ -137,39 +139,37 @@ export class AppComponent implements OnInit {
       const defaultChamaId = this.authService.getUserData().user.chama_id;
       this.chamas = this.currentUser['user']['chamas'];
       for (let i = 0; i < this.chamas.length; i++) {
-        if (this.chamas[i].id == defaultChamaId) {
-          this.defaultChamaName = this.chamas[i].name
+        if (this.chamas[i].id === defaultChamaId) {
+          this.defaultChamaName = this.chamas[i].name;
         }
       }
     } else {
       this.chamas = [];
     }
-    
   }
   updateDefaultGroup(chama) {
     if (this.currentUser) {
       this.authService.updateLoadingDataStatus(true)
       this.chamaService.updateDefaultChama(chama.id).subscribe(res => {
-        let authData = this.authService.getUserData();
+        const authData = this.authService.getUserData();
         const user = {
           user_id: authData.user.id,
           chama_id: chama.id
-        }
+        };
         this.userService.getChamaUserPermissionsList(user).subscribe(result => {
           authData.user.chama_id = chama.id;
           authData.user.roles = result.data;
           this.authService.storeResult(authData);
           this.authService.updateCurrentUserSubject(authData);
-        
-          this.authService.updateLoadingDataStatus(false)
-          this.ns.emit('Default group/chama switched to ' + chama.name, 'success')
+          this.authService.updateLoadingDataStatus(false);
+          this.ns.emit('Default group/chama switched to ' + chama.name, 'success');
         }, error => {
-          this.authService.updateLoadingDataStatus(false)
+          this.authService.updateLoadingDataStatus(false);
           // console.log('errkr')
         });
-      })
+      });
     }
-    this.authService.updateLoadingDataStatus(false)
+    this.authService.updateLoadingDataStatus(false);
   }
   logout() {
     this.chamas = [];
@@ -177,7 +177,7 @@ export class AppComponent implements OnInit {
     this.router.navigate(['login']);
   }
   spinner() {
-    this.loaderService.isLoading.getValue()
+    this.loaderService.isLoading.getValue();
   }
   prepareRouterState(router: RouterOutlet) {
     return router.activatedRouteData['animation'] || 'initial';

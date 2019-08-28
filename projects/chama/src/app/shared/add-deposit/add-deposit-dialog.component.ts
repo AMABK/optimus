@@ -22,25 +22,9 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   maxPaymentDate = new Date();
   chama$: Observable<Chama>;
   currentDeposit: any;
-  activeButton: boolean = true;
+  activeButton = true;
   chamaData: any;
   depositTypes;
-  @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
-  constructor(
-    private depositService: DepositService,
-    private authService: AuthService,
-    private notificationService: NotificationService,
-    public dialogRef: MatDialogRef<AddGroupContributionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private ngZone: NgZone,
-    private chamaService:ChamaService
-  ) {}
-  triggerResize() {
-    // Wait for changes to be applied, then trigger textarea resize.
-    this.ngZone.onStable
-      .pipe(take(1))
-      .subscribe(() => this.autosize.resizeToFitContent(true));
-  }
   paymentDate = new FormControl("", [
     Validators.required,
     Validators.minLength(4)
@@ -57,24 +41,41 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
     Validators.minLength(1),
     Validators.pattern("[0]*([1-9]+|[1-9][0-9][0-9]*)")
   ]);
+  desc = new FormControl("", [Validators.required, Validators.minLength(4)]);
+
+  matcher = new FormErrorService();
+  @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
+  constructor(
+    private depositService: DepositService,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    public dialogRef: MatDialogRef<AddGroupContributionComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private ngZone: NgZone,
+    private chamaService: ChamaService
+  ) { }
+  triggerResize() {
+    // Wait for changes to be applied, then trigger textarea resize.
+    this.ngZone.onStable
+      .pipe(take(1))
+      .subscribe(() => this.autosize.resizeToFitContent(true));
+  }
+
   // tslint:disable-next-line: member-ordering
   location = new FormControl("", [
     Validators.required,
     Validators.minLength(4)
   ]);
-  desc = new FormControl("", [Validators.required, Validators.minLength(4)]);
-
-  matcher = new FormErrorService();
 
   ngOnInit() {
     this.authService.updateLoadingDataStatus(true)
-    this.chamaData={
-      name:''
+    this.chamaData = {
+      name: ''
     }
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
     }));
-    this.subscription.add(this.depositService.getContributionType('deposit',null).subscribe(result => {
+    this.subscription.add(this.depositService.getContributionType('deposit', null).subscribe(result => {
       this.depositTypes = result;
       this.authService.updateLoadingDataStatus(false)
     }));
@@ -138,8 +139,8 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
       this.authService.updateLoadingDataStatus(false)
       this.notificationService.emit("Deposit details updated");
     }, error => {
-        this.authService.updateLoadingDataStatus(false)
-        this.notificationService.emit("Request failed");
+      this.authService.updateLoadingDataStatus(false)
+      this.notificationService.emit("Request failed");
     });
   }
   resetCurrentChama() {

@@ -60,7 +60,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
   constructor(
-    private router:Router,
+    private router: Router,
     private depositService: DepositService,
     public dialog: MatDialog,
     private chamaService: ChamaService,
@@ -95,7 +95,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
           }
         };
         this.depositDataSource.sort = this.sort;
-       this.authService.updateLoadingDataStatus(false);
+        this.authService.updateLoadingDataStatus(false);
       }));
   }
   ngOnDestroy() {
@@ -273,7 +273,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === "success") {
-       // this.getDefaultChamaDetails;
+        // this.getDefaultChamaDetails;
       }
     });
   }

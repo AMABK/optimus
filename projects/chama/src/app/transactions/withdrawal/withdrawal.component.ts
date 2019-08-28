@@ -56,7 +56,7 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
     minimum: 0,
     maximum: 0
   };
-  download: string = '';
+  download = '';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
@@ -78,25 +78,25 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
           this.aggregates.average = response.data.avg;
           this.aggregates.minimum = response.data.min;
           this.aggregates.maximum = response.data.max;
-        this.paginationData = {
-          current_page: response.data.current_page - 1,
-          total: response.data.total,
-          per_page: response.data.per_page
-        };
-        this.depositDataSource = new MatTableDataSource(response.data.data);
-        this.depositDataSource.sortingDataAccessor = (item, property) => {
-          switch (property) {
-            case "contribution_type.type_name":
-              return item.contribution_type.type_name;
-            case "payment_mode.bank":
-              if (item.payment_mode != null) {
-                return item.payment_mode.bank;
-              }
-              return null;
-            default:
-              return item[property];
-          }
-        };
+          this.paginationData = {
+            current_page: response.data.current_page - 1,
+            total: response.data.total,
+            per_page: response.data.per_page
+          };
+          this.depositDataSource = new MatTableDataSource(response.data.data);
+          this.depositDataSource.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case "contribution_type.type_name":
+                return item.contribution_type.type_name;
+              case "payment_mode.bank":
+                if (item.payment_mode != null) {
+                  return item.payment_mode.bank;
+                }
+                return null;
+              default:
+                return item[property];
+            }
+          };
           this.depositDataSource.sort = this.sort;
         } else {
           this.downloadPDF(response.data);
@@ -150,7 +150,7 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
       case "asAdmin":
         this.asAdmin = query;
         if (query == 'yes') {
-          this.displayedColumns= [
+          this.displayedColumns = [
             "position",
             'name',
             "contribution_type.type_name",
@@ -293,7 +293,7 @@ export class WithdrawalComponent implements OnInit, OnDestroy {
       data.push(subData);
       x++;
     }
-    const head = ['No.', 'Bank','Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    const head = ['No.', 'Bank', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
     this.exportPdf.createPDF(data, head, 'landscape');
   }
   userHasRole(role) {

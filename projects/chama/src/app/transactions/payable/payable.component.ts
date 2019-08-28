@@ -65,7 +65,7 @@ export class PayableComponent implements OnInit {
     private depositService: DepositService,
     public dialog: MatDialog,
     private exportPdf: ExportPdf
-  ) { 
+  ) {
     this.authService.currentUser.subscribe(x => {
       if (x != null) {
         this.defaultDataLoad();
@@ -111,7 +111,7 @@ export class PayableComponent implements OnInit {
         }
         this.authService.updateLoadingDataStatus(false)
       }, error => {
-          this.authService.updateLoadingDataStatus(false)
+        this.authService.updateLoadingDataStatus(false)
       }));
 
   }
@@ -250,7 +250,6 @@ export class PayableComponent implements OnInit {
     if (value == null) {
       return 0;
     }
-    
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   formatDateInput(date) {

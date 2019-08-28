@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -29,7 +29,7 @@ export interface PeriodicElement {
   templateUrl: "./deposit.component.html",
   styleUrls: ["./deposit.component.css"]
 })
-export class DepositComponent implements OnInit {
+export class DepositComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription()
   searchTerm$ = new Subject<any>();
   paginationData: any;
@@ -81,7 +81,7 @@ export class DepositComponent implements OnInit {
     private chamaService: ChamaService,
     private authService: AuthService,
     private exportPdf: ExportPdf
-  ) { 
+  ) {
     this.authService.currentUser.subscribe(x => {
       this.defaultDataLoad();
     });
@@ -328,25 +328,25 @@ export class DepositComponent implements OnInit {
   }
   openAddGroupDepositDialog() {
     const authData = this.authService.getUserData();
-      const defaultChama = {
-        name:
-          authData.user.default_chama != null
-            ? authData.user.default_chama.name
-            : null,
-        chamaId: authData.user.chama_id,
-        depositBy: 'admin',
-        user: {
-          userId: authData.user.id,
-          userName: authData.user.first_name+' '+authData.user.last_name
-        }
-      };
-      const dialogRef = this.dialog.open(AddDepositDialogComponent, {
-        height: "auto",
-        width: "600px",
-        data: {
-          key: defaultChama
-        }
-      });
+    const defaultChama = {
+      name:
+        authData.user.default_chama != null
+          ? authData.user.default_chama.name
+          : null,
+      chamaId: authData.user.chama_id,
+      depositBy: 'admin',
+      user: {
+        userId: authData.user.id,
+        userName: authData.user.first_name + ' ' + authData.user.last_name
+      }
+    };
+    const dialogRef = this.dialog.open(AddDepositDialogComponent, {
+      height: "auto",
+      width: "600px",
+      data: {
+        key: defaultChama
+      }
+    });
     dialogRef.afterClosed().subscribe(result => {
       if (result === "success") {
         this.getDefaultChamaDeposits();

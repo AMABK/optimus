@@ -44,7 +44,7 @@ export class AuthService {
     return this.http
       .post<Auth>(`${url}`, {
         username: email,
-        password: password,
+        password,
         client_id: clientId,
         client_secret: clientSecret,
         grant_type: 'password',
@@ -80,6 +80,7 @@ export class AuthService {
     localStorage.removeItem('authData');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+    this.updateLoadingDataStatus(false);
   }
 
   storeResult(authData) {
@@ -90,20 +91,19 @@ export class AuthService {
     return this.getUserData().access_token;
   }
   getUserId() {
-    return this.getUserData().user['id'];
+    return this.getUserData().user.id;
   }
   getUserData() {
     return JSON.parse(localStorage.getItem('authData'));
   }
   updateDefaultChama(chamaId) {
-    let authData = this.getUserData();
-    if (authData.user.chama_id != chamaId) {
+    const authData = this.getUserData();
+    if (authData.user.chama_id !== chamaId) {
 
-      authData.user.chama_id = chamaId
+      authData.user.chama_id = chamaId;
       this.storeResult(authData);
       this.currentUserSubject.next(authData);
     }
-
   }
   public getCountryJSON(): Observable<any> {
     return this.http.get("/assets/country.json");
