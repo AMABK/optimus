@@ -8,26 +8,20 @@ import { User } from '../../models/user/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class ChamaService {
-  model = "chama";
+  model = 'chama';
   token: string;
   groupsData = {
     chamas: [],
-    default:[]
-  }
-  public groupsDataSubject: BehaviorSubject<any>;
-  public groups: Observable<any>;
+    default: []
+  };
+  protected groupsDataSubject: BehaviorSubject<any>;
+  protected groups: Observable<any>;
   constructor(private http: HttpClient, private authService: AuthService) {
     this.groupsDataSubject = new BehaviorSubject<any>(this.groupsData);
     this.groups = this.groupsDataSubject.asObservable();
-  }
-
-  createAuthorizationHeader(headers: Headers) {
-    this.token = this.authService.getUserId();
-    headers.append("Authorization", "Bearer " + this.token);
-    headers.append("X-Requested-With", "XMLHttpRequest");
   }
   getUrl() {
     return `${environment.apiUrl}${this.model}`;
@@ -38,15 +32,8 @@ export class ChamaService {
   }
 
   all(url) {
-    //return this.http.get<Chama[]>(this.getUrl());
-    this.token = this.authService.getUserData()["access_token"];
-    let headers = new HttpHeaders({
-      Authorization: "Bearer " + this.token
-    });
     return this.http
-      .get<Chama>(`${url}`, {
-        headers: headers
-      })
+      .get<Chama>(`${url}`)
       .pipe(share());
   }
 
@@ -63,13 +50,7 @@ export class ChamaService {
   }
 
   create(chama: Chama) {
-    this.token = this.authService.getUserData()["access_token"];
-    let headers = new HttpHeaders({
-      Authorization: "Bearer " + this.token
-    });
-    return this.http.post(`${environment.apiUrl}/api/${this.model}/create`, chama, {
-      headers: headers
-    });
+    return this.http.post(`${environment.apiUrl}/api/${this.model}/create`, chama);
   }
 
   createPaymentMode(paymentMode) {
@@ -102,15 +83,10 @@ export class ChamaService {
     );
   }
   updateDefaultChama(chamaId) {
-    // this.token = this.authService.getUserData()["access_token"];
-    // let headers = new HttpHeaders({
-    //   Authorization: "Bearer " + this.token
-    // });
-
     return this.http.post(
       `${environment.apiUrl}/api/chama/update-default`,
       {
-        chamaId: chamaId
+        chamaId
       }
     );
   }
@@ -130,11 +106,15 @@ export class ChamaService {
     return this.http.get<any>(
       `${environment.apiUrl}/api/chama/${chamaId}/get-group-invite-code`);
   }
-  setUserGroupList(groupsObject=[]) {
+  getChamaMemberInvites(chamaId) {
+    return this.http.get<any>(
+      `${environment.apiUrl}/api/chama/${chamaId}/get-chama-member-invites`);
+  }
+  setUserGroupList(groupsObject = []) {
     if (groupsObject.length > 0) {
       this.groupsData.chamas = groupsObject;
     }
-    let authData = this.authService.getUserData();
+    const authData = this.authService.getUserData();
     authData.user.chamas = this.groupsData;
     this.authService.storeResult(authData);
     this.groupsDataSubject.next(this.groupsData);

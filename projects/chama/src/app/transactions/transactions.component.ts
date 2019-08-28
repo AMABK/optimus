@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.component';
 import { Subject, BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { User } from '../models/user/user';
 import { MatSort } from '@angular/material/sort';
@@ -12,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import * as moment from 'moment';
 import { RequestDebitDialogComponent } from './request-debit-dialog/request-debit-dialog.component';
 import { Router } from '@angular/router';
+import { AddDepositDialogComponent } from '../shared/add-deposit/add-deposit-dialog.component';
 
 @Component({
   selector: 'app-transactions',
@@ -20,15 +20,16 @@ import { Router } from '@angular/router';
 })
 export class TransactionsComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  searchTerm$ = new Subject<any>();
+  private searchTerm$ = new Subject<any>();
   paginationData: any;
   pFromDate = '';
-  pToDate: string = '';
-  sFromDate: string = '';
-  sToDate: string = '';
-  search: string = '';
-  verified: string = '';
+  pToDate = '';
+  sFromDate = '';
+  sToDate = '';
+  search = '';
+  verified = '';
   depositDataSource;
+  // tslint:disable-next-line: variable-name
   txn_type = 'deposit';
   displayedColumns: string[] = [
     'position',
@@ -60,7 +61,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
   constructor(
-    private router:Router,
+    private router: Router,
     private depositService: DepositService,
     public dialog: MatDialog,
     private chamaService: ChamaService,
@@ -95,12 +96,14 @@ export class TransactionsComponent implements OnInit, OnDestroy {
           }
         };
         this.depositDataSource.sort = this.sort;
+        this.authService.updateLoadingDataStatus(false);
       }));
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
   handleSearch(query: string, model: string) {
+    this.authService.updateLoadingDataStatus(true);
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -213,12 +216,13 @@ export class TransactionsComponent implements OnInit, OnDestroy {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
         this.router.navigate(['/transactions/debit-request']);
       }
     });
   }
   getDefaultChamaDetails() {
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       // update default chama
       const authData = this.authService.getUserData();
@@ -239,38 +243,42 @@ export class TransactionsComponent implements OnInit, OnDestroy {
           authData.user.default_chama.name = result.default_chama.name;
         }
       }
-      //this.authService.storeResult(authData);
+      // this.authService.storeResult(authData);
 
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama = this.chamaSubject.asObservable();
+      this.authService.updateLoadingDataStatus(false);
     }));
   }
   openAddDepositDialog() {
-    this.chama.subscribe(res => {
-      this.dChama = res;
-    });
+    const authData = this.authService.getUserData();
+    const defaultChama = {
+      name:
+        authData.user.default_chama != null
+          ? authData.user.default_chama.name
+          : null,
+      chamaId: authData.user.chama_id,
+      depositBy: 'admin',
+      user: {
+        userId: authData.user.id,
+        userName: authData.user.first_name + ' ' + authData.user.last_name
+      }
+    };
     const dialogRef = this.dialog.open(AddDepositDialogComponent, {
       height: 'auto',
       width: '600px',
       data: {
-        depositTypes: this.depositTypes,
-        group: this.dChama.default_chama
+        key: defaultChama
       }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {
-        // this.chamas$ = this.getChamas(this.authService.getUserId());
-        // this.getDefaultChamaDetails();
-        // // set message to be emitted by loader interceptor after http requests end
-        // this.loaderIService.storeNotificationMessage(
-        //   "Chama successfully updated!",
-        //   "success"
-        // );
+        // this.getDefaultChamaDetails;
       }
     });
   }
   userHasRole(role) {
-    return this.authService.userHasRole(role)
+    return this.authService.userHasRole(role);
   }
 }

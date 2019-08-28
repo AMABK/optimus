@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from 'projects/auth/src/public_api';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { Auth } from './models/auth/auth';
 import { LoaderService } from 'projects/loader/src/public_api';
-import { RequestJoinGroupComponent } from './shared/request-join-group/request-join-group.component';
-import { MatDialog } from '@angular/material/dialog';
 import { ChamaService } from './http/chama/chama.service';
 import { UserService } from './http/user/user.service';
+import * as introJs from 'intro.js/intro.js';
 
 @Component({
   selector: 'app-root',
@@ -103,7 +102,7 @@ export class AppComponent implements OnInit {
       label: 'Manage System Groups', designation: 'admin'
     }
   ];
-  defaultChama = 'No Selected Set';
+  defaultChamaName = 'No Selected Set';
   chamas = [];
   constructor(
     public loaderService: LoaderService,
@@ -111,11 +110,13 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private chamaService: ChamaService,
-    private userService: UserService
+    private userService: UserService,
   ) {
     this.authService.currentUser.subscribe(x => {
-      this.currentUser = x
-      this.ngOnInit();
+      this.currentUser = x;
+      if (x !== null) {
+        this.ngOnInit();
+      }
     });
     // subscribe to router events and send page views to Google Analytics
     this.router.events.subscribe(event => {
@@ -127,6 +128,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    introJs().start();
 
     if (this.loaderService.isLoading.getValue()) {
       // console.log(this.loaderService.isLoading.getValue());
@@ -135,35 +137,39 @@ export class AppComponent implements OnInit {
     }
     if (this.currentUser) {
       const defaultChamaId = this.authService.getUserData().user.chama_id;
-      this.chamas = this.currentUser['user']['chamas']
+      this.chamas = this.currentUser['user']['chamas'];
       for (let i = 0; i < this.chamas.length; i++) {
-        if (this.chamas[i].id == defaultChamaId) {
-          this.defaultChama = this.chamas[i].name
+        if (this.chamas[i].id === defaultChamaId) {
+          this.defaultChamaName = this.chamas[i].name;
         }
       }
     } else {
       this.chamas = [];
     }
-    
   }
-  updateDefaultGroup(chamaId) {
-    this.chamaService.updateDefaultChama(chamaId).subscribe(res => {
-      let authData = this.authService.getUserData();
-      const user = {
-        user_id: authData.user.id,
-        chama_id: chamaId
-      }
-      this.userService.getChamaUserPermissionsList(user).subscribe(result => {
-        authData.user.chama_id = chamaId;
-        authData.user.roles = result.data;
-        this.authService.storeResult(authData);
-        this.authService.updateCurrentUserSubject(authData);
-       //// console.log(this.defaultChama)
-        this.ns.emit('Default group/chama switched to ' + this.defaultChama,'success')
-      },error => {
-         // console.log('errkr')
+  updateDefaultGroup(chama) {
+    if (this.currentUser) {
+      this.authService.updateLoadingDataStatus(true)
+      this.chamaService.updateDefaultChama(chama.id).subscribe(res => {
+        const authData = this.authService.getUserData();
+        const user = {
+          user_id: authData.user.id,
+          chama_id: chama.id
+        };
+        this.userService.getChamaUserPermissionsList(user).subscribe(result => {
+          authData.user.chama_id = chama.id;
+          authData.user.roles = result.data;
+          this.authService.storeResult(authData);
+          this.authService.updateCurrentUserSubject(authData);
+          this.authService.updateLoadingDataStatus(false);
+          this.ns.emit('Default group/chama switched to ' + chama.name, 'success');
+        }, error => {
+          this.authService.updateLoadingDataStatus(false);
+          // console.log('errkr')
+        });
       });
-    })
+    }
+    this.authService.updateLoadingDataStatus(false);
   }
   logout($event) {
     this.chamas = [];
@@ -176,7 +182,7 @@ export class AppComponent implements OnInit {
     this.router.navigate(['login']);
   }
   spinner() {
-    this.loaderService.isLoading.getValue()
+    this.loaderService.isLoading.getValue();
   }
   prepareRouterState(router: RouterOutlet) {
     return router.activatedRouteData['animation'] || 'initial';

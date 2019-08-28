@@ -8,9 +8,9 @@ import { ChamaService } from '../../http/chama/chama.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: "app-request-debit-dialog",
-  templateUrl: "./request-debit-dialog.component.html",
-  styleUrls: ["./request-debit-dialog.component.css"]
+  selector: 'app-request-debit-dialog',
+  templateUrl: './request-debit-dialog.component.html',
+  styleUrls: ['./request-debit-dialog.component.css']
 })
 export class RequestDebitDialogComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
@@ -24,22 +24,22 @@ export class RequestDebitDialogComponent implements OnInit, OnDestroy {
     private chamaService: ChamaService
   ) { }
   requestType = new FormControl(this.data.requestType);
-  amount = new FormControl("", [Validators.required, Validators.min(10), Validators.pattern("^[0-9]*$")]);
-  debitFrom = new FormControl("", [Validators.required]);
-  reason = new FormControl("", [Validators.required, Validators.minLength(3)]);
-  paymentDate = new FormControl("", [
+  amount = new FormControl('', [Validators.required, Validators.min(10), Validators.pattern('^[0-9]*$')]);
+  debitFrom = new FormControl('', [Validators.required]);
+  reason = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  paymentDate = new FormControl('', [
     Validators.required,
     Validators.minLength(8)
   ]);
-  disbursementDate = new FormControl("", [
+  disbursementDate = new FormControl('', [
     Validators.required,
     Validators.minLength(8)
   ]);
   matcher = new FormErrorService();
   ngOnInit() {
     this.chamaData = {
-      name:''
-    }
+      name: ''
+    };
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
     }));
@@ -69,7 +69,7 @@ export class RequestDebitDialogComponent implements OnInit, OnDestroy {
   }
   saveLoanRequest(loan) {
     if (!loan.id) {
-      loan.id = this.chamaData.id
+      loan.id = this.chamaData.id;
       this.createLoanRequest(loan);
     } else {
       loan.id = this.chamaData.id;
@@ -80,10 +80,10 @@ export class RequestDebitDialogComponent implements OnInit, OnDestroy {
     this.subscription.add(this.debitService.createDebitRequest(loan).subscribe(
       response => {
         this.notificationService.emit(
-          "Debit request successful",
-          "success"
+          'Debit request successful',
+          'success'
         );
-        this.dialogRef.close("success");
+        this.dialogRef.close('success');
       },
       error => {}
     ));
@@ -91,7 +91,7 @@ export class RequestDebitDialogComponent implements OnInit, OnDestroy {
   updateLoanRequest(loan) {
     this.subscription.add(this.debitService.updateDebitRequest(loan).subscribe(
       response => {
-        this.dialogRef.close("success");
+        this.dialogRef.close('success');
       },
       error => {}
     ));

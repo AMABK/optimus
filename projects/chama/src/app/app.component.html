@@ -16,7 +16,7 @@
         fxFlexFill
         class="button-dropdown"
       >
-        <span style="float:left;"><b>{{defaultChama.substring(0,20)}}</b></span>
+        <span style="float:left;"><b>{{defaultChamaName.substring(0,20)}}</b></span>
         <mat-icon style="float:right;padding-top:6px">expand_more</mat-icon>
       </button>
       <!-- <mat-accordion *ngFor="let menu of menus">
@@ -42,8 +42,9 @@
         <!-- <button mat-menu-item style="min-inline-size: 200px;">
           Optimus E-Solutions
         </button> -->
-        <button mat-menu-item *ngFor="let chama of chamas" (click)="updateDefaultGroup(chama.id)" >{{chama.name.substring(0,24)}}</button>
-        <button mat-menu-item (click)="logoutApp()"><mat-icon>exit_to_app</mat-icon>Logout(Exit App)</button>
+        <button mat-menu-item *ngFor="let chama of chamas" (click)="updateDefaultGroup(chama)" >{{chama.name.substring(0,24)}}</button>
+        <button mat-menu-item (click)="logout()"><mat-icon>exit_to_app</mat-icon>Logout(Exit App)</button>
+
       </mat-menu>
       <ng-container  *ngFor="let link of links">
       <a

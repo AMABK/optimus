@@ -18,22 +18,27 @@ export class UserComponent implements OnInit, OnDestroy {
   email = null;
   action = '';
   activationEmail = null;
-  constructor(private authService: AuthService, private router: Router, private activatedRoute: ActivatedRoute, private userService: UserService, private notificationService: NotificationService) { }
+  constructor(private authService: AuthService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private userService: UserService,
+              private notificationService: NotificationService)
+              { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(urlParams => {
-      this.code = urlParams.get("code")
+      this.code = urlParams.get('code');
       this.activatedRoute.queryParams.subscribe(queryParams => {
-        this.email = queryParams['email'];
+        this.email = queryParams.email;
 
-        this.activationCode = urlParams.get("activationCode");
-        this.activationEmail = urlParams.get("email");
-        if (this.activationCode != '') {
+        this.activationCode = urlParams.get('activationCode');
+        this.activationEmail = urlParams.get('email');
+        if (this.activationCode !== '') {
           const account = {
             apiUrl: environment.apiUrl,
             activation_code: this.activationCode,
             email: this.activationEmail
-          }
+          };
           this.activateAccount(account);
         }
 
@@ -41,14 +46,14 @@ export class UserComponent implements OnInit, OnDestroy {
           const request = {
             email: this.email,
             code: this.code
-          }
+          };
           this.acceptGroupInviteRequest(request);
         }
       });
     });
   }
   ngOnDestroy() {
-    //this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
   acceptGroupInviteRequest(request) {
     this.userService.acceptGroupInviteRequest(request).subscribe(res => {
@@ -61,11 +66,11 @@ export class UserComponent implements OnInit, OnDestroy {
   }
   activateAccount(account) {
    this.authService.activateAccount(account).subscribe(res => {
-      this.notificationService.emit('Account activated!', 'success')
+      this.notificationService.emit('Account activated!', 'success');
       this.authService.logout();
       this.router.navigate(['login']);
     }, error => {
-      this.notificationService.emit('Account activation failed, invalid url')
+      this.notificationService.emit('Account activation failed, invalid url');
       this.router.navigate(['login']);
     });
   }

@@ -18,9 +18,10 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DebitRequestComponent } from './debit-request/debit-request.component';
-import { AddDepositDialogComponent } from './add-deposit/add-deposit-dialog.component';
 import { ChangeDebitStatusComponent } from './change-debit-status/change-debit-status.component';
 import { ChangeDepositStatusComponent } from './change-deposit-status/change-deposit-status.component';
+import { AddDepositDialogModule } from '../shared/add-deposit/add-deposit-dialog.module';
+import { AddDepositDialogComponent } from '../shared/add-deposit/add-deposit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,6 @@ import { ChangeDepositStatusComponent } from './change-deposit-status/change-dep
     PayableComponent, 
     RequestDebitDialogComponent,
     DebitRequestComponent,
-    AddDepositDialogComponent,
     ChangeDebitStatusComponent,
     ChangeDepositStatusComponent
   ],
@@ -48,6 +48,7 @@ import { ChangeDepositStatusComponent } from './change-deposit-status/change-dep
     MatPaginatorModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    AddDepositDialogModule
   ],
   entryComponents: [RequestDebitDialogComponent, AddDepositDialogComponent, ChangeDebitStatusComponent,ChangeDepositStatusComponent],
   providers: [CdkColumnDef]

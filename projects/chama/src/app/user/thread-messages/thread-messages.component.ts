@@ -16,16 +16,19 @@ export class ThreadMessagesComponent implements OnInit, OnDestroy {
   panelOpenState = false;
   @Input() messageId;
   messageThread$: Observable<any>;
-  currentUserId
-  default_message = "";
+  currentUserId;
+  // tslint:disable-next-line: variable-name
+  default_message = '';
   displayedColumns: string[] = ['message', 'created_at'];
-  constructor(private messageService: MessageService,private notificationService:NotificationService, private authService: AuthService) { }
-  message = new FormControl("", [Validators.required]);
-  thread_id = new FormControl("", [Validators.required]);
+  // tslint:disable-next-line: max-line-length
+  constructor(private messageService: MessageService, private notificationService: NotificationService, private authService: AuthService) { }
+  message = new FormControl('', [Validators.required]);
+  // tslint:disable-next-line: variable-name
+  thread_id = new FormControl('', [Validators.required]);
   matcher = new FormErrorService();
 
   ngOnInit() {
-    console.log('run')
+    console.log('run');
     this.currentUserId = this.authService.getUserId();
     this.getThreadMessages();
   }
@@ -36,11 +39,11 @@ export class ThreadMessagesComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.messageService.getThreadMessages(this.messageId).subscribe(res => {
         this.messageThread$ = res.data;
-        console.log('this.messageThread$')
+        console.log('this.messageThread$');
       }, error => {
 
       })
-    )
+    );
   }
   onSendReplyMessage() {
     const message = {
@@ -48,13 +51,13 @@ export class ThreadMessagesComponent implements OnInit, OnDestroy {
       message_id: this.messageId,
       message: this.message.value,
       user_id: this.authService.getUserId()
-    }
-    console.log(message)
+    };
+    console.log(message);
     this.messageService.onSendReplyMessage(message).subscribe(res => {
       this.message.setValue('');
       this.getThreadMessages();
-      this.notificationService.emit('Reply sent','success')
-    }, error => { })
+      this.notificationService.emit('Reply sent', 'success');
+    }, error => { });
 
   }
 }
