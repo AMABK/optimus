@@ -106,11 +106,14 @@ export class AuthService {
     }
   }
   public getCountryJSON(): Observable<any> {
-    return this.http.get("/assets/country.json");
+    return this.http.get('/assets/country.json');
 
   }
   userHasRole(permission) {
     const authData = this.getUserData();
+    if (authData === null) {
+      return false;
+    }
     return authData.user.roles.includes(permission);
   }
   activateAccount(account) {
@@ -126,7 +129,9 @@ export class AuthService {
     return this.http.post(`${user.apiUrl}/api/oauth/password-reset/reset`, user);
   }
   updateCurrentUserSubject(authData) {
-    if (JSON.stringify(authData) !== JSON.stringify(this.currentUserSubject.value)) {
+    console.log(authData);
+    console.log(this.currentUserSubject.value);
+    if (JSON.stringify(authData) != JSON.stringify(this.currentUserSubject.value)) {
       this.currentUserSubject.next(authData);
     }
   }

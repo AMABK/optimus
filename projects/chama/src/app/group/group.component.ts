@@ -52,7 +52,7 @@ export class GroupComponent implements OnInit, OnDestroy {
       this.notificationService.emit('You have not been granted admin rights to access this page');
     }
     this.authService.currentUser.subscribe(x => {
-      this.depositService.getAllContributionTypes().subscribe(res => {
+      this.depositService.getAllTransactionTypes().subscribe(res => {
         this.txnTypeDataSource = new MatTableDataSource(res.data);
       });
       this.chamaService.getChamaMemberInvites(this.authService.getUserData().user.id).subscribe(res => {

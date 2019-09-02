@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddGroupContributionTypeComponent } from './add-group-contribution-type.component';
+import { AddGroupTransactionTypeComponent } from './add-group-transaction-type.component';
 
 describe('AddGroupContributionTypeComponent', () => {
-  let component: AddGroupContributionTypeComponent;
-  let fixture: ComponentFixture<AddGroupContributionTypeComponent>;
+  let component: AddGroupTransactionTypeComponent;
+  let fixture: ComponentFixture<AddGroupTransactionTypeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddGroupContributionTypeComponent ]
+      declarations: [AddGroupTransactionTypeComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddGroupContributionTypeComponent);
+    fixture = TestBed.createComponent(AddGroupTransactionTypeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

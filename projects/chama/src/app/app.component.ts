@@ -16,56 +16,7 @@ import * as introJs from 'intro.js/intro.js';
 export class AppComponent implements OnInit {
   title = 'Chama App';
   currentUser: Auth;
-  menus = [
-    {
-      main: { label: 'Transactions', icon: 'credit_card' },
-      sub: [
-        { path: '/transactions', icon: 'credit_card', label: 'Transactions' },
-        {
-          path: '/transactions/deposit',
-          icon: 'money',
-          label: 'Deposits'
-        },
-        {
-          path: '/transactions/payable',
-          icon: 'money_off',
-          label: 'Payables(Fines&Loans)'
-        },
-        {
-          path: '/transactions/withdrawal',
-          icon: 'zoom_out_map',
-          label: 'Withdrawals/Debits'
-        },
-        {
-          path: '/transactions/loan-request',
-          icon: 'shopping_basket',
-          label: 'Loan Requests'
-        }
-      ]
-    },
-    {
-      main: { label: 'Admin', icon: 'build' },
-      sub: [
-        { path: '/admin/users', icon: 'person', label: 'Manage Users' },
-        { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups' }
-      ]
-    },
-    {
-      main: { label: 'System Admin', icon: 'settings' },
-      sub: [
-        {
-          path: '/admin/system/users',
-          icon: 'assignment_ind',
-          label: 'Manage System Users'
-        },
-        {
-          path: '/admin/system/groups',
-          icon: 'supervisor_account',
-          label: 'Manage System Groups'
-        }
-      ]
-    }
-  ];
+
   links = [
     { path: '/home', icon: 'home', label: 'Your Home', designation: 'user' },
     { path: '/transactions', icon: 'credit_card', label: 'Transactions', designation: 'user' },
@@ -87,7 +38,8 @@ export class AppComponent implements OnInit {
     },
     { path: '/disputes', icon: 'flare', label: 'Disputes', designation: 'user' },
     { path: '/insights', icon: 'pie_chart', label: 'Insights', designation: 'user' },
-    { path: '/group', icon: 'group', label: 'Group', designation: 'user' },
+    { path: '/group', icon: 'group', label: 'Group Admin', designation: 'user' },
+    { path: '/user/notifications', icon: 'message', label: 'Notifications', designation: 'user' },
     { path: '/admin', icon: '', label: 'Administration', designation: 'admin' },
     { path: '/admin/users', icon: 'person', label: 'Manage Users', designation: 'admin' },
     { path: '/admin/groups', icon: 'group_work', label: 'Manage Groups', designation: 'admin' },
