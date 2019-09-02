@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddDepositDialogComponent } from './add-deposit-dialog.component';
+import { InviteGroupMembersComponent } from './invite-group-members.component';
 
-describe('AddDepositComponent', () => {
-  let component: AddDepositDialogComponent;
-  let fixture: ComponentFixture<AddDepositDialogComponent>;
+describe('InviteGroupMembersComponent', () => {
+  let component: InviteGroupMembersComponent;
+  let fixture: ComponentFixture<InviteGroupMembersComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddDepositDialogComponent ]
+      declarations: [ InviteGroupMembersComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddDepositDialogComponent);
+    fixture = TestBed.createComponent(InviteGroupMembersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

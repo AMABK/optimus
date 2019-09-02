@@ -16,11 +16,11 @@ import { InviteGroupMembersComponent } from './invite-group-members/invite-group
 import { CdkColumnDef } from '@angular/cdk/table';
 import { AddGroupPaymentDetailsComponent } from './add-group-payment-details/add-group-payment-details.component';
 import { RichTextEditorAllModule } from '@syncfusion/ej2-angular-richtexteditor';
-import { AddGroupContributionTypeComponent } from './add-group-contribution-type/add-group-contribution-type.component';
-import { AddGroupContributionComponent } from './add-group-contribution/add-group-contribution.component';
-import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatSortModule } from '@angular/material/sort';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AddDepositDialogComponent } from '../shared/add-deposit/add-deposit-dialog.component';
+import { AddDepositDialogModule } from '../shared/add-deposit/add-deposit-dialog.module';
 
 
 
@@ -31,8 +31,6 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     RequestExitGroupComponent,
     InviteGroupMembersComponent,
     AddGroupPaymentDetailsComponent,
-    AddGroupContributionTypeComponent,
-    AddGroupContributionComponent,
   ],
   imports: [
     CommonModule,
@@ -48,15 +46,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSortModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    AddDepositDialogModule
   ],
   entryComponents: [
     AddGroupDetailsComponent,
     InviteGroupMembersComponent,
     RequestExitGroupComponent,
     AddGroupPaymentDetailsComponent,
-    AddGroupContributionTypeComponent,
-    AddGroupContributionComponent
+    AddDepositDialogComponent
   ],
   providers: [CdkColumnDef]
 })

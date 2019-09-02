@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Deposit } from '../../models/deposit/deposit';
 import { environment } from 'projects/chama/src/environments/environment';
 import { startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { AuthService } from 'projects/auth/src/lib/auth.service';
 @Injectable({
   providedIn: "root"
 })
 export class DepositService {
   apiUrl = environment.apiUrl;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private authService:AuthService) {}
   createDeposit(deposit) {
     return this.http.post(`${this.apiUrl}/api/chama/create-deposit`, deposit);
   }
@@ -21,6 +22,7 @@ export class DepositService {
     return this.http.post(`${this.apiUrl}/api/chama/update-deposit`, deposit);
   }
   search(searchQueries?: any, defaultTxnType = "") {
+    this.authService.updateLoadingDataStatus(true);
     return searchQueries.pipe(
       startWith({
         q: "",
@@ -109,13 +111,13 @@ export class DepositService {
       `${this.apiUrl}/api/chama/get-loan-request${queryParams}`
     );
   }
-  getContributionType(txnType, typeId = null) {
+  getTransactionType(txnType, typeId = null) {
     return this.http.get(
       `${this.apiUrl}/api/chama/get-contribution-type/${txnType}/${typeId}`
     );
   }
-  getAllContributionTypes() {
-    return this.http.get(
+  getAllTransactionTypes() {
+    return this.http.get<any>(
       `${this.apiUrl}/api/chama/get-all-contribution-types`
     );
   }

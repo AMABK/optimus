@@ -7,7 +7,6 @@
   position: fixed !important;
 }
 .mat-tab-body-wrapper {
-  height: 120%;
   overflow-y: auto;
 }
 .editButton {
@@ -27,4 +26,8 @@ table {
 
 th.mat-sort-header-sorted {
   color: black;
+}
+.tablePosition{
+  padding-left: 5%;
+  margin-top: 0%;
 }

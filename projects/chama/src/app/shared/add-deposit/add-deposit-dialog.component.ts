@@ -5,7 +5,6 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { DepositService } from '../../http/deposit/deposit.service';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddGroupContributionComponent } from '../../home/add-group-contribution/add-group-contribution.component';
 import { take } from 'rxjs/operators';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
@@ -22,25 +21,9 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   maxPaymentDate = new Date();
   chama$: Observable<Chama>;
   currentDeposit: any;
-  activeButton: boolean = true;
+  activeButton = true;
   chamaData: any;
   depositTypes;
-  @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
-  constructor(
-    private depositService: DepositService,
-    private authService: AuthService,
-    private notificationService: NotificationService,
-    public dialogRef: MatDialogRef<AddGroupContributionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private ngZone: NgZone,
-    private chamaService:ChamaService
-  ) {}
-  triggerResize() {
-    // Wait for changes to be applied, then trigger textarea resize.
-    this.ngZone.onStable
-      .pipe(take(1))
-      .subscribe(() => this.autosize.resizeToFitContent(true));
-  }
   paymentDate = new FormControl("", [
     Validators.required,
     Validators.minLength(4)
@@ -57,25 +40,43 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
     Validators.minLength(1),
     Validators.pattern("[0]*([1-9]+|[1-9][0-9][0-9]*)")
   ]);
+  desc = new FormControl("", [Validators.required, Validators.minLength(4)]);
+
+  matcher = new FormErrorService();
+  @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
+  constructor(
+    private depositService: DepositService,
+    private authService: AuthService,
+    private notificationService: NotificationService,
+    public dialogRef: MatDialogRef<AddDepositDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private ngZone: NgZone,
+    private chamaService: ChamaService
+  ) { }
+  triggerResize() {
+    // Wait for changes to be applied, then trigger textarea resize.
+    this.ngZone.onStable
+      .pipe(take(1))
+      .subscribe(() => this.autosize.resizeToFitContent(true));
+  }
+
   // tslint:disable-next-line: member-ordering
   location = new FormControl("", [
     Validators.required,
     Validators.minLength(4)
   ]);
-  desc = new FormControl("", [Validators.required, Validators.minLength(4)]);
-
-  matcher = new FormErrorService();
 
   ngOnInit() {
-
-    this.chamaData={
-      name:''
+    this.authService.updateLoadingDataStatus(true)
+    this.chamaData = {
+      name: ''
     }
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
     }));
-    this.subscription.add(this.depositService.getContributionType('deposit',null).subscribe(result => {
+    this.subscription.add(this.depositService.getTransactionType('deposit', null).subscribe(result => {
       this.depositTypes = result;
+      this.authService.updateLoadingDataStatus(false)
     }));
   }
   ngOnDestroy() {
@@ -103,7 +104,7 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
         createdBy: this.authService.getUserData().user.id,
         status: 0
       };
-
+      this.authService.updateLoadingDataStatus(true)
       this.saveDeposit(this.currentDeposit);
     }
   }
@@ -118,21 +119,28 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   createDeposit(deposit) {
     this.subscription.add(this.depositService.createDeposit(deposit).subscribe(
       response => {
+        this.authService.updateLoadingDataStatus(false)
         this.notificationService.emit(
           "Transaction successful",
           "success"
         );
         this.dialogRef.close("success");
       },
-      error => {}
+      error => {
+        this.authService.updateLoadingDataStatus(false);
+      }
     ));
   }
 
   updateDeposit(chama) {
-    // this.depositService.updateDeposit(chama).subscribe(response => {
-    //   this.resetCurrentChama();
-    //   this.notificationService.emit("Chama details saved!");
-    // });
+    this.depositService.updateDeposit(chama).subscribe(response => {
+      //this.resetCurrentChama();
+      this.authService.updateLoadingDataStatus(false)
+      this.notificationService.emit("Deposit details updated");
+    }, error => {
+      this.authService.updateLoadingDataStatus(false)
+      this.notificationService.emit("Request failed");
+    });
   }
   resetCurrentChama() {
     //this.currentChama = '';

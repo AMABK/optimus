@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -12,10 +12,7 @@ import { Observable, of, BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user/user';
 import { AddGroupPaymentDetailsComponent } from './add-group-payment-details/add-group-payment-details.component';
-import { AddGroupContributionTypeComponent } from './add-group-contribution-type/add-group-contribution-type.component';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
-import * as Chart from 'chart.js';
-import { AddGroupContributionComponent } from './add-group-contribution/add-group-contribution.component';
 import { Chama } from '../models/chama/chama';
 import { DepositService } from '../http/deposit/deposit.service';
 import * as moment from 'moment';
@@ -23,6 +20,7 @@ import { Router } from '@angular/router';
 import { RequestJoinGroupComponent } from '../shared/request-join-group/request-join-group.component';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { UserService } from '../http/user/user.service';
+import { AddGroupTransactionTypeComponent } from '../shared/add-group-transaction-type/add-group-transaction-type.component';
 export interface PeriodicElement1 {
   position: number;
   weight: number;
@@ -32,61 +30,62 @@ export interface PeriodicElement1 {
   verified: string;
 }
 @Component({
-  selector: "app-home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.css"]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   inviteCode: string;
-  searchTerm$ = new Subject<any>();
+  private searchTerm$ = new Subject<any>();
   subscriptions: Subscription[] = [];
   @Output() queryEvt = new EventEmitter<any>();
   depositColumns: string[] = [
-    "position",
-    "bank",
-    "type_name",
-    "amount",
-    "payment_date",
-    "created_at",
-    "verified"
+    'position',
+    'bank',
+    'type_name',
+    'amount',
+    'payment_date',
+    'created_at',
+    'verified'
   ];
-  @ViewChild("lineChart", { static: true }) private chartRef;
+  @ViewChild('lineChart', { static: true }) private chartRef;
   chart: any;
   deposits: any = [];
   depositData;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  @ViewChild("searchRef", { static: true }) searchRef;
-  pFromDate = "";
-  pToDate: string = "";
-  sFromDate: string = "";
-  sToDate: string = "";
-  search: string = "";
-  verified: string = "";
+  @ViewChild('searchRef', { static: true }) searchRef;
+  pFromDate = '';
+  pToDate = '';
+  sFromDate = '';
+  sToDate = '';
+  search = '';
+  verified = '';
   paginationData: any;
   @ViewChild(AddGroupDetailsComponent, { static: true }) child;
   statuses = [
-    { value: "", display: "Verified Status" },
-    { value: "yes", display: "Yes" },
-    { value: "no", display: "No" }
+    { value: '', display: 'Verified Status' },
+    { value: 'yes', display: 'Yes' },
+    { value: 'no', display: 'No' }
   ];
   txnTypeColumns: string[] = [
-    "position",
-    "name",
-    "txn_type",
-    'created_by',
-    "status"
+    'position',
+    'name',
+    'txn_type',
+    'created_at',
+    'status',
+    'more'
   ];
-  txnTypes$;
+  txnTypes = [];
   chamas$: Observable<Chama>;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   defaultGroup: any;
   editGroup = true;
   user$: Observable<User>;
-  displayedColumns: string[] = ["name", "address", "default", "request"];
+  displayedColumns: string[] = ['name', 'address', 'default', 'request'];
   user: any = {
     id: null
   };
@@ -94,20 +93,20 @@ export class HomeComponent implements OnInit {
   private chamaSubject: BehaviorSubject<User>;
   chama$: Observable<User>;
   private pieChartLabels: string[] = [
-    "Pending",
-    "InProgress",
-    "OnHold",
-    "Complete",
-    "Cancelled"
+    'Pending',
+    'InProgress',
+    'OnHold',
+    'Complete',
+    'Cancelled'
   ];
   public pieChartData: number[] = [21, 39, 10, 14, 16];
-  public pieChartType = "pie";
+  public pieChartType = 'pie';
   public pieChartOptions: any = {
-    backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#E7E9ED", "#36A2EB"]
+    backgroundColor: ['#FF6384', '#4BC0C0', '#FFCE56', '#E7E9ED', '#36A2EB']
   };
   constructor(
     public dialog: MatDialog,
-    private _formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
     private chamaService: ChamaService,
     private depositService: DepositService,
     private authService: AuthService,
@@ -117,13 +116,15 @@ export class HomeComponent implements OnInit {
     private notificationService: NotificationService
   ) {
     this.authService.currentUser.subscribe(x => {
-      this.ngOnInit();
+      if (x !== null) {
+        this.defaultDataLoad();
+      }
     });
     // this.getDefaultChamaDetails();
   }
 
-  ngAfterViewInit() {
-  }
+  // ngAfterViewInit() {
+  // }
   // events on slice click
   public chartClicked(e: any): void {
     // console.log(e);
@@ -143,137 +144,72 @@ export class HomeComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
         this.getDefaultChamaDetails();
       }
     });
   }
   ngOnInit() {
-    this.updateInviteCode();
+    this.defaultDataLoad();
+  }
+  defaultDataLoad() {
     this.getDefaultChamaDetails();
     if (this.authService.getUserData().user.default_chama == null) {
       this.openRequestJoinGroupDialog();
-    } else {
-      // if (this.authService.getUserData().user.default_chama.invite_code == null) {
-      //   this.openRequestJoinGroupDialog();
-      // }
     }
 
-    this.subscription.add(this.depositService.getAllContributionTypes().subscribe(res => {
-      this.txnTypes$ = res;
-    }));
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ["", Validators.required]
+    this.depositService.getAllTransactionTypes().subscribe(res => {
+      this.txnTypes = res.data;
     });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ["", Validators.required]
+    this.firstFormGroup = this.formBuilder.group({
+      firstCtrl: ['', Validators.required]
     });
-    // Line chart:
-    // this.LineChart = new Chart("lineChart", {
-    //   type: "line",
-    //   data: {
-    //     labels: [
-    //       "Jan",
-    //       "Feb",
-    //       "March",
-    //       "April",
-    //       "May",
-    //       "June",
-    //       "July",
-    //       "Aug",
-    //       "Sep",
-    //       "Oct",
-    //       "Nov",
-    //       "Dec"
-    //     ],
-    //     datasets: [
-    //       {
-    //         label: "Total contributions(KES)",
-    //         data: [9, 7, 3, 5, 2, 10, 15, 16, 19, 3, 1, 9],
-    //         fill: false,
-    //         lineTension: 0.2,
-    //         borderColor: "red",
-    //         borderWidth: 1
-    //       },
-    //       {
-    //         label: "Total saving(KES)",
-    //         data: [0, 7, 3, 4, 2, 18, 5, 16, 1, 3, 1, 9],
-    //         fill: false,
-    //         lineTension: 0.2,
-    //         borderColor: "green",
-    //         borderWidth: 1
-    //       },
-    //       {
-    //         label: "Other Ccontributions(KES)",
-    //         data: [8, 6, 3, 9, 2, 10, 15, 16, 19, 9, 1, 0],
-    //         fill: false,
-    //         lineTension: 0.2,
-    //         borderColor: "blue",
-    //         borderWidth: 1
-    //       }
-    //     ]
-    //   },
-    //   options: {
-    //     responsive: false,
-    //     maintainAspectRatio: false,
-    //     title: {
-    //       text: "Line Chart",
-    //       display: true
-    //     },
-    //     scales: {
-    //       yAxes: [
-    //         {
-    //           ticks: {
-    //             beginAtZero: true
-    //           }
-    //         }
-    //       ]
-    //     }
-    //   }
-    // });
+    this.secondFormGroup = this.formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
   }
   formatDateInput(date) {
-    if (date === "" || date == null) {
-      return "";
+    if (date === '' || date == null) {
+      return '';
     }
     const momentDate = new Date(date); // Replace event.value with your date value
-    const formattedDate = moment(momentDate).format("YYYY-MM-DD");
+    const formattedDate = moment(momentDate).format('YYYY-MM-DD');
     return formattedDate;
   }
   handleSearch(query: string, model: string) {
     switch (model) {
-      case "search":
+      case 'search':
         // General search can only be done in exclusivity
         this.clearSearch();
         this.search = query;
         break;
-      case "pFromDate":
-        this.search = "";
+      case 'pFromDate':
+        this.search = '';
         this.pFromDate = query;
         break;
-      case "pToDate":
-        this.search = "";
+      case 'pToDate':
+        this.search = '';
         this.pToDate = query;
         break;
-      case "sFromDate":
-        this.search = "";
+      case 'sFromDate':
+        this.search = '';
         this.sFromDate = query;
         break;
-      case "sToDate":
-        this.search = "";
+      case 'sToDate':
+        this.search = '';
         this.sToDate = query;
         break;
-      case "verified":
-        this.search = "";
+      case 'verified':
+        this.search = '';
         this.verified = query;
         break;
       default:
         break;
     }
-    this.pFromDate = query === "" ? "" : this.formatDateInput(this.pFromDate);
-    this.pToDate = query === "" ? "" : this.formatDateInput(this.pToDate);
-    this.sFromDate = query === "" ? "" : this.formatDateInput(this.sFromDate);
-    this.sToDate = query === "" ? "" : this.formatDateInput(this.sToDate);
+    this.pFromDate = query === '' ? '' : this.formatDateInput(this.pFromDate);
+    this.pToDate = query === '' ? '' : this.formatDateInput(this.pToDate);
+    this.sFromDate = query === '' ? '' : this.formatDateInput(this.sFromDate);
+    this.sToDate = query === '' ? '' : this.formatDateInput(this.sToDate);
     this.searchTerm$.next({
       q: this.search,
       pFromDate: this.pFromDate,
@@ -285,14 +221,14 @@ export class HomeComponent implements OnInit {
     this.paginator.pageIndex = 0;
   }
   clearSearch(activate = null) {
-    this.pFromDate = "";
-    this.pToDate = "";
-    this.sFromDate = "";
-    this.sToDate = "";
-    this.verified = "";
-    this.search = "";
-    if (activate === "activate") {
-      this.handleSearch("", "");
+    this.pFromDate = '';
+    this.pToDate = '';
+    this.sFromDate = '';
+    this.sToDate = '';
+    this.verified = '';
+    this.search = '';
+    if (activate === 'activate') {
+      this.handleSearch('', '');
     }
   }
   paginate($event) {
@@ -301,13 +237,13 @@ export class HomeComponent implements OnInit {
     const pageSize = this.pageEvent.pageSize;
     const query = this.search;
     const pFromDate =
-      this.pFromDate === "" ? "" : this.formatDateInput(this.pFromDate);
+      this.pFromDate === '' ? '' : this.formatDateInput(this.pFromDate);
     const pToDate =
-      this.pToDate === "" ? "" : this.formatDateInput(this.pToDate);
+      this.pToDate === '' ? '' : this.formatDateInput(this.pToDate);
     const sFromDate =
-      this.sFromDate === "" ? "" : this.formatDateInput(this.sFromDate);
+      this.sFromDate === '' ? '' : this.formatDateInput(this.sFromDate);
     const sToDate =
-      this.sToDate === "" ? "" : this.formatDateInput(this.sToDate);
+      this.sToDate === '' ? '' : this.formatDateInput(this.sToDate);
     const verified = this.verified;
     this.searchTerm$.next({
       q: query,
@@ -321,11 +257,12 @@ export class HomeComponent implements OnInit {
     });
   }
   getChamas(userId) {
-    const url = environment.apiUrl + "/api/chama?user_id=" + userId;
+    const url = environment.apiUrl + '/api/chama?user_id=' + userId;
     return this.chamaService.all(url);
   }
   getDefaultChamaDetails() {
-    let authData = this.authService.getUserData();
+    this.authService.updateLoadingDataStatus(true);
+    const authData = this.authService.getUserData();
     this.chamas$ = this.getChamas(this.authService.getUserId());
 
     this.chamaService.getDefaultChamaDetails().subscribe(result => {
@@ -348,42 +285,23 @@ export class HomeComponent implements OnInit {
           authData.user.chama_id = result.chama_id;
         }
       }
-      if (authData.user.chama_id != null) {
-        // const user = {
-        //   chama_id: authData.user.chama_id,
-        //   user_id: authData.user.id
-        // }
-        // this.userService.getChamaUserPermissions(user).subscribe(response => {
-        //   this.authService.storeResult(authData);
-        // })
-      } else {
-        // this.authService.storeResult(authData);
-      }
-      // this.chamas$.subscribe(res => {
-      //   authData.user.chamas = res.data;
-      //   console.log(authData);
-      //   this.authService.storeResult(authData);
-      // });
-
-      this.getDefaultUserChamaPermissions();
       this.chamaSubject = new BehaviorSubject<User>(result);
       this.user = this.chamaSubject.value;
       this.chama$ = this.chamaSubject.asObservable();
+
+      const user = {
+        user_id: authData.user.id,
+        chama_id: authData.user.chama_id
+      };
+      this.userService.getChamaUserPermissionsList(user).subscribe(res => {
+        authData.user.roles = res.data;
+        this.authService.storeResult(authData);
+        this.authService.updateLoadingDataStatus(false);
+      });
     });
   }
-  getDefaultUserChamaPermissions() {
-    let authData = this.authService.getUserData();
-    let user = {
-      user_id: authData.user.id,
-      chama_id: authData.user.chama_id
-    }
-    this.userService.getChamaUserPermissionsList(user).subscribe(res => {
-      authData.user.roles = res.data;
-      this.authService.storeResult(authData);
-    })
-  }
 
-  updateDefaultChama(chamaId,chamaName) {
+  updateDefaultChama(chamaId, chamaName) {
     const currentChamaId = this.authService.getUserData().user.chama_id;
     // allow change only if the chama id has changed
     if (currentChamaId !== chamaId) {
@@ -393,7 +311,7 @@ export class HomeComponent implements OnInit {
           this.router.navigate(['home']);
           this.authService.updateDefaultChama(chamaId);
           this.getDefaultChamaDetails();
-          this.notificationService.emit('Default group / chama switched to ' + chamaName,'success')
+          this.notificationService.emit('Default group / chama switched to ' + chamaName, 'success');
         });
     }
   }
@@ -404,40 +322,40 @@ export class HomeComponent implements OnInit {
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       let modalData = {};
       // alert(result)
-      if ((result.default_chama == null) || (status == 'create')) {
+      if ((result.default_chama === null) || (status === 'create')) {
         modalData = {
           id: null,
-          name: "",
-          address: "",
-          phone_number: "",
-          email: "",
-          location: "",
-          description: ""
+          name: '',
+          address: '',
+          phone_number: '',
+          email: '',
+          location: '',
+          description: ''
         };
       } else {
         modalData = result.default_chama;
       }
       const dialogRef = this.dialog.open(AddGroupDetailsComponent, {
-        height: "auto",
-        width: "600px",
+        height: 'auto',
+        width: '600px',
         data: {
           key: modalData
         }
       });
-      dialogRef.afterClosed().subscribe(result => {
-        if (result === "success") {
+      dialogRef.afterClosed().subscribe(res => {
+        if (res === 'success') {
           this.getDefaultChamaDetails();
           this.router.navigate(['home']);
           // set message to be emitted by loader interceptor after http requests end
           this.loaderIService.storeNotificationMessage(
-            "Chama successfully updated!",
-            "success"
+            'Chama successfully updated!',
+            'success'
           );
         }
       });
     }));
   }
-  openAddGroupContributionTypes() {
+  openAddGroupTransactionTypes() {
     const defaultChama = {
       name:
         this.authService.getUserData().user.default_chama != null
@@ -445,19 +363,19 @@ export class HomeComponent implements OnInit {
           : null,
       id: this.authService.getUserData().user.chama_id
     };
-    const dialogRef = this.dialog.open(AddGroupContributionTypeComponent, {
-      height: "auto",
-      width: "600px",
+    const dialogRef = this.dialog.open(AddGroupTransactionTypeComponent, {
+      height: 'auto',
+      width: '600px',
       data: {
         key: defaultChama
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === "success") {
-        this.getDefaultChamaDetails();
-        this.loaderIService.storeNotificationMessage(
-          "Contribution type successfully added",
-          "success"
+    dialogRef.afterClosed().subscribe(res => {
+      if (res === 'success') {
+        this.defaultDataLoad();
+        this.notificationService.emit(
+          'Transaction type successfully added',
+          'success'
         );
       }
     });
@@ -465,17 +383,16 @@ export class HomeComponent implements OnInit {
 
   openRequestExitGroupDialog() {
     const dialogRef = this.dialog.open(RequestExitGroupComponent, {
-      height: "auto",
-      width: "600px"
+      height: 'auto',
+      width: '600px'
     });
     dialogRef.afterClosed().subscribe(result => {
-      //console.log(`Dialog result: ${result}`);
     });
   }
   openInviteGroupMembersDialog() {
     const dialogRef = this.dialog.open(InviteGroupMembersComponent, {
-      height: "auto",
-      width: "600px"
+      height: 'auto',
+      width: '600px'
     });
     dialogRef.afterClosed().subscribe(result => {
       // console.log(`Dialog result: ${result}`);
@@ -484,37 +401,37 @@ export class HomeComponent implements OnInit {
 
   openAddPaymentDetails(chamaId) {
     const result = {
-      modal: "Add",
+      modal: 'Add',
       chama_id: chamaId,
-      bank: "",
-      country: "",
-      account: "",
-      description: ""
+      bank: '',
+      country: '',
+      account: '',
+      description: ''
     };
     const dialogRef = this.dialog.open(AddGroupPaymentDetailsComponent, {
-      height: "auto",
-      width: "600px",
+      height: 'auto',
+      width: '600px',
       data: {
         key: result
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(res => {
       this.getDefaultChamaDetails();
-      if (result === "success") {
+      if (res === 'success') {
         // set message to be emitted by loader interceptor after http requests end
         this.loaderIService.storeNotificationMessage(
-          "Payment method successfully added",
-          "success"
+          'Payment method successfully added',
+          'success'
         );
       }
     });
   }
   openEditPaymentDetails(payment, chamaName) {
     payment.chamaName = chamaName;
-    payment.modal = "Edit";
+    payment.modal = 'Edit';
     const dialogRef = this.dialog.open(AddGroupPaymentDetailsComponent, {
-      height: "auto",
-      width: "600px",
+      height: 'auto',
+      width: '600px',
       data: {
         key: payment
       }
@@ -524,90 +441,83 @@ export class HomeComponent implements OnInit {
       // console.log(`Dialog result: ${result}`);
     });
   }
-  openAddGroupContributionDialog() {
-    const depositTypes = [
-      { id: 1, type_name: "Savings" },
-      { id: 2, type_name: "Fines" },
-      { id: 3, type_name: "Trip" },
-      { id: 4, type_name: "CSR" }
-    ];
-    let dChama: any;
-    this.chama$.subscribe(res => {
-      dChama = res;
-    });
-    const dialogRef = this.dialog.open(AddGroupContributionComponent, {
-      height: "auto",
-      width: "600px",
-      data: {
-        depositTypes,
-        group: dChama.default_chama
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === "success") {
-        this.getDefaultChamaDetails();
-        // set message to be emitted by loader interceptor after http requests end
-        this.loaderIService.storeNotificationMessage(
-          "Chama successfully updated!",
-          "success"
-        );
-      }
-    });
-  }
+  // openAddGroupTransactionDialog() {
+  //   const depositTypes = [
+  //     { id: 1, type_name: 'Savings' },
+  //     { id: 2, type_name: 'Fines' },
+  //     { id: 3, type_name: 'Trip' },
+  //     { id: 4, type_name: 'CSR' }
+  //   ];
+  //   let dChama: any;
+  //   this.chama$.subscribe(res => {
+  //     dChama = res;
+  //   });
+  //   const dialogRef = this.dialog.open(AddGroupTransactionComponent, {
+  //     height: 'auto',
+  //     width: '600px',
+  //     data: {
+  //       depositTypes,
+  //       group: dChama.default_chama
+  //     }
+  //   });
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result === 'success') {
+  //       this.getDefaultChamaDetails();
+  //       // set message to be emitted by loader interceptor after http requests end
+  //       this.loaderIService.storeNotificationMessage(
+  //         'Chama successfully updated!',
+  //         'success'
+  //       );
+  //     }
+  //   });
+  // }
   tabPosition(key) {
     const position = Number(key) + 1;
     return position;
   }
-  numberWithCommas(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  numberWithCommas(num: number) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   userHasRole(role) {
     return this.authService.userHasRole(role);
   }
   generateGroupInviteCode() {
-    var retVal = confirm("This will invalidate any previous invite code!. Do you want to continue ?");
-    if (retVal == true) {
+    const retVal = confirm('This will invalidate any previous invite code!. Do you want to continue ?');
+    if (retVal === true) {
       if (this.authService.getUserData().user.chama_id != null) {
         const invite = {
           chama_id: this.authService.getUserData().user.chama_id
-        }
+        };
         this.subscription.add(this.chamaService.generateGroupInviteCode(invite).subscribe(res => {
-          let authData = this.authService.getUserData();
+          const authData = this.authService.getUserData();
           authData.user.invite_code = res.data;
           this.authService.storeResult(authData);
-          this.updateInviteCode();
-          this.notificationService.emit('Group Invite Code successfully updated', 'success')
+          this.notificationService.emit('Group Invite Code successfully updated', 'success');
         }, error => {
-          this.notificationService.emit(error.message.message)
+          this.notificationService.emit(error.message.message);
         }));
       } else {
-        this.notificationService.emit('Please set default group first')
+        this.notificationService.emit('Please set default group first');
       }
     } else {
-      this.notificationService.emit('Request cancelled successfully', 'warning')
+      this.notificationService.emit('Request cancelled successfully', 'warning');
     }
   }
   clearGroupInviteCode() {
-    var retVal = confirm("This will invalidate any previous invite code!. Do you want to continue ?");
-    if (retVal == true) {
-      let authData = this.authService.getUserData();
+    const retVal = confirm('This will invalidate any previous invite code!. Do you want to continue ?');
+    if (retVal === true) {
+      const authData = this.authService.getUserData();
       authData.user.invite_code = null;
       this.authService.storeResult(authData);
-      this.updateInviteCode();
     } else {
 
     }
-  }
-  updateInviteCode() {
-    //console.log(this.authService.getUserData())
-    if (this.authService.getUserData()!=null)
-      this.inviteCode = this.authService.getUserData().user.default_chama.invite_code;
   }
   viewGroupInviteCode() {
     const chamaId = this.authService.getUserData().user.chama_id;
     if (chamaId != null) {
       this.subscription.add(this.chamaService.getGroupInviteCode(chamaId).subscribe(res => {
-        this.inviteCode = res.data
+        this.inviteCode = res.data;
         alert('Group Invite Code: ' + this.inviteCode);
       }));
     } else {

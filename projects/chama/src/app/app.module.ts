@@ -21,11 +21,8 @@ import { TokenInterceptorService } from 'projects/token-interceptor/src/public_a
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { InputFieldComponent } from './shared/input-field/input-field.component';
-import { GroupComponent } from './group/group.component';
 import { RequestJoinGroupComponent } from './shared/request-join-group/request-join-group.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSelectSearchComponent } from './shared/mat-select-search/mat-select-search.component';
 import { MatSelectSearchModule } from './shared/mat-select-search/mat-select-search.module';
 
 @NgModule({
@@ -36,7 +33,7 @@ import { MatSelectSearchModule } from './shared/mat-select-search/mat-select-sea
     SidenavComponent,
     SpinnerComponent,
     InputFieldComponent,
-    RequestJoinGroupComponent,
+    RequestJoinGroupComponent
   ],
   imports: [
     AppRoutingModule,

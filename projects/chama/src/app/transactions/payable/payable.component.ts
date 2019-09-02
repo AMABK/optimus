@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -15,8 +15,9 @@ import { AuthService } from 'projects/auth/src/public_api';
   templateUrl: './payable.component.html',
   styleUrls: ['./payable.component.css']
 })
-export class PayableComponent implements OnInit {
-  searchTerm$ = new Subject<any>();
+export class PayableComponent implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
+  protected searchTerm$ = new Subject<any>();
   paginationData: any;
   asAdmin = 'no';
   pFromDate = '';
@@ -28,6 +29,7 @@ export class PayableComponent implements OnInit {
   debitType = '';
   paymentStatus = '';
   depositDataSource;
+  // tslint:disable-next-line: variable-name
   txn_type = 'payable';
   displayedColumns: string[] = [
     'position',
@@ -55,26 +57,34 @@ export class PayableComponent implements OnInit {
     min: 0,
     max: 0
   };
-  download: string = '';
+  download = '';
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   pageEvent: PageEvent;
-  private subscription: Subscription = new Subscription();
   constructor(
     private authService: AuthService,
     private depositService: DepositService,
     public dialog: MatDialog,
     private exportPdf: ExportPdf
-  ) { 
+  ) {
     this.authService.currentUser.subscribe(x => {
-      this.ngOnInit();
+      if (x != null) {
+        this.defaultDataLoad();
+      }
     });
   }
   ngOnInit() {
+    this.defaultDataLoad();
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+  defaultDataLoad() {
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.depositService
       .search(this.searchTerm$, 'payable')
       .subscribe(response => {
-        if (this.download != 'download') {
+        if (this.download !== 'download') {
           this.aggregates.total = response.data.sum;
           this.aggregates.avg = response.data.avg;
           this.aggregates.min = response.data.min;
@@ -103,13 +113,15 @@ export class PayableComponent implements OnInit {
           this.downloadPDF(response.data);
           this.download = '';
         }
+        this.authService.updateLoadingDataStatus(false);
+      }, error => {
+          this.authService.updateLoadingDataStatus(false);
       }));
 
   }
-  ngOnDestory() {
-    this.subscription.unsubscribe();
-  }
+
   handleSearch(query: string, model: string) {
+    this.authService.updateLoadingDataStatus(true);
     switch (model) {
       case 'search':
         // General search can only be done in exclusivity
@@ -147,9 +159,9 @@ export class PayableComponent implements OnInit {
         this.search = '';
         this.paymentStatus = query;
         break;
-      case "asAdmin":
+      case 'asAdmin':
         this.asAdmin = query;
-        if (query == 'yes') {
+        if (query === 'yes') {
           this.displayedColumns = [
             'position',
             'name',
@@ -208,6 +220,7 @@ export class PayableComponent implements OnInit {
     }
   }
   paginate($event) {
+    this.authService.updateLoadingDataStatus(true);
     this.pageEvent = $event;
     const pageIndex = this.pageEvent.pageIndex;
     const pageSize = this.pageEvent.pageSize;
@@ -238,7 +251,6 @@ export class PayableComponent implements OnInit {
     if (value == null) {
       return 0;
     }
-    
     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   formatDateInput(date) {
@@ -274,7 +286,7 @@ export class PayableComponent implements OnInit {
         //   "success"
         // );
       }
-    })
+    });
   }
   downloadPDF(pdfData) {
     const data = [];
@@ -295,6 +307,6 @@ export class PayableComponent implements OnInit {
     this.exportPdf.createPDF(data, head, 'landscape');
   }
   userHasRole(role) {
-    return this.authService.userHasRole(role)
+    return this.authService.userHasRole(role);
   }
 }

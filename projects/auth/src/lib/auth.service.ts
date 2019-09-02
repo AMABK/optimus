@@ -13,6 +13,8 @@ import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public
 export class AuthService {
   public currentUserSubject: BehaviorSubject<Auth>;
   public currentUser: Observable<Auth>;
+  public loadingDataSubject: BehaviorSubject<boolean>;
+  public loadingData: Observable<boolean>;
   token: string;
   constructor(
     private router: Router,
@@ -22,7 +24,9 @@ export class AuthService {
     const userData = JSON.parse(localStorage.getItem('authData'));
     this.currentUserSubject = new BehaviorSubject<Auth>(userData);
     this.currentUser = this.currentUserSubject.asObservable();
-    
+    this.loadingDataSubject = new BehaviorSubject<boolean>(false);
+    this.loadingData = this.loadingDataSubject.asObservable();
+
   }
   public get currentUserValue(): Auth {
     return this.currentUserSubject.value;
@@ -40,7 +44,7 @@ export class AuthService {
     return this.http
       .post<Auth>(`${url}`, {
         username: email,
-        password: password,
+        password,
         client_id: clientId,
         client_secret: clientSecret,
         grant_type: 'password',
@@ -76,6 +80,7 @@ export class AuthService {
     localStorage.removeItem('authData');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+    this.updateLoadingDataStatus(false);
   }
 
   storeResult(authData) {
@@ -86,23 +91,29 @@ export class AuthService {
     return this.getUserData().access_token;
   }
   getUserId() {
-    return this.getUserData().user['id'];
+    return this.getUserData().user.id;
   }
   getUserData() {
     return JSON.parse(localStorage.getItem('authData'));
   }
   updateDefaultChama(chamaId) {
-    let authData = this.getUserData();
-    authData.user.chama_id = chamaId;
-    this.storeResult(authData);
-    this.currentUserSubject.next(authData);
+    const authData = this.getUserData();
+    if (authData.user.chama_id !== chamaId) {
+
+      authData.user.chama_id = chamaId;
+      this.storeResult(authData);
+      this.currentUserSubject.next(authData);
+    }
   }
   public getCountryJSON(): Observable<any> {
-    return this.http.get("/assets/country.json");
+    return this.http.get('/assets/country.json');
 
   }
   userHasRole(permission) {
     const authData = this.getUserData();
+    if (authData === null) {
+      return false;
+    }
     return authData.user.roles.includes(permission);
   }
   activateAccount(account) {
@@ -118,7 +129,13 @@ export class AuthService {
     return this.http.post(`${user.apiUrl}/api/oauth/password-reset/reset`, user);
   }
   updateCurrentUserSubject(authData) {
-    this.currentUserSubject.next(authData);
-
+    console.log(authData);
+    console.log(this.currentUserSubject.value);
+    if (JSON.stringify(authData) != JSON.stringify(this.currentUserSubject.value)) {
+      this.currentUserSubject.next(authData);
+    }
+  }
+  updateLoadingDataStatus(status) {
+    this.loadingDataSubject.next(status);
   }
 }

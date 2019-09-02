@@ -1,35 +1,32 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ChamaService } from '../../http/chama/chama.service';
 import { AuthService } from 'projects/auth/src/public_api';
-import { NotificationService } from 'projects/notification/src/public_api';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { InviteGroupMembersComponent } from '../invite-group-members/invite-group-members.component';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
-import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
-import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-add-group-contribution-type',
-  templateUrl: './add-group-contribution-type.component.html',
-  styleUrls: ['./add-group-contribution-type.component.css']
+  selector: 'app-add-group-transaction-type',
+  templateUrl: './add-group-transaction-type.component.html',
+  styleUrls: ['./add-group-transaction-type.component.css']
 })
-export class AddGroupContributionTypeComponent implements OnInit, OnDestroy {
+export class AddGroupTransactionTypeComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   constructor(
     private chamaService: ChamaService,
     private authService: AuthService,
-    private loaderIService: LoaderInterceptorService,
-    public dialogRef: MatDialogRef<AddGroupContributionTypeComponent>,
+    public dialogRef: MatDialogRef<AddGroupTransactionTypeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.data = data;
-   }
+  }
 
-  name = new FormControl("", [Validators.required, Validators.minLength(4)]);
-  description = new FormControl("", [Validators.required, Validators.minLength(2)]);
-  status = new FormControl("", [Validators.required, Validators.minLength(1)]);
-  txn_type = new FormControl("", [Validators.required, Validators.minLength(1)]);
+  name = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  description = new FormControl('', [Validators.required, Validators.minLength(2)]);
+  status = new FormControl('', [Validators.required, Validators.minLength(1)]);
+  // tslint:disable-next-line: variable-name
+  txn_type = new FormControl('', [Validators.required, Validators.minLength(1)]);
 
   matcher = new FormErrorService();
 
@@ -42,7 +39,7 @@ export class AddGroupContributionTypeComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.name.valid && this.description.valid && this.status.valid && this.txn_type.valid) {
-      let currentContributionType = {
+      const currentContributionType = {
         name: this.name.value,
         status: this.status.value,
         txn_type: this.txn_type.value,

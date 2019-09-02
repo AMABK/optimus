@@ -16,7 +16,7 @@
       <form (submit)="login()" *ngIf="showLoginForm">
         <mat-card-content>
           <mat-form-field>
-            <input matInput placeholder="Email or Phone number" [(ngModel)]="userLogin.email" type="text" name="email">
+            <input matInput placeholder="Email" [(ngModel)]="userLogin.email" type="text" name="email">
           </mat-form-field>
           <mat-form-field>
             <input matInput placeholder="Password" [(ngModel)]="userLogin.password" type="password" name="password">
