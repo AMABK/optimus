@@ -18,9 +18,17 @@ import { Subscription } from 'rxjs';
 export class RequestJoinGroupComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
-  constructor(private notificationService: NotificationService, private loaderIService: LoaderInterceptorService, private dialog:MatDialog, private chamaService: ChamaService, private router: Router, private authService: AuthService, public dialogRef: MatDialogRef<RequestJoinGroupComponent>, public addGroup: MatDialogRef<AddGroupDetailsComponent>) { }
-  matcher = new FormErrorService;
-  code = new FormControl("", [Validators.required]);
+  constructor(
+    private notificationService: NotificationService,
+    private loaderIService: LoaderInterceptorService,
+    private dialog: MatDialog,
+    private chamaService: ChamaService,
+    private router: Router,
+    private authService: AuthService,
+    public dialogRef: MatDialogRef<RequestJoinGroupComponent>,
+    public addGroup: MatDialogRef<AddGroupDetailsComponent>) { }
+  matcher = new FormErrorService();
+  code = new FormControl('', [Validators.required]);
   ngOnInit() {
   }
   ngOnDestroy() {
@@ -29,10 +37,10 @@ export class RequestJoinGroupComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.code.valid) {
       const invite = {
-        code:this.code.value
-      }
+        code: this.code.value
+      };
       this.chamaService.joinGroupByInviteCode(invite).subscribe(res => {
-        this.notificationService.emit('Successfully joined group', 'success')
+        this.notificationService.emit('Successfully joined group', 'success');
         this.dialogRef.close('success');
       }, error => {
           let msg;
@@ -41,13 +49,13 @@ export class RequestJoinGroupComponent implements OnInit, OnDestroy {
           } else {
             msg = error.error.message;
           }
-        this.notificationService.emit(msg, 'danger')
-      })
+          this.notificationService.emit(msg, 'danger');
+      });
     } else {
-      console.log('log')
+      console.log('log');
     }
   }
-  closeRequestJoinGroup(){
+  closeRequestJoinGroup() {
     this.dialogRef.close();
     this.router.navigate(['home'], { queryParams: { addGroup: 'success' } });
     this.openAddGroupDetails();
@@ -59,32 +67,32 @@ export class RequestJoinGroupComponent implements OnInit, OnDestroy {
       if ((result.default_chama == null) || (status == 'create')) {
         modalData = {
           id: null,
-          name: "",
-          address: "",
-          phone_number: "",
-          email: "",
-          location: "",
-          description: ""
+          name: '',
+          address: '',
+          phone_number: '',
+          email: '',
+          location: '',
+          description: ''
         };
       } else {
         modalData = result.default_chama;
       }
       const dialogRef1 = this.dialog.open(AddGroupDetailsComponent, {
-        height: "auto",
-        width: "600px",
+        height: 'auto',
+        width: '600px',
         data: {
           key: modalData
         }
       });
       dialogRef1.afterClosed().subscribe(result => {
-        if (result === "success") {
+        if (result === 'success') {
           // this.chamas$ = this.getChamas(this.authService.getUserId());
-          //this.getDefaultChamaDetails();
+          // this.getDefaultChamaDetails();
           this.router.navigate(['home']);
           // set message to be emitted by loader interceptor after http requests end
           this.loaderIService.storeNotificationMessage(
-            "Chama successfully updated!",
-            "success"
+            'Chama successfully updated!',
+            'success'
           );
         }
       });

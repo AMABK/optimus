@@ -14,6 +14,18 @@
   <button *ngIf="userData" mat-icon-button [matMenuTriggerFor]="notification">
     <mat-icon matBadgeColor="accent">notifications_on</mat-icon>
   </button>
+  <button *ngIf="currentUser" mat-button style="border: 1px solid #428bca;" [matMenuTriggerFor]="menu">
+    <mat-icon class="success-icon">keyboard_arrow_down</mat-icon>Quick Actions
+  </button>
+  <mat-menu #menu="matMenu">
+    <!-- <button mat-menu-item><mat-icon>add</mat-icon>Add Member</button> -->
+    <button (click)="openAddGroupDepositDialog()" mat-menu-item><mat-icon>add</mat-icon>Add Deposit/Contribution</button>
+    <button *ngIf="userHasRole('create-contribution-type')" [disabled]="currentUser?.user.chama_id==null" (click)="openAddGroupTransactionTypes()" mat-menu-item><mat-icon>add</mat-icon>Add Deposit/Contribution Type</button>
+    <button mat-menu-item (click)="openRequestJoinGroupDialog()">
+      <mat-icon>add</mat-icon>Join Group By Invite Code
+    </button>
+    <!-- <button mat-menu-item><mat-icon>add</mat-icon>Add Payment/Bank Details</button> -->
+  </mat-menu>
   <mat-menu #notification="matMenu">
     <button mat-menu-item>
       <mat-icon>notifications_on</mat-icon>
@@ -29,7 +41,7 @@
   <button mat-icon-button [matMenuTriggerFor]="user">
     <mat-icon>more_vert</mat-icon>
   </button>
-  <mat-menu #user="matMenu">
+  <mat-menu #user="matMenu" class="testcontainer">
     <a [routerLink]="['/user/notifications']" mat-menu-item> 
       <mat-icon>notifications_on</mat-icon>
       <span>Notifications</span>

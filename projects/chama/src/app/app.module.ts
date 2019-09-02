@@ -33,7 +33,7 @@ import { MatSelectSearchModule } from './shared/mat-select-search/mat-select-sea
     SidenavComponent,
     SpinnerComponent,
     InputFieldComponent,
-    RequestJoinGroupComponent,
+    RequestJoinGroupComponent
   ],
   imports: [
     AppRoutingModule,

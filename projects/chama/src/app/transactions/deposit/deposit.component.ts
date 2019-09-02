@@ -83,7 +83,9 @@ export class DepositComponent implements OnInit, OnDestroy {
     private exportPdf: ExportPdf
   ) {
     this.authService.currentUser.subscribe(x => {
-      this.defaultDataLoad();
+      if (x !== null) {
+        this.defaultDataLoad();
+      }
     });
   }
   ngOnDestroy(): void {
@@ -93,9 +95,8 @@ export class DepositComponent implements OnInit, OnDestroy {
     this.defaultDataLoad();
   }
   defaultDataLoad() {
-    console.log('loop');
     this.authService.updateLoadingDataStatus(true);
-    this.subscription.add(this.depositService.getContributionType('deposit', null).subscribe(result => {
+    this.subscription.add(this.depositService.getTransactionType('deposit', null).subscribe(result => {
       this.depositTypes = result;
     }));
     this.getDefaultChamaDetails();

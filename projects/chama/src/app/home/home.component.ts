@@ -12,10 +12,7 @@ import { Observable, of, BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user/user';
 import { AddGroupPaymentDetailsComponent } from './add-group-payment-details/add-group-payment-details.component';
-import { AddGroupContributionTypeComponent } from './add-group-contribution-type/add-group-contribution-type.component';
 import { LoaderInterceptorService } from 'projects/loader-interceptor/src/public_api';
-import * as Chart from 'chart.js';
-import { AddGroupContributionComponent } from './add-group-contribution/add-group-contribution.component';
 import { Chama } from '../models/chama/chama';
 import { DepositService } from '../http/deposit/deposit.service';
 import * as moment from 'moment';
@@ -23,6 +20,7 @@ import { Router } from '@angular/router';
 import { RequestJoinGroupComponent } from '../shared/request-join-group/request-join-group.component';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { UserService } from '../http/user/user.service';
+import { AddGroupTransactionTypeComponent } from '../shared/add-group-transaction-type/add-group-transaction-type.component';
 export interface PeriodicElement1 {
   position: number;
   weight: number;
@@ -76,10 +74,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     'position',
     'name',
     'txn_type',
-    'created_by',
-    'status'
+    'created_at',
+    'status',
+    'more'
   ];
-  txnTypes;
+  txnTypes = [];
   chamas$: Observable<Chama>;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
@@ -159,8 +158,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.openRequestJoinGroupDialog();
     }
 
-    this.depositService.getAllContributionTypes().subscribe(res => {
-      this.txnTypes = res;
+    this.depositService.getAllTransactionTypes().subscribe(res => {
+      this.txnTypes = res.data;
     });
     this.firstFormGroup = this.formBuilder.group({
       firstCtrl: ['', Validators.required]
@@ -356,7 +355,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
     }));
   }
-  openAddGroupContributionTypes() {
+  openAddGroupTransactionTypes() {
     const defaultChama = {
       name:
         this.authService.getUserData().user.default_chama != null
@@ -364,18 +363,18 @@ export class HomeComponent implements OnInit, OnDestroy {
           : null,
       id: this.authService.getUserData().user.chama_id
     };
-    const dialogRef = this.dialog.open(AddGroupContributionTypeComponent, {
+    const dialogRef = this.dialog.open(AddGroupTransactionTypeComponent, {
       height: 'auto',
       width: '600px',
       data: {
         key: defaultChama
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'success') {
-        this.getDefaultChamaDetails();
-        this.loaderIService.storeNotificationMessage(
-          'Contribution type successfully added',
+    dialogRef.afterClosed().subscribe(res => {
+      if (res === 'success') {
+        this.defaultDataLoad();
+        this.notificationService.emit(
+          'Transaction type successfully added',
           'success'
         );
       }
@@ -442,36 +441,36 @@ export class HomeComponent implements OnInit, OnDestroy {
       // console.log(`Dialog result: ${result}`);
     });
   }
-  openAddGroupContributionDialog() {
-    const depositTypes = [
-      { id: 1, type_name: 'Savings' },
-      { id: 2, type_name: 'Fines' },
-      { id: 3, type_name: 'Trip' },
-      { id: 4, type_name: 'CSR' }
-    ];
-    let dChama: any;
-    this.chama$.subscribe(res => {
-      dChama = res;
-    });
-    const dialogRef = this.dialog.open(AddGroupContributionComponent, {
-      height: 'auto',
-      width: '600px',
-      data: {
-        depositTypes,
-        group: dChama.default_chama
-      }
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'success') {
-        this.getDefaultChamaDetails();
-        // set message to be emitted by loader interceptor after http requests end
-        this.loaderIService.storeNotificationMessage(
-          'Chama successfully updated!',
-          'success'
-        );
-      }
-    });
-  }
+  // openAddGroupTransactionDialog() {
+  //   const depositTypes = [
+  //     { id: 1, type_name: 'Savings' },
+  //     { id: 2, type_name: 'Fines' },
+  //     { id: 3, type_name: 'Trip' },
+  //     { id: 4, type_name: 'CSR' }
+  //   ];
+  //   let dChama: any;
+  //   this.chama$.subscribe(res => {
+  //     dChama = res;
+  //   });
+  //   const dialogRef = this.dialog.open(AddGroupTransactionComponent, {
+  //     height: 'auto',
+  //     width: '600px',
+  //     data: {
+  //       depositTypes,
+  //       group: dChama.default_chama
+  //     }
+  //   });
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result === 'success') {
+  //       this.getDefaultChamaDetails();
+  //       // set message to be emitted by loader interceptor after http requests end
+  //       this.loaderIService.storeNotificationMessage(
+  //         'Chama successfully updated!',
+  //         'success'
+  //       );
+  //     }
+  //   });
+  // }
   tabPosition(key) {
     const position = Number(key) + 1;
     return position;

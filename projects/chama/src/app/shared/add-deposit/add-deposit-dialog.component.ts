@@ -5,7 +5,6 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { DepositService } from '../../http/deposit/deposit.service';
 import { AuthService } from 'projects/auth/src/public_api';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AddGroupContributionComponent } from '../../home/add-group-contribution/add-group-contribution.component';
 import { take } from 'rxjs/operators';
 import { FormControl, Validators } from '@angular/forms';
 import { FormErrorService } from 'projects/form-error/src/public_api';
@@ -49,7 +48,7 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
     private depositService: DepositService,
     private authService: AuthService,
     private notificationService: NotificationService,
-    public dialogRef: MatDialogRef<AddGroupContributionComponent>,
+    public dialogRef: MatDialogRef<AddDepositDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private ngZone: NgZone,
     private chamaService: ChamaService
@@ -75,7 +74,7 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
     }));
-    this.subscription.add(this.depositService.getContributionType('deposit', null).subscribe(result => {
+    this.subscription.add(this.depositService.getTransactionType('deposit', null).subscribe(result => {
       this.depositTypes = result;
       this.authService.updateLoadingDataStatus(false)
     }));

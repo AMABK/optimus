@@ -1,4 +1,5 @@
-<mat-tab-group><!---
+<mat-tab-group>
+    <!---
     <mat-tab label="Transcations">
         <div fxLayout="row" fxLayout.xs="column">
             <mat-card fxFlex="1 2 72">
@@ -116,53 +117,118 @@
                     </mat-list>
                 </mat-card>
             </div>
-        </div>--!>
+        </div>
     </mat-tab>
     --->
-        <mat-tab label="Add Group Details/Members" *ngIf="editGroup">
-            <div fxLayout="column" fxLayoutAlign="top center" class="full-row-height">
-                <div fxFlex="50">
-                    <mat-horizontal-stepper labelPosition="bottom" #stepper>
-                        <mat-step [stepControl]="firstFormGroup">
-                            <ng-template matStepLabel>GROUP<br>Set Up Group Details</ng-template>
-                            <div class="center">
-        
-                                <!-- <button *ngIf="noChamaData" [disabled]="user.chama_id == null" mat-button
-                                                        class="edit-group-button" (click)="openAddGroupDetails()">
-                                                        <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
-                                                    </button> -->
-                                <button *ngIf="user.chama_id != null" mat-button class="edit-group-button"
-                                    (click)="openAddGroupDetails('update')">
-                                    <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
-                                </button>
-                                <button mat-button class="edit-group-button" (click)="openAddGroupDetails('create')">
-                                    <mat-icon>group</mat-icon> ADD NEW GROUP HERE
-                                </button>
-                            </div>
-                        </mat-step>
-                        <mat-step [stepControl]="secondFormGroup" optional>
-                            <ng-template matStepLabel>GROUP MEMBERS<br>Add Group Members</ng-template>
-                            <div class="center">
-                                <button mat-button [disabled]="!((user.chama_id != null)&&(userHasRole('invite-user')))"
-                                    class="edit-group-button" (click)="openInviteGroupMembersDialog()">
-                                    <mat-icon>group_add</mat-icon> ADD GROUP MEMBERS
-                                </button>
-                            </div>
-                        </mat-step>
-                        <mat-step [stepControl]="secondFormGroup">
-                            <ng-template matStepLabel>CONTRIBUTIONS<br>Set Up Group Contributions</ng-template>
-                            <div class="center">
-                                <button mat-button
-                                    [disabled]="(user.chama_id == null)||(!userHasRole('create-contribution-type'))"
-                                    class="edit-group-button" (click)="openAddGroupContributionTypes()">
-                                    <mat-icon>ac_unit</mat-icon> SET UP GROUP CONTRIBUTIONS
-                                </button>
-                            </div>
-                        </mat-step>
-                    </mat-horizontal-stepper>
-                </div>
+    <mat-tab label="Add Group Details/Members" *ngIf="editGroup" style="overflow-x: auto;">
+        <div fxLayout="column" fxLayoutAlign="top center">
+            <div fxFlex="50">
+                <mat-horizontal-stepper labelPosition="bottom" #stepper>
+                    <mat-step [stepControl]="firstFormGroup">
+                        <ng-template matStepLabel>GROUP<br>Set Up Group Details</ng-template>
+                        <div class="center">
+                            <button *ngIf="user.chama_id != null" mat-button class="edit-group-button"
+                                (click)="openAddGroupDetails('update')">
+                                <mat-icon>group</mat-icon> UPDATE GROUP DETAILS HERE
+                            </button>
+                            <button mat-button class="edit-group-button" (click)="openAddGroupDetails('create')">
+                                <mat-icon>group</mat-icon> ADD NEW GROUP HERE
+                            </button>
+                        </div>
+                    </mat-step>
+                    <mat-step [stepControl]="secondFormGroup" optional>
+                        <ng-template matStepLabel>GROUP MEMBERS<br>Add Group Members</ng-template>
+                        <div class="center">
+                            <button mat-button [disabled]="!((user.chama_id != null)&&(userHasRole('invite-user')))"
+                                class="edit-group-button" (click)="openInviteGroupMembersDialog()">
+                                <mat-icon>group_add</mat-icon> ADD GROUP MEMBERS
+                            </button>
+                        </div>
+                    </mat-step>
+                    <mat-step [stepControl]="secondFormGroup">
+                        <ng-template matStepLabel>CONTRIBUTIONS<br>Set Up Group Contributions</ng-template>
+                        <div class="center">
+                            <button mat-button
+                                [disabled]="(user.chama_id == null)||(!userHasRole('create-contribution-type'))"
+                                class="edit-group-button" (click)="openAddGroupTransactionTypes()">
+                                <mat-icon>ac_unit</mat-icon> SET UP GROUP CONTRIBUTIONS
+                            </button>
+                        </div>
+                    </mat-step>
+                </mat-horizontal-stepper>
             </div>
-        </mat-tab>
+        </div>
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="top center">
+            <div *ngIf="chama$ | async as chamaData" fxFlex="48.5">
+                <mat-card class="mat-table" *ngIf="chamaData.default_chama; else noChamaData">
+                    <mat-list>
+                        <h3>Group Details</h3>
+                        <mat-divider></mat-divider>
+                        <mat-list-item><b>Name</b>: {{chamaData.default_chama.name}}</mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item><b>Address</b>: {{chamaData.default_chama.address}}</mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item><b>Phone Number</b>: {{chamaData.default_chama.phone_number}}</mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item><b>Email</b>: {{chamaData.default_chama.email}}</mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item><b>Location</b>: {{chamaData.default_chama.location}}</mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item><b>Description</b>: {{chamaData.default_chama.description}}</mat-list-item>
+                    </mat-list>
+                </mat-card>
+                <ng-template #noChamaData>
+                    <button mat-button style="border: 1px solid #428bca;">
+                        <mat-icon>warning</mat-icon> NO GROUP DETAILS
+                    </button>
+                </ng-template>
+            </div>
+            <mat-divider></mat-divider>
+            <div *ngIf="chama$ | async as chamaData" fxFlex="48.5" class="tablePosition">
+                <table mat-table [dataSource]="txnTypes" matSort class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="position">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index;">
+                            {{1+i}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.type_name}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="txn_type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+                        <td mat-cell *matCellDef="let element"> {{element.txn_type.toUpperCase()}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="created_at">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created On </th>
+                        <td mat-cell *matCellDef="let element"> {{element.created_at|date}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                        <td mat-cell *matCellDef="let element">{{(element.status===0)?'Active':'In Active'}} </td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="more">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> More </th>
+                        <td mat-cell *matCellDef="let element"><mat-icon>more_vert</mat-icon></td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="txnTypeColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: txnTypeColumns;"></tr>
+                </table>
+                <ng-template #noChamaData>
+                    <button mat-button style="border: 1px solid #428bca;">
+                        <mat-icon>warning</mat-icon> NO GROUP TRANSACTION TYPES
+                    </button>
+                </ng-template>
+            </div>
+        </div>
+    </mat-tab>
     <mat-tab label="Group Details" fxLayout="row">
         <mat-grid-list cols="2" rowHeight="2:1" fxLayout="row" fxLayout.xs="column">
             <mat-grid-tile *ngIf="chama$ | async as chamaData" fxFlex="70">
@@ -188,12 +254,13 @@
                 </ng-template>
             </mat-grid-tile>
             <mat-grid-tile fxFlex="50" class="mat-grid-tile-top-right">
-                    <button (click)="openRequestJoinGroupDialog()" mat-button style="border: 1px solid #428bca;">
-                        <mat-icon>compare_arrows</mat-icon> JOIN GROUP BY INVITE CODE
-                    </button>
-                    <button *ngIf="userHasRole('invite-user')" (click)="openInviteGroupMembersDialog()" mat-button style="border: 1px solid #428bca;">
-                        <mat-icon>email</mat-icon> INVITE MEMBER BY EMAIL
-                    </button>
+                <button (click)="openRequestJoinGroupDialog()" mat-button style="border: 1px solid #428bca;">
+                    <mat-icon>compare_arrows</mat-icon> JOIN GROUP BY INVITE CODE
+                </button>
+                <button *ngIf="userHasRole('invite-user')" (click)="openInviteGroupMembersDialog()" mat-button
+                    style="border: 1px solid #428bca;">
+                    <mat-icon>email</mat-icon> INVITE MEMBER BY EMAIL
+                </button>
             </mat-grid-tile>
             <mat-grid-tile fxFlex="50" class="mat-grid-tile-bottom-left mat-grid-tile-home"
                 *ngIf="chama$ | async as chamaData">
@@ -222,16 +289,19 @@
                     </mat-tab-group>
                 </mat-card>
                 <ng-template #noChamaData>
-                    <button *ngIf="userHasRole('add-paymennt-details')" mat-button style="border: 1px solid #428bca;" (click)="openAddPaymentDetails(authService.getUserData().user.chama_id)">
+                    <button *ngIf="userHasRole('add-paymennt-details')" mat-button style="border: 1px solid #428bca;"
+                        (click)="openAddPaymentDetails(authService.getUserData().user.chama_id)">
                         <mat-icon>warning</mat-icon> NO GROUP PAYMENT/BANK DETAILS
                     </button>
                 </ng-template>
             </mat-grid-tile>
             <mat-grid-tile *ngIf="userHasRole('create-invite-code')" fxFlex="50" class="mat-grid-tile-bottom-right">
-                <button (click)="generateGroupInviteCode()" mat-button style="border: 1px solid #428bca; margin-top: -30%">
+                <button (click)="generateGroupInviteCode()" mat-button
+                    style="border: 1px solid #428bca; margin-top: -30%">
                     <mat-icon>cached</mat-icon> GENERATE A NEW GROUP INVITE CODE
                 </button>
-                <button *ngIf="userHasRole('view-invite-code')" (click)="viewGroupInviteCode()" mat-button style="border: 1px solid #428bca; margin-top: -30%">
+                <button *ngIf="userHasRole('view-invite-code')" (click)="viewGroupInviteCode()" mat-button
+                    style="border: 1px solid #428bca; margin-top: -30%">
                     <mat-icon>visibility</mat-icon> VIEW GROUP INVITE CODE
                 </button>
             </mat-grid-tile>
@@ -288,7 +358,7 @@
         </ng-template>
     </mat-tab>
 </mat-tab-group>
-    <mat-card>
+<mat-card>
     <div fxLayout="row" *ngIf="false">
         <canvas id="lineChart" height="500" width="1050"></canvas>
     </div>

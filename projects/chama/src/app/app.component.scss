@@ -27,3 +27,10 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
     border-top-right-radius: 0px; 
     border-top-left-radius: 0px;
 }
+.footer{
+    width: 100%;
+    bottom: 0;
+}
+.mat-nav-list a.active {
+    background: blue;
+}
