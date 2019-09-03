@@ -81,7 +81,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     introJs().start();
-
     if (this.loaderService.isLoading.getValue()) {
       // console.log(this.loaderService.isLoading.getValue());
     } else {
