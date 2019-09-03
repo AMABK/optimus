@@ -405,7 +405,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       chama_id: chamaId,
       bank: '',
       country: '',
-      account: '',
+      account_no: '',
       description: ''
     };
     const dialogRef = this.dialog.open(AddGroupPaymentDetailsComponent, {
@@ -415,7 +415,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         key: result
       }
     });
-    dialogRef.afterClosed().subscribe(res => {
+    dialogRef.afterClosed().subscribe(res => { 
       this.getDefaultChamaDetails();
       if (res === 'success') {
         // set message to be emitted by loader interceptor after http requests end

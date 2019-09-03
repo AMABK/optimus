@@ -8,9 +8,9 @@ import { NotificationService } from 'projects/notification/src/public_api';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: "app-invite-group-members",
-  templateUrl: "./invite-group-members.component.html",
-  styleUrls: ["./invite-group-members.component.css"]
+  selector: 'app-invite-group-members',
+  templateUrl: './invite-group-members.component.html',
+  styleUrls: ['./invite-group-members.component.css']
 })
 export class InviteGroupMembersComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
@@ -21,10 +21,10 @@ export class InviteGroupMembersComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<InviteGroupMembersComponent>
   ) {}
 
-  name = new FormControl("", [Validators.required, Validators.minLength(4)]);
-  email = new FormControl("", [Validators.email, Validators.minLength(4)]);
-  phoneNumber = new FormControl("", [Validators.required, Validators.minLength(4)]);
-  
+  name = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  email = new FormControl('', [Validators.email, Validators.minLength(4)]);
+  phoneNumber = new FormControl('', [Validators.required, Validators.minLength(4)]);
+
   matcher = new FormErrorService();
 
   ngOnInit() { }
@@ -35,8 +35,8 @@ export class InviteGroupMembersComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if (this.name.valid &&this.email.valid) {
-      let currentInvite = {
+    if (this.name.valid && this.email.valid) {
+      const currentInvite = {
         name: this.name.value,
         email: this.email.value,
         phone_number: this.phoneNumber.value,
@@ -48,10 +48,10 @@ export class InviteGroupMembersComponent implements OnInit, OnDestroy {
   }
   createInvite(currentInvite) {
     this.subscription.add(this.chamaService.createInvite(currentInvite).subscribe(
-      response => {
+      res => {
         this.dialogRef.close('success');
         this.notificationService.emit(
-          'Invite successfully sent out',
+          res.message,
           'success'
         );
       },

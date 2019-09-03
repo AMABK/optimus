@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NotificationService } from 'projects/notification/src/public_api';
 import { AddGroupTransactionTypeComponent } from '../../shared/add-group-transaction-type/add-group-transaction-type.component';
 import { RequestJoinGroupComponent } from '../../shared/request-join-group/request-join-group.component';
+import * as introJs from 'intro.js/intro.js';
 
 @Component({
   selector: 'app-header',
@@ -26,6 +27,7 @@ export class HeaderComponent implements OnInit {
   currentRoute: any;
   loadingStatus: boolean;
   messageCount;
+  introJS = introJs();
   constructor(
     private authService: AuthService,
     private cdRef: ChangeDetectorRef, 
@@ -36,8 +38,40 @@ export class HeaderComponent implements OnInit {
       this.currentUser = user;
     });
 
+    // this.introJS.setOptions({
+    //   steps: [
+    //     {
+    //       intro: "Hello world!"
+    //     },
+    //     {
+    //       element: document.querySelector('#step1'),
+    //       intro: "This is a tooltip."
+    //     },
+    //     {
+    //       element: document.querySelectorAll('#step2')[0],
+    //       intro: "Ok, wasn't that fun?",
+    //       position: 'right'
+    //     },
+    //     {
+    //       element: '#step3',
+    //       intro: 'More features, more fun.',
+    //       position: 'left'
+    //     },
+    //     {
+    //       element: '#step4',
+    //       intro: "Another step.",
+    //       position: 'bottom'
+    //     },
+    //     {
+    //       element: '#step5',
+    //       intro: 'Get it, use it.'
+    //     }
+    //   ]
+    // });
+
   }
   ngOnInit() {
+    this.introJS.start();
     this.authService.loadingData.subscribe(loadingStatus => {
       this.loadingStatus = loadingStatus;
       this.cdRef.detectChanges();
