@@ -75,7 +75,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit, OnDestroy {
 
   chamas$: Observable<Chama>;
   paymentDetails: {};
-  activeButton: boolean = true;
+  activeButton = true;
   countries$: Observable<any>;
   @Output() updateEvent = new EventEmitter<Chama>();
   constructor(
@@ -84,13 +84,14 @@ export class AddGroupPaymentDetailsComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     public dialogRef: MatDialogRef<AddGroupDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   id = new FormControl(this.data.key.id, []);
+  // tslint:disable-next-line: variable-name
   chama_id = new FormControl(this.data.key.chama_id, []);
   bank = new FormControl(this.data.key.bank, [Validators.required]);
   account = new FormControl(this.data.key.account_no, [Validators.required]);
-  status = new FormControl("", [Validators.required]);
+  status = new FormControl('', [Validators.required]);
   country = new FormControl(this.data.key.country, [
     Validators.required,
     Validators.minLength(2)
@@ -111,7 +112,7 @@ export class AddGroupPaymentDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-  registerChama(form) {}
+  registerChama(form) { }
 
   onSubmit() {
     if (

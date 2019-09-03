@@ -293,7 +293,10 @@ export class DepositComponent implements OnInit, OnDestroy {
     this.subscription.add(this.depositService
       .search(this.searchTerm$, 'deposit')
       .subscribe(response => {
-        if (this.download !== 'download') {
+        if (this.download === 'download') {
+          this.downloadPDF(response.data);
+          this.download = '';
+        } else {
           this.aggregates.total = response.data.sum;
           this.aggregates.avg = response.data.avg;
           this.aggregates.min = response.data.min;
@@ -318,9 +321,6 @@ export class DepositComponent implements OnInit, OnDestroy {
             }
           };
           this.depositDataSource.sort = this.sort;
-        } else {
-          this.downloadPDF(response.data);
-          this.download = '';
         }
         this.authService.updateLoadingDataStatus(false);
       }));

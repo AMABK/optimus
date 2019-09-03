@@ -25,18 +25,17 @@ export class ErrorInterceptorService implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError(response => {
         if (response instanceof HttpErrorResponse) {
-          let responseStatus = 'danger';
+          const responseStatus = 'danger';
           let message = '';
           if (response.status === 401) {
             message = response.error.message;
             // auto logout if 401 response returned from api
             this.authService.logout();
-            //location.reload(true);
-          }
-          else if (response.status === 452) {
+            // location.reload(true);
+          } else if (response.status === 452) {
             // validation custom error
             let i = 0;
-            for (var key in response.error.message) {
+            for (let key in response.error.message) {
               if (i == 0) {
                 message = response.error.message[key];
                 i++;
@@ -46,10 +45,9 @@ export class ErrorInterceptorService implements HttpInterceptor {
               }
             }
 
-          }
-          else if (response.status === 0) {
+          } else if (response.status === 0) {
             message = 'Considering the circumstances, the server might have taken leave without notice';
-          }else {
+          } else {
             message = response.error.message;
           }
 

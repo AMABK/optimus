@@ -80,8 +80,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    introJs().start();
-
     if (this.loaderService.isLoading.getValue()) {
       // console.log(this.loaderService.isLoading.getValue());
     } else {
@@ -90,6 +88,7 @@ export class AppComponent implements OnInit {
     if (this.currentUser) {
       const defaultChamaId = this.authService.getUserData().user.chama_id;
       this.chamas = this.currentUser['user']['chamas'];
+      // tslint:disable-next-line: prefer-for-of
       for (let i = 0; i < this.chamas.length; i++) {
         if (this.chamas[i].id === defaultChamaId) {
           this.defaultChamaName = this.chamas[i].name;
