@@ -50,6 +50,7 @@ export class InviteGroupMembersComponent implements OnInit, OnDestroy {
     this.subscription.add(this.chamaService.createInvite(currentInvite).subscribe(
       res => {
         this.dialogRef.close('success');
+        console.log(res)
         this.notificationService.emit(
           res.message,
           'success'
