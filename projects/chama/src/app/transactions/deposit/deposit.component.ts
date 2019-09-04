@@ -364,6 +364,9 @@ export class DepositComponent implements OnInit, OnDestroy {
       } else {
         subData.push(item.payment_mode.bank);
       }
+      if (this.asAdmin === 'yes') {
+        subData.push(item.user.first_name + ' ' + item.user.last_name);
+      }
       subData.push(item.contribution_type.type_name);
       subData.push(this.numberWithCommas(item.amount));
       subData.push(item.payment_date);
@@ -372,7 +375,12 @@ export class DepositComponent implements OnInit, OnDestroy {
       data.push(subData);
       x++;
     }
-    const head = ['No.', 'Bank', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    let head = [];
+    if (this.asAdmin === 'yes') {
+       head = ['No.', 'Bank', 'Name', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    } else {
+       head = ['No.', 'Bank', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    }
     this.exportPdf.createPDF(data, head, 'landscape');
   }
   openChangeDepositStatusDialog(element): void {
