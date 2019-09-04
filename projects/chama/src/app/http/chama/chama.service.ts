@@ -60,7 +60,7 @@ export class ChamaService {
     );
   }
   createInvite(createInvite) {
-    return this.http.post(
+    return this.http.post<any>(
       `${environment.apiUrl}/api/user/invite`,
       createInvite
     );
