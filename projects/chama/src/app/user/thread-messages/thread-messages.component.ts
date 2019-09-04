@@ -52,7 +52,7 @@ export class ThreadMessagesComponent implements OnInit, OnDestroy {
       message: this.message.value,
       user_id: this.authService.getUserId()
     };
-    console.log(message);
+    // console.log(message);
     this.messageService.onSendReplyMessage(message).subscribe(res => {
       this.message.setValue('');
       this.getThreadMessages();

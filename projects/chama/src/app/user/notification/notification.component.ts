@@ -98,10 +98,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
       );
     }
   }
-  getChamaUsers() {
+  searchChamaUserEmails() {
     this.subscription.add(this.userService
-      .searchChamaUser(this.searchTerm$)
+      .searchChamaUserEmails(0,this.searchTerm$)
       .subscribe(response => {
+        console.log(response.data.data)
         this.allusers = response.data;
         this.allusers = this.allusers.filter((el) => !this.users.includes(el));
 
@@ -188,7 +189,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
       this.subTitle = '';
     }
     if (this.newMessage === true) {
-      this.getChamaUsers();
+      this.searchChamaUserEmails();
     }
   }
   backToNotifications() {
