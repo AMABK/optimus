@@ -50,6 +50,11 @@ export class NotificationComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private notificationService: NotificationService,
     private authService: AuthService) {
+    this.authService.currentUser.subscribe(x => {
+      if (x !== null) {
+        this.searchChamaUserEmails();
+      }
+    });
     this.filteredusers = this.userCtrl.valueChanges.pipe(
       // tslint:disable-next-line: deprecation
       startWith(null),
