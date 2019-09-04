@@ -93,7 +93,7 @@ export class UserService {
       )
     );
   }
-  searchChamaUsers(userChamaStatusDefault= 0, searchQueries?) {
+  searchChamaUsers(userChamaStatus = 0, searchQueries?) {
     return searchQueries.pipe(
       startWith({
         q: '',
@@ -102,7 +102,7 @@ export class UserService {
         cFromDate: '',
         cToDate: '',
         status: '',
-        userChamaStatusDefault,
+        userChamaStatus,
         gender: '',
         download: ''
       }),
@@ -117,10 +117,9 @@ export class UserService {
           cFromDate = '',
           cToDate = '',
           status = '',
-          // tslint:disable-next-line: no-shadowed-variable
-          userChamaStatus = userChamaStatusDefault,
+          userChamaStatus,
           gender = '',
-          download= ''
+          download = ''
 
         }) => {
           // tslint:disable-next-line:max-line-length
@@ -184,7 +183,6 @@ export class UserService {
       `${this.apiUrl}/api/chama/get-chama-users${queryParams}`
     );
   }
-
   getChamaUserPermissions(user) {
     return this.http.get<any>(
       `${this.apiUrl}/api/user/${user.user_id}/chama/${user.chama_id}/get-permissions`

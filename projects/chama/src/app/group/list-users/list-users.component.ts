@@ -73,7 +73,7 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
   }
   getChamaUsers() {
     this.subscription.add(this.userService.searchChamaUsers(this.userChamaStatus, this.searchTerm$).subscribe(response => {
-      if (this.download != 'download') {
+      if (this.download !== 'download') {
         this.paginationData = {
           current_page: response.data.current_page - 1,
           total: response.data.total,
