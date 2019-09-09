@@ -17,7 +17,7 @@
   <button *ngIf="currentUser" mat-button style="border: 1px solid #428bca;" [matMenuTriggerFor]="menu">
     <mat-icon class="success-icon">keyboard_arrow_down</mat-icon>Quick Actions
   </button>
-  <mat-menu #menu="matMenu">
+  <mat-menu #menu="matMenu" style="pointer-events: auto;top: 0px;right: 0px;">
     <!-- <button mat-menu-item><mat-icon>add</mat-icon>Add Member</button> -->
     <button (click)="openAddGroupDepositDialog()" mat-menu-item><mat-icon>add</mat-icon>Add Deposit/Contribution</button>
     <button *ngIf="userHasRole('create-contribution-type')" [disabled]="currentUser?.user.chama_id==null" (click)="openAddGroupTransactionTypes()" mat-menu-item><mat-icon>add</mat-icon>Add Deposit/Contribution Type</button>
