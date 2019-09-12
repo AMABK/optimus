@@ -95,7 +95,7 @@ export class ChamaService {
     return this.http.delete(this.getUrlForId(chama.id));
   }
   joinGroupByInviteCode(invite) {
-    return this.http.post(
+    return this.http.post<any>(
       `${environment.apiUrl}/api/chama/join-group-invite-by-code`, invite);
   }
   generateGroupInviteCode(chama) {

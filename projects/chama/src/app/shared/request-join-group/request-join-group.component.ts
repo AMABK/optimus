@@ -26,7 +26,7 @@ export class RequestJoinGroupComponent implements OnInit, OnDestroy {
     private router: Router,
     private authService: AuthService,
     public dialogRef: MatDialogRef<RequestJoinGroupComponent>,
-    public addGroup: MatDialogRef<AddGroupDetailsComponent>) { }
+    public addGroupDialogRef: MatDialogRef<AddGroupDetailsComponent>) { }
   matcher = new FormErrorService();
   code = new FormControl('', [Validators.required]);
   ngOnInit() {
@@ -40,16 +40,28 @@ export class RequestJoinGroupComponent implements OnInit, OnDestroy {
         code: this.code.value
       };
       this.chamaService.joinGroupByInviteCode(invite).subscribe(res => {
+        const chama = {
+          id: res.data.id,
+          name: res.data.name,
+          status: res.data.status
+        };
+        let authData = this.authService.getUserData();
+        if (authData.user.chama_id == null) {
+          authData.user.chama_id = res.data.id;
+        }
+        authData.user.chamas.push(chama);
+        this.authService.storeResult(authData);
+        this.authService.updateCurrentUserSubject(authData);
         this.notificationService.emit('Successfully joined group', 'success');
         this.dialogRef.close('success');
       }, error => {
-          let msg;
-          if (error.error.message == null) {
-             msg = 'Some error occured';
-          } else {
-            msg = error.error.message;
-          }
-          this.notificationService.emit(msg, 'danger');
+        let msg;
+        if (error.error.message == null) {
+          msg = 'Some error occured';
+        } else {
+          msg = error.error.message;
+        }
+        this.notificationService.emit(msg, 'danger');
       });
     } else {
       console.log('log');
@@ -63,8 +75,7 @@ export class RequestJoinGroupComponent implements OnInit, OnDestroy {
   openAddGroupDetails(status = 'create') {
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       let modalData = {};
-      // alert(result)
-      if ((result.default_chama == null) || (status == 'create')) {
+      if ((result.default_chama == null) || (status === 'create')) {
         modalData = {
           id: null,
           name: '',
@@ -84,16 +95,14 @@ export class RequestJoinGroupComponent implements OnInit, OnDestroy {
           key: modalData
         }
       });
-      dialogRef1.afterClosed().subscribe(result => {
-        if (result === 'success') {
-          // this.chamas$ = this.getChamas(this.authService.getUserId());
-          // this.getDefaultChamaDetails();
+      dialogRef1.afterClosed().subscribe(res => {
+        if (res === 'success') {
           this.router.navigate(['home']);
           // set message to be emitted by loader interceptor after http requests end
-          this.loaderIService.storeNotificationMessage(
-            'Chama successfully updated!',
-            'success'
-          );
+          // this.loaderIService.storeNotificationMessage(
+          //   'Chama successfully updated!',
+          //   'success'
+          // );
         }
       });
     }));
