@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
 
   links = [
     { path: '/home', icon: 'home', label: 'Your Home', designation: 'user' },
-    { path: '/transactions', icon: 'credit_card', label: 'Transactions', designation: 'user' },
+    // { path: '/transactions', icon: 'credit_card', label: 'Transactions', designation: 'user' },
     { path: '/transactions/deposit', icon: 'money', label: 'Deposits', designation: 'user' },
     {
       path: '/transactions/payable',
