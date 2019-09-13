@@ -51,7 +51,8 @@ export class DepositComponent implements OnInit, OnDestroy {
     'amount',
     'payment_date',
     'created_at',
-    'verified'
+    'verified',
+    'edit'
   ];
   statuses = [
     { value: '', display: 'Verified Status' },
