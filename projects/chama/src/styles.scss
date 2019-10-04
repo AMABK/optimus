@@ -54,6 +54,7 @@ app-root {
     bottom: 0;
     left: 0;
     right: 0;
+    min-width: 100%;
 }
 
 mat-toolbar {
@@ -482,9 +483,9 @@ color: blue;
     height: 51%;
     width: 100%;
 }
-// app-root {
-//   width: 150%;
-// }
+app-root {
+  min-width: unset;
+}
 .mat-table.mat-table {
   min-width: 450px;
   overflow-x: auto;
