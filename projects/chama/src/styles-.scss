@@ -8,7 +8,7 @@ html {
 body {
   margin: 0;
   font-family: Roboto, sans-serif;
-   height: 685px;
+  height: 685px;
   position: relative;
   display:flex;
 }
@@ -22,8 +22,8 @@ body {
 // }
 
 .container {
-  // display: flex;
-  // margin: 10px;
+  display: flex;
+  margin: 10px;
   flex-wrap: wrap;
 }
 
@@ -48,13 +48,9 @@ mat-card-title h1 {
 }
 
 app-root {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 0px;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 mat-toolbar {
@@ -77,13 +73,13 @@ mat-sidenav {
   flex: 1;
 }
 
-// .fill-remaining-space {
-//   flex: 1 1 auto;
-// }
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
 
-// .full-width {
-//   width: 100%;
-// }
+.full-width {
+  width: 100%;
+}
 
 .chama-card {
   position: absolute !important;
@@ -473,22 +469,4 @@ color: red;
 }
 .rejectedVerified{
 color: blue;
-}
-
-@media only screen and (max-device-width : 640px) {
-.cdk-global-overlay-wrapper, .cdk-overlay-container {
-    pointer-events: none;
-    top: 0;
-    left: 0;
-    height: 51%;
-    width: 100%;
-}
-// app-root {
-//   width: 150%;
-// }
-.mat-table.mat-table {
-  min-width: 450px;
-  overflow-x: auto;
-}
-
 }
