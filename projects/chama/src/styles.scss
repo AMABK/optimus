@@ -9,9 +9,8 @@ body {
   margin: 0;
   font-family: Roboto, sans-serif;
   // height: 685px;
-  // position: relative;
-  // width: auto;
-  // display:flex;
+  position: relative;
+  display:flex;
 }
 .icon-20 {
   font-size: 20px;
@@ -481,12 +480,12 @@ color: blue;
     pointer-events: none;
     top: 0;
     left: 0;
-    height: 71%;
+    height: 51%;
     width: 100%;
 }
-app-root {
-  width: 150%;
-}
+// app-root {
+//   width: 150%;
+// }
 .mat-table.mat-table {
   min-width: 450px;
   overflow-x: auto;
