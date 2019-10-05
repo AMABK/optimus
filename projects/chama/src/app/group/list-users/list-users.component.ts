@@ -246,7 +246,7 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
 
       }
       console.log('dialogclosed');
