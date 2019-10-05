@@ -150,7 +150,8 @@ export class DepositComponent implements OnInit, OnDestroy {
             'amount',
             'payment_date',
             'created_at',
-            'verified'
+            'verified',
+            'edit'
           ];
         } else {
           this.displayedColumns = [
@@ -160,7 +161,8 @@ export class DepositComponent implements OnInit, OnDestroy {
             'amount',
             'payment_date',
             'created_at',
-            'verified'
+            'verified',
+            'edit'
           ];
         }
         break;
