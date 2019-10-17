@@ -72,6 +72,7 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
     this.subscription.unsubscribe();
   }
   getChamaUsers() {
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.userService.searchChamaUsers(this.userChamaStatus, this.searchTerm$).subscribe(response => {
       if (this.download !== 'download') {
         this.paginationData = {
@@ -106,6 +107,7 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
         this.downloadPDF(response.data);
         this.download = '';
       }
+      this.authService.updateLoadingDataStatus(false);
     }));
   }
   handleSearch(query: string, model: string) {
