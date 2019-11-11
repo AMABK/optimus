@@ -137,7 +137,7 @@ export class DepositComponent implements OnInit, OnDestroy {
         break;
       case 'debitType':
         this.search = '';
-        this.verified = query;
+        this.debitType = query;
         break;
       case 'asAdmin':
         this.asAdmin = query;
