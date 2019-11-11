@@ -72,8 +72,9 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
     this.subscription.unsubscribe();
   }
   getChamaUsers() {
+    this.authService.updateLoadingDataStatus(true);
     this.subscription.add(this.userService.searchChamaUsers(this.userChamaStatus, this.searchTerm$).subscribe(response => {
-      if (this.download != 'download') {
+      if (this.download !== 'download') {
         this.paginationData = {
           current_page: response.data.current_page - 1,
           total: response.data.total,
@@ -106,6 +107,7 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
         this.downloadPDF(response.data);
         this.download = '';
       }
+      this.authService.updateLoadingDataStatus(false);
     }));
   }
   handleSearch(query: string, model: string) {
@@ -246,7 +248,7 @@ export class ListUsersComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result == 'success') {
+      if (result === 'success') {
 
       }
       console.log('dialogclosed');

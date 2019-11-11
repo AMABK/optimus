@@ -139,7 +139,7 @@ export class ListMessagesComponent implements OnInit, OnDestroy {
     this.subscription.add(this.messageService
       .searchChamaUserMessages(this.messageType, this.searchTerm$)
       .subscribe(response => {
-        console.log(response);
+       // console.log(response);
         this.messages = response.data.data;
       }));
   }
@@ -148,7 +148,7 @@ export class ListMessagesComponent implements OnInit, OnDestroy {
     // tslint:disable-next-line: variable-name
     for (const user_message of user_messages) {
       if (user_message.id === this.authService.getUserId()) {
-        console.log(user_message);
+        //console.log(user_message);
         switch (user_message.pivot.status) {
           case 0:
             return 'email';

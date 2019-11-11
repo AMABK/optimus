@@ -44,8 +44,8 @@
           <option *ngFor="let status of statuses" [(value)]='status.value'>{{status.display}}</option>
         </select>
         <select [disabled]="!userHasRole('group-admin')" class="input-field select" (ngModelChange)="handleSearch($event,'asAdmin')" [(ngModel)]="asAdmin">
-          <option value="no">Non Group Admin</option>
-          <option value="yes">Group Admin</option>
+          <option value="no">My Deposits</option>
+          <option value="yes">Group Deposits</option>
         </select>
         <button (click)="clearSearch('activate')" class="small-button"> Clear Search</button>
       </div>
@@ -94,18 +94,34 @@
         <td mat-footer-cell *matFooterCellDef> </td>
       </ng-container>
 
-      <!-- Weight Column -->
+      <!-- Submission Column -->
       <ng-container matColumnDef="created_at">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Of Submission.</th>
         <td mat-cell *matCellDef="let element">{{ element.created_at|date }}</td>
         <td mat-footer-cell *matFooterCellDef> </td>
       </ng-container>
 
-      <!-- Symbol Column -->
+      <!-- Verified Column -->
       <ng-container matColumnDef="verified">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Verified.</th>
-        <td mat-cell *matCellDef="let element"> <span (click)="openChangeDepositStatusDialog(element)"
+        <td mat-cell *matCellDef="let element"> <span 
             [className]="(element.verified==='no') ? 'noVerified' : (element.verified==='yes')?'yesVerified':'rejectedVerified'">{{ element.verified.toUpperCase() }}</span>
+        </td>
+        <td mat-footer-cell *matFooterCellDef> </td>
+      </ng-container>
+      
+      <!-- Edit Column -->
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>More.</th>
+        <td mat-cell *matCellDef="let element"> <span  [matMenuTriggerFor]="moreOps"><mat-icon style="cursor: pointer">more_vert</mat-icon></span>
+        <mat-menu #moreOps="matMenu">
+          <button mat-menu-item (click)="openChangeDepositStatusDialog(element)">
+            <mat-icon>verified_user</mat-icon>Change Status
+          </button>
+          <button mat-menu-item (click)="openEditGroupDepositDialog(element)" *ngIf="(element.verified==='no')||(element.verified==='rejected')">
+            <mat-icon>edit</mat-icon>Update/Edit Details
+          </button>
+        </mat-menu>
         </td>
         <td mat-footer-cell *matFooterCellDef> </td>
       </ng-container>

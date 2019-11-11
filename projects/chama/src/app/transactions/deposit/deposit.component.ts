@@ -51,7 +51,8 @@ export class DepositComponent implements OnInit, OnDestroy {
     'amount',
     'payment_date',
     'created_at',
-    'verified'
+    'verified',
+    'edit'
   ];
   statuses = [
     { value: '', display: 'Verified Status' },
@@ -149,7 +150,8 @@ export class DepositComponent implements OnInit, OnDestroy {
             'amount',
             'payment_date',
             'created_at',
-            'verified'
+            'verified',
+            'edit'
           ];
         } else {
           this.displayedColumns = [
@@ -159,7 +161,8 @@ export class DepositComponent implements OnInit, OnDestroy {
             'amount',
             'payment_date',
             'created_at',
-            'verified'
+            'verified',
+            'edit'
           ];
         }
         break;
@@ -348,7 +351,35 @@ export class DepositComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {
-        this.getDefaultChamaDeposits();
+        this.handleSearch(this.asAdmin, 'asAdmin');
+      }
+    });
+  }
+  openEditGroupDepositDialog(txnDetails) {
+    const authData = this.authService.getUserData();
+    const defaultChama = {
+      name:
+        authData.user.default_chama != null
+          ? authData.user.default_chama.name
+          : null,
+      chamaId: authData.user.chama_id,
+      depositBy: 'admin',
+      user: {
+        userId: authData.user.id,
+        userName: authData.user.first_name + ' ' + authData.user.last_name
+      },
+      txnDetails
+    };
+    const dialogRef = this.dialog.open(AddDepositDialogComponent, {
+      height: 'auto',
+      width: '600px',
+      data: {
+        key: defaultChama
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'success') {
+        this.handleSearch(this.asAdmin, 'asAdmin');
       }
     });
   }
@@ -364,6 +395,9 @@ export class DepositComponent implements OnInit, OnDestroy {
       } else {
         subData.push(item.payment_mode.bank);
       }
+      if (this.asAdmin === 'yes') {
+        subData.push(item.user.first_name + ' ' + item.user.last_name);
+      }
       subData.push(item.contribution_type.type_name);
       subData.push(this.numberWithCommas(item.amount));
       subData.push(item.payment_date);
@@ -372,7 +406,12 @@ export class DepositComponent implements OnInit, OnDestroy {
       data.push(subData);
       x++;
     }
-    const head = ['No.', 'Bank', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    let head = [];
+    if (this.asAdmin === 'yes') {
+       head = ['No.', 'Bank', 'Name', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    } else {
+       head = ['No.', 'Bank', 'Deposit Type', 'Amount', 'Payment Date', 'Submission Date', 'Verified'];
+    }
     this.exportPdf.createPDF(data, head, 'landscape');
   }
   openChangeDepositStatusDialog(element): void {

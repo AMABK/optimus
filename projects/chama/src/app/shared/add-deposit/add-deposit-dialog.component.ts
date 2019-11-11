@@ -12,9 +12,9 @@ import { ChamaService } from '../../http/chama/chama.service';
 import { NotificationService } from 'projects/notification/src/public_api';
 
 @Component({
-  selector: "app-add-deposit-dialog",
-  templateUrl: "./add-deposit-dialog.component.html",
-  styleUrls: ["./add-deposit-dialog.component.css"]
+  selector: 'app-add-deposit-dialog',
+  templateUrl: './add-deposit-dialog.component.html',
+  styleUrls: ['./add-deposit-dialog.component.css']
 })
 export class AddDepositDialogComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
@@ -24,26 +24,30 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   activeButton = true;
   chamaData: any;
   depositTypes;
-  paymentDate = new FormControl("", [
+  paymentDate = new FormControl(this.data.key.txnDetails ? this.data.key.txnDetails.payment_date : '', [
     Validators.required,
     Validators.minLength(4)
   ]);
-  deposit = new FormControl("", [Validators.required, Validators.minLength(1)]);
-  email = new FormControl("", [Validators.email, Validators.minLength(4)]);
+  // tslint:disable-next-line: max-line-length
+  depositId = new FormControl(this.data.key.txnDetails ? this.data.key.txnDetails.id : '', [Validators.required, Validators.minLength(1)]);
+  // tslint:disable-next-line: max-line-length
+  depositTypeId = new FormControl(this.data.key.txnDetails ? this.data.key.txnDetails.contribution_type_id : '', [Validators.required, Validators.minLength(1)]);
+  email = new FormControl('', [Validators.email, Validators.minLength(4)]);
   userId = new FormControl(0, []);
-  phoneNumber = new FormControl("", [
+  phoneNumber = new FormControl('', [
     Validators.required,
     Validators.minLength(4)
   ]);
-  amount = new FormControl("", [
+  amount = new FormControl(this.data.key.txnDetails ? this.data.key.txnDetails.amount : '', [
     Validators.required,
     Validators.minLength(1),
-    Validators.pattern("[0]*([1-9]+|[1-9][0-9][0-9]*)")
+    Validators.pattern('[0]*([1-9]+|[1-9][0-9][0-9]*)')
   ]);
-  desc = new FormControl("", [Validators.required, Validators.minLength(4)]);
+  // tslint:disable-next-line: max-line-length
+  desc = new FormControl(this.data.key.txnDetails ? this.data.key.txnDetails.description : '', [Validators.required, Validators.minLength(4)]);
 
   matcher = new FormErrorService();
-  @ViewChild("autosize", { static: true }) autosize: CdkTextareaAutosize;
+  @ViewChild('autosize', { static: true }) autosize: CdkTextareaAutosize;
   constructor(
     private depositService: DepositService,
     private authService: AuthService,
@@ -61,34 +65,34 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   }
 
   // tslint:disable-next-line: member-ordering
-  location = new FormControl("", [
-    Validators.required,
-    Validators.minLength(4)
-  ]);
+  // location = new FormControl('', [
+  //   Validators.required,
+  //   Validators.minLength(4)
+  // ]);
 
   ngOnInit() {
-    this.authService.updateLoadingDataStatus(true)
+    this.authService.updateLoadingDataStatus(true);
     this.chamaData = {
       name: ''
-    }
+    };
     this.subscription.add(this.chamaService.getDefaultChamaDetails().subscribe(result => {
       this.chamaData = result.default_chama;
     }));
     this.subscription.add(this.depositService.getTransactionType('deposit', null).subscribe(result => {
       this.depositTypes = result;
-      this.authService.updateLoadingDataStatus(false)
+      this.authService.updateLoadingDataStatus(false);
     }));
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
   registerChama(form) {
-    //console.log(form.value);
+    // console.log(form.value);
   }
 
   onSubmit() {
     if (
-      this.deposit.valid &&
+      this.depositTypeId.valid &&
       this.amount.valid &&
       this.paymentDate.valid &&
       this.desc.valid
@@ -96,7 +100,8 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
       this.currentDeposit = {
         depositBy: this.data.key.depositBy,
         userId: this.data.key.user.userId,
-        depositType: this.deposit.value,
+        depositType: this.depositTypeId.value,
+        depositId: this.depositId.value,
         amount: parseInt(this.amount.value, 10),
         description: this.desc.value,
         paymentDate: this.paymentDate.value,
@@ -104,13 +109,13 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
         createdBy: this.authService.getUserData().user.id,
         status: 0
       };
-      this.authService.updateLoadingDataStatus(true)
+      this.authService.updateLoadingDataStatus(true);
       this.saveDeposit(this.currentDeposit);
     }
   }
 
   saveDeposit(deposit) {
-    if (!deposit.id) {
+    if (!this.depositId.valid) {
       this.createDeposit(deposit);
     } else {
       this.updateDeposit(deposit);
@@ -119,12 +124,12 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
   createDeposit(deposit) {
     this.subscription.add(this.depositService.createDeposit(deposit).subscribe(
       response => {
-        this.authService.updateLoadingDataStatus(false)
+        this.authService.updateLoadingDataStatus(false);
         this.notificationService.emit(
-          "Transaction successful",
-          "success"
+          'Transaction successful',
+          'success'
         );
-        this.dialogRef.close("success");
+        this.dialogRef.close('success');
       },
       error => {
         this.authService.updateLoadingDataStatus(false);
@@ -134,16 +139,17 @@ export class AddDepositDialogComponent implements OnInit, OnDestroy {
 
   updateDeposit(chama) {
     this.depositService.updateDeposit(chama).subscribe(response => {
-      //this.resetCurrentChama();
-      this.authService.updateLoadingDataStatus(false)
-      this.notificationService.emit("Deposit details updated");
+      // this.resetCurrentChama();
+      this.authService.updateLoadingDataStatus(false);
+      this.notificationService.emit('Transaction updated successfully', 'success');
+      this.dialogRef.close('success');
     }, error => {
-      this.authService.updateLoadingDataStatus(false)
-      this.notificationService.emit("Request failed");
+      this.authService.updateLoadingDataStatus(false);
+      this.notificationService.emit('Request failed');
     });
   }
   resetCurrentChama() {
-    //this.currentChama = '';
+    // this.currentChama = '';
   }
   closeAddDeposit(): void {
     this.dialogRef.close();

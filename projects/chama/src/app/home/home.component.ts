@@ -145,7 +145,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'success') {
-        this.getDefaultChamaDetails();
+        dialogRef.close();
+       // this.getDefaultChamaDetails();
       }
     });
   }
@@ -153,6 +154,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.defaultDataLoad();
   }
   defaultDataLoad() {
+    this.dialog.closeAll();
     this.getDefaultChamaDetails();
     if (this.authService.getUserData().user.default_chama == null) {
       this.openRequestJoinGroupDialog();
@@ -415,7 +417,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         key: result
       }
     });
-    dialogRef.afterClosed().subscribe(res => { 
+    dialogRef.afterClosed().subscribe(res => {
       this.getDefaultChamaDetails();
       if (res === 'success') {
         // set message to be emitted by loader interceptor after http requests end

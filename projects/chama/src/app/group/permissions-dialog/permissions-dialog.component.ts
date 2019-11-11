@@ -17,7 +17,8 @@ export class PermissionsDialogComponent implements OnInit, OnDestroy {
   form: FormGroup;
   constructor(
     public dialogRef: MatDialogRef<PermissionsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data, private authService:AuthService, private userService: UserService, private formBuilder: FormBuilder, private notificationService: NotificationService) {
+    // tslint:disable-next-line: max-line-length
+    @Inject(MAT_DIALOG_DATA) public data, private authService: AuthService, private userService: UserService, private formBuilder: FormBuilder, private notificationService: NotificationService) {
     this.form = this.formBuilder.group({
       roles: new FormArray([], this.minSelectedCheckboxes(1))
     });
@@ -53,14 +54,14 @@ export class PermissionsDialogComponent implements OnInit, OnDestroy {
       user_id: this.data.user_id,
       chama_id: this.data.chama_id
 
-    }
+    };
     this.subscription.add(this.userService.updateChamaUserPermissions(role).subscribe(res => {
       this.notificationService.emit('User permissions successfully updated', 'success');
       this.dialogRef.close('success');
     }, error => {
       this.dialogRef.close('fail');
       this.notificationService.emit('User permissions could not be successfully updated', 'danger');
-    }))
+    }));
   }
   ngOnDestroy() {
     this.subscription.unsubscribe();
