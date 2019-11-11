@@ -35,7 +35,7 @@
           [matDatepicker]="toDateSubmission">
         <mat-datepicker #toDateSubmission></mat-datepicker>
         <select class="input-field select" (ngModelChange)="handleSearch($event, 'debitType')" [(ngModel)]="debitType">
-          <option [(value)]="debitType">Please Select</option>
+          <option [(value)]="debitType">Deposit Type</option>
           <option *ngFor="let debitType of depositTypes?.data" [(value)]="debitType.id">
             {{debitType.type_name}}
           </option>
