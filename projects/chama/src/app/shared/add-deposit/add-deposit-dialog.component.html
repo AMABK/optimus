@@ -2,7 +2,7 @@
 </ng-container>
 <ng-template #addDeposit>
   <div *ngIf="chamaData?.name!=''">
-    <h1 mat-dialog-title>Add Group Contribution [{{chamaData?.name}}]</h1>
+    <h1 mat-dialog-title>{{data.key.txnDetails ? 'Edit' : 'Add'}} Group Contribution [{{chamaData?.name}}]</h1>
     <div *ngIf="data.key.depositBy=='admin'">
       <h2>Deposit For {{data.key.user.userName}}</h2>
     </div>
