@@ -26,7 +26,7 @@
     "@bugsnag/plugin-angular": "^6.0.0",
     "@syncfusion/ej2-angular-richtexteditor": "^17.1.39",
     "@types/intro.js": "^2.4.5",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "cloudinary-core": "^2.6.2",
     "core-js": "^2.5.4",
     "fecha": "^3.0.3",
