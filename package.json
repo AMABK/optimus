@@ -37,7 +37,7 @@
     "intro.js": "^2.9.3",
     "jspdf": "^1.5.3",
     "jspdf-autotable": "^3.1.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "ng2-charts": "^2.2.2",
     "rxjs": "~6.5.2",
     "tslib": "^1.9.0",
